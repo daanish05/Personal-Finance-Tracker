@@ -1,0 +1,111 @@
+export default function Sidebar() {
+  return (
+    <>
+      <aside className="fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300">
+        <div className="px-lg py-xl flex items-center gap-sm">
+          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
+            <span
+              className="material-symbols-outlined text-on-primary text-[20px]"
+              style={{ fontVariationSettings: '"FILL" 1' }}
+            >
+              account_balance_wallet
+            </span>
+          </div>
+          <h1 className="font-headline-md text-headline-md font-bold text-primary">
+            WealthFlow
+          </h1>
+        </div>
+        <nav className="flex-1 px-md space-y-base">
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold bg-surface-variant/30 sidebar-active transition-all"
+            href="#"
+          >
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{ fontVariationSettings: '"FILL" 1' }}
+            >
+              dashboard
+            </span>
+            <span className="font-label-md text-label-md">Dashboard</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              receipt_long
+            </span>
+            <span className="font-label-md text-label-md">Transactions</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              account_balance
+            </span>
+            <span className="font-label-md text-label-md">Accounts</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              account_balance_wallet
+            </span>
+            <span className="font-label-md text-label-md">Budgets</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              ads_click
+            </span>
+            <span className="font-label-md text-label-md">Goals</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              bar_chart
+            </span>
+            <span className="font-label-md text-label-md">Reports</span>
+          </a>
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              psychology
+            </span>
+            <span className="font-label-md text-label-md">AI Insights</span>
+          </a>
+        </nav>
+        <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
+          <a
+            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            href="#"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              settings
+            </span>
+            <span className="font-label-md text-label-md">Settings</span>
+          </a>
+          <div className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant">
+            <div className="flex items-center gap-md flex-1">
+              <span className="material-symbols-outlined text-[20px]">
+                contrast
+              </span>
+              <span className="font-label-md text-label-md">Theme</span>
+            </div>
+            <div className="w-8 h-4 bg-outline-variant/30 rounded-full relative cursor-pointer">
+              <div className="absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm" />
+            </div>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
