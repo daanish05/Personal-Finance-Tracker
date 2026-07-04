@@ -2,12 +2,12 @@ export default function Header() {
   return (
     <>
       <header className="h-16 flex items-center justify-between px-xl sticky top-0 z-40 bg-surface/80 backdrop-blur-md">
-        <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md py-1.5 w-96">
-          <span className="material-symbols-outlined text-outline text-[18px]">
+        <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 w-96 gap-sm">
+          <span className="material-symbols-outlined text-outline text-[20px] leading-none">
             search
           </span>
           <input
-            className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60"
+            className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
             placeholder="Search transactions, accounts..."
             type="text"/>
         </div>

@@ -1,11 +1,11 @@
-// import Header from '../components/Dashboard/Header';
 import Sidebar from '../components/Dashboard/Sidebar';
+import ThemeProvider from '../components/ThemeProvider';
 import { GeistSans } from "geist/font";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
@@ -13,8 +13,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${GeistSans.className} bg-surface text-on-surface`}>
-        <Sidebar />
-        {children}
+        <ThemeProvider>
+          <Sidebar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,4 +1,15 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+import { useTheme } from '../ThemeProvider';
+import ThemeToggle from './ThemeToggle';
+
 export default function Sidebar() {
+  const pathname = usePathname();
+  const { dark, toggleDark } = useTheme();
+
+  const isActive = (path) => pathname === path;
+
   return (
     <>
       <aside className="fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300">
@@ -17,36 +28,36 @@ export default function Sidebar() {
         </div>
         <nav className="flex-1 px-md space-y-base">
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold bg-surface-variant/30 sidebar-active transition-all"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
             href="/"
           >
             <span
               className="material-symbols-outlined text-[20px]"
-              style={{ fontVariationSettings: '"FILL" 1' }}
+              style={{ fontVariationSettings: isActive('/') ? '"FILL" 1' : '0' }}
             >
               dashboard
             </span>
             <span className="font-label-md text-label-md">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Transaction') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            href="/Transaction"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Transaction') ? '"FILL" 1' : '0' }}>
               receipt_long
             </span>
             <span className="font-label-md text-label-md">Transactions</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Accounts') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            href="/Accounts"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Accounts') ? '"FILL" 1' : '0' }}>
               account_balance
             </span>
             <span className="font-label-md text-label-md">Accounts</span>
           </a>
-          <a
+          {/* <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
             href="#"
           >
@@ -54,12 +65,12 @@ export default function Sidebar() {
               account_balance_wallet
             </span>
             <span className="font-label-md text-label-md">Budgets</span>
-          </a>
+          </a> */}
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Goals') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            href="/Goals"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Goals') ? '"FILL" 1' : '0' }}>
               ads_click
             </span>
             <span className="font-label-md text-label-md">Goals</span>
@@ -100,9 +111,7 @@ export default function Sidebar() {
               </span>
               <span className="font-label-md text-label-md">Theme</span>
             </div>
-            <div className="w-8 h-4 bg-outline-variant/30 rounded-full relative cursor-pointer">
-              <div className="absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm" />
-            </div>
+            <ThemeToggle dark={dark} onToggle={toggleDark} />
           </div>
         </div>
       </aside>

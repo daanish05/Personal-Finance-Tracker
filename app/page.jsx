@@ -1,32 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import IncomeExpenseChart from '../components/Dashboard/IncomeExpenseChart';
-import ThemeToggle from '../components/Dashboard/ThemeToggle';
+import { useTheme } from '../components/ThemeProvider';
 import Header from '../components/Dashboard/Header';
-import Sidebar from '../components/Dashboard/Sidebar';
 
 export default function Home() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') {
-      setDark(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark);
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
-  }, [dark]);
+  const { dark } = useTheme();
   return (
     <>
       <>
         {/* Main Content Shell */}
         <main className="ml-60 min-h-screen flex flex-col">
-            <Sidebar />
           {/* Top Nav Bar */}
           <Header />
           {/* Dashboard Content */}
