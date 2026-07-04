@@ -18,7 +18,7 @@ export default function Sidebar() {
         <nav className="flex-1 px-md space-y-base">
           <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold bg-surface-variant/30 sidebar-active transition-all"
-            href="#"
+            href="/"
           >
             <span
               className="material-symbols-outlined text-[20px]"

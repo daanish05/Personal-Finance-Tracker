@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import IncomeExpenseChart from '../components/Dashboard/IncomeExpenseChart';
 import ThemeToggle from '../components/Dashboard/ThemeToggle';
 import Header from '../components/Dashboard/Header';
+import Sidebar from '../components/Dashboard/Sidebar';
 
 export default function Home() {
   const [dark, setDark] = useState(false);
@@ -25,6 +26,7 @@ export default function Home() {
       <>
         {/* Main Content Shell */}
         <main className="ml-60 min-h-screen flex flex-col">
+            <Sidebar />
           {/* Top Nav Bar */}
           <Header />
           {/* Dashboard Content */}
