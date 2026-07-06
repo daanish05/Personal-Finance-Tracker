@@ -49,8 +49,7 @@ export default function Providers({ children }) {
     <ThemeProvider
       attribute="class"
       defaultTheme="light"
-      enableSystem={false}
-    >
+      enableSystem={false}>
       {children}
     </ThemeProvider>
   );
