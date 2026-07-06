@@ -131,12 +131,12 @@ export default function Accounts() {
               <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-2">
                 notifications
               </button>
-              <button className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
+              <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
                 <span className="material-symbols-outlined text-[18px]">
                   add
                 </span>
                 Quick Add
-              </button>
+              </a>
             </div>
           </header>
           {/* Content Canvas */}

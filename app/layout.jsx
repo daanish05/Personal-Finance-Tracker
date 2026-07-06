@@ -11,6 +11,15 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark');
+              }
+            } catch (e) {}
+          `,
+        }} />
       </head>
       <body className={`${GeistSans.className} bg-surface text-on-surface`}>
         <ThemeProvider>

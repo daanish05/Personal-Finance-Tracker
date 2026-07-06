@@ -110,9 +110,12 @@ export default function Goals() {
               </div>
             </div>
             <div className="flex items-center gap-lg">
-              <button className="bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md text-label-md font-bold hover:opacity-90 active:scale-95 transition-all">
+              <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
                 Quick Add
-              </button>
+              </a>
               <button className="relative text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">notifications</span>
                 <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />

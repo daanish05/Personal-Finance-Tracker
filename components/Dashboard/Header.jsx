@@ -9,7 +9,8 @@ export default function Header() {
           <input
             className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
             placeholder="Search transactions, accounts..."
-            type="text"/>
+            type="text"
+          />
         </div>
         <div className="flex items-center gap-lg">
           <button className="relative text-on-surface-variant hover:text-primary transition-colors">
@@ -19,10 +20,11 @@ export default function Header() {
             <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
           </button>
           <div className="h-8 w-[1px] bg-outline-variant/50" />
-          <button className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">
+
+          <a href="/Quickadd" className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">
             <span className="material-symbols-outlined text-[18px]">add</span>
             Quick Add
-          </button>
+          </a>
           <div className="flex items-center gap-sm cursor-pointer group">
             <div className="text-right">
               <p className="font-label-md text-on-surface font-bold">
