@@ -1,10 +1,32 @@
+'use client';
+import { useMemo } from 'react';
+import { useTransactions } from '../../contexts/TransactionContext';
+
 export default function Goals() {
+  const { transactions, balance, totalIncome, totalExpenses } = useTransactions();
+
+  const savingsGoal = 200000;
+  const progressPct = Math.min(((balance / savingsGoal) * 100).toFixed(0), 100);
+
+  const monthlySavings = useMemo(() => {
+    const data = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const m = d.getMonth();
+      const y = d.getFullYear();
+      const inc = transactions.filter((t) => t.type === "income" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+      const exp = transactions.filter((t) => t.type === "expense" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+      data.push({ label: d.toLocaleDateString("en-US", { month: "short" }), saved: inc - exp });
+    }
+    return data;
+  }, [transactions]);
+
+  const maxSavings = Math.max(...monthlySavings.map((m) => m.saved), 1);
+  const avgMonthly = monthlySavings.reduce((s, m) => s + m.saved, 0) / monthlySavings.length;
+
   return (
     <>
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
-      <link href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist.min.css" rel="stylesheet" />
-      
       <>
         {/* Main Content Area */}
         <main className="ml-60 min-h-screen">
@@ -23,7 +45,10 @@ export default function Goals() {
               </div>
             </div>
             <div className="flex items-center gap-lg">
-              <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
+              <a
+                href="/Quickadd"
+                className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95"
+              >
                 <span className="material-symbols-outlined text-[18px]">
                   add
                 </span>
@@ -57,9 +82,9 @@ export default function Goals() {
                 </div>
                 <p className="font-body-md text-body-md text-on-surface-variant max-w-prose">
                   Track your progress toward your most important financial
-                  objectives. Your total savings across all goals have grown by
-                  <span className="text-secondary font-bold">12.4%</span> this
-                  month.
+                  objectives. You have{" "}
+                  <span className="text-secondary font-bold">{transactions.length} transactions</span>{" "}
+                  tracked across income and expenses.
                 </p>
               </div>
               <div className="col-span-12 md:col-span-4">
@@ -69,21 +94,21 @@ export default function Goals() {
                       Total Progress
                     </span>
                     <span className="font-mono-data text-mono-data text-primary font-bold">
-                      64%
+                      {progressPct}%
                     </span>
                   </div>
                   <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary progress-bar-glow rounded-full"
-                      style={{ width: "64%" }}
+                      style={{ width: `${progressPct}%` }}
                     />
                   </div>
                   <div className="flex justify-between items-baseline">
                     <span className="font-headline-md text-headline-md font-black">
-                      $128,450.00
+                      ${balance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </span>
                     <span className="font-body-sm text-body-sm text-on-surface-variant">
-                      of $200,000 target
+                      of ${savingsGoal.toLocaleString()} target
                     </span>
                   </div>
                 </div>
@@ -303,80 +328,37 @@ export default function Goals() {
                     Saving Velocity
                   </h3>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">
-                    Based on your last 6 months of contributions, you are set to
-                    hit all primary goals
+                    Based on your last 6 months of savings, your average monthly
+                    saving is{" "}
                     <span className="text-secondary font-bold">
-                      14 days ahead
-                    </span>{" "}
-                    of schedule.
+                      ${avgMonthly.toFixed(0)}
+                    </span>.
                   </p>
                   <ul className="space-y-sm">
                     <li className="flex items-center gap-3 font-label-md text-label-md text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-primary" />{" "}
-                      Monthly Avg: $4,200
+                      Monthly Avg: ${avgMonthly.toFixed(0)}
                     </li>
                     <li className="flex items-center gap-3 font-label-md text-label-md text-on-surface">
                       <span className="w-2 h-2 rounded-full bg-secondary" />
-                      Compounding Interest: +$240/mo
+                      Balance: ${balance.toFixed(0)}
                     </li>
                   </ul>
                 </div>
                 <div className="lg:col-span-8 flex items-end h-64 gap-2">
-                  {/* Simplified bar chart representation */}
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary/20 rounded-t group-hover:bg-primary/40 transition-all"
-                      style={{ height: "40%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-outline">
-                      JAN
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary/20 rounded-t group-hover:bg-primary/40 transition-all"
-                      style={{ height: "55%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-outline">
-                      FEB
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary/20 rounded-t group-hover:bg-primary/40 transition-all"
-                      style={{ height: "48%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-outline">
-                      MAR
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary/20 rounded-t group-hover:bg-primary/40 transition-all"
-                      style={{ height: "70%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-outline">
-                      APR
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary/20 rounded-t group-hover:bg-primary/40 transition-all"
-                      style={{ height: "85%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-outline">
-                      MAY
-                    </span>
-                  </div>
-                  <div className="flex-1 flex flex-col items-center gap-2 group">
-                    <div
-                      className="w-full bg-primary rounded-t shadow-lg shadow-primary/20"
-                      style={{ height: "95%" }}
-                    />
-                    <span className="font-label-md text-[10px] text-primary font-bold">
-                      JUN
-                    </span>
-                  </div>
+                  {monthlySavings.map((m, i) => {
+                    const pct = maxSavings > 0 ? Math.max((m.saved / maxSavings) * 95, 2) : 2;
+                    const isCurrent = i === monthlySavings.length - 1;
+                    return (
+                      <div key={m.label} className="flex-1 flex flex-col items-center gap-2 group">
+                        <div
+                          className={`w-full rounded-t transition-all group-hover:opacity-80 ${isCurrent ? "bg-primary shadow-lg shadow-primary/20" : "bg-primary/20 group-hover:bg-primary/40"}`}
+                          style={{ height: `${pct}%` }}
+                        />
+                        <span className={`font-label-md text-[10px] ${isCurrent ? "text-primary font-bold" : "text-outline"}`}>{m.label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </section>

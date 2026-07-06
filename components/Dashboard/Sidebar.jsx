@@ -76,15 +76,15 @@ export default function Sidebar() {
             <span className="font-label-md text-label-md">Goals</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Report') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
             href="/Report"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Report') ? '"FILL" 1' : '0' }}>
               bar_chart
             </span>
             <span className="font-label-md text-label-md">Reports</span>
           </a>
-          <a
+          {/* <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
             href="#"
           >
@@ -92,14 +92,14 @@ export default function Sidebar() {
               psychology
             </span>
             <span className="font-label-md text-label-md">AI Insights</span>
-          </a>
+          </a> */}
         </nav>
         <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Settings') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
             href="/Settings"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Settings') ? '"FILL" 1' : '0' }}>
               settings
             </span>
             <span className="font-label-md text-label-md">Settings</span>

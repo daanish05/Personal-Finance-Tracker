@@ -1,4 +1,23 @@
+'use client';
+import { useMemo } from 'react';
+import { useTransactions } from '../../contexts/TransactionContext';
+
 export default function Accounts() {
+  const { transactions, balance } = useTransactions();
+
+  const recentActivity = useMemo(() => {
+    return transactions.slice(0, 5);
+  }, [transactions]);
+
+  const totalPortfolio = useMemo(() => {
+    const total = transactions
+      .filter((t) => t.type === "income")
+      .reduce((s, t) => s + Number(t.amount), 0);
+    const deducted = transactions
+      .filter((t) => t.type === "expense")
+      .reduce((s, t) => s + Number(t.amount), 0);
+    return total - deducted;
+  }, [transactions]);
   return (
     <>
       <>
@@ -122,7 +141,7 @@ export default function Accounts() {
                 </span>
                 <input
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                  placeholder="Search goals or metrics..."
+                  placeholder="Search accounts..."
                   type="text"
                 />
               </div>
@@ -156,7 +175,7 @@ export default function Accounts() {
                   Total Portfolio Value
                 </p>
                 <h2 className="font-headline-xl text-headline-xl text-on-surface">
-                  $1,482,904.52
+                  ${totalPortfolio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </h2>
                 <div className="flex items-center gap-md mt-md">
                   <span className="flex items-center gap-xs text-secondary font-bold font-label-md text-label-md bg-secondary-container/20 px-sm py-1 rounded-full">
@@ -420,81 +439,35 @@ export default function Accounts() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/30">
-                    <tr className="hover:bg-surface-container-low transition-colors group">
-                      <td className="px-lg py-md">
-                        <div className="flex items-center gap-md">
-                          <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[18px] text-primary">
-                              shopping_bag
+                    {recentActivity.length === 0 ? (
+                      <tr>
+                        <td className="px-lg py-xl text-center text-on-surface-variant" colSpan={4}>No activity yet.</td>
+                      </tr>
+                    ) : (
+                      recentActivity.map((t) => (
+                        <tr key={t.id} className="hover:bg-surface-container-low transition-colors group">
+                          <td className="px-lg py-md">
+                            <div className="flex items-center gap-md">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${t.type === "income" ? "bg-secondary/10" : "bg-surface-variant"}`}>
+                                <span className="material-symbols-outlined text-[18px] text-primary">
+                                  {t.type === "income" ? "work" : "receipt"}
+                                </span>
+                              </div>
+                              <span className="font-body-sm text-body-sm font-medium text-on-surface">{t.title}</span>
+                            </div>
+                          </td>
+                          <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant capitalize">{t.account || "N/A"}</td>
+                          <td className="px-lg py-md">
+                            <span className={`${t.type === "income" ? "bg-secondary/10 text-secondary" : "bg-surface-variant text-on-surface-variant"} text-[11px] px-2 py-0.5 rounded-full font-medium capitalize`}>
+                              {t.category}
                             </span>
-                          </div>
-                          <span className="font-body-sm text-body-sm font-medium">
-                            Apple Store
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant">
-                        Amex Gold
-                      </td>
-                      <td className="px-lg py-md">
-                        <span className="bg-surface-variant text-on-surface-variant text-[11px] px-2 py-0.5 rounded-full font-medium">
-                          Technology
-                        </span>
-                      </td>
-                      <td className="px-lg py-md font-mono-data text-mono-data text-right text-error font-bold">
-                        -$1,245.80
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-surface-container-low transition-colors group">
-                      <td className="px-lg py-md">
-                        <div className="flex items-center gap-md">
-                          <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[18px] text-primary">
-                              work
-                            </span>
-                          </div>
-                          <span className="font-body-sm text-body-sm font-medium">
-                            TechCorp Payroll
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant">
-                        Chase Bank
-                      </td>
-                      <td className="px-lg py-md">
-                        <span className="bg-secondary/10 text-secondary text-[11px] px-2 py-0.5 rounded-full font-medium">
-                          Income
-                        </span>
-                      </td>
-                      <td className="px-lg py-md font-mono-data text-mono-data text-right text-secondary font-bold">
-                        +$8,402.15
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-surface-container-low transition-colors group">
-                      <td className="px-lg py-md">
-                        <div className="flex items-center gap-md">
-                          <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[18px] text-primary">
-                              restaurant
-                            </span>
-                          </div>
-                          <span className="font-body-sm text-body-sm font-medium">
-                            Le Bernardin
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant">
-                        Chase Bank
-                      </td>
-                      <td className="px-lg py-md">
-                        <span className="bg-surface-variant text-on-surface-variant text-[11px] px-2 py-0.5 rounded-full font-medium">
-                          Dining
-                        </span>
-                      </td>
-                      <td className="px-lg py-md font-mono-data text-mono-data text-right text-on-surface font-bold">
-                        -$450.00
-                      </td>
-                    </tr>
+                          </td>
+                          <td className={`px-lg py-md font-mono-data text-mono-data text-right font-bold ${t.type === "income" ? "text-secondary" : "text-error"}`}>
+                            {t.type === "income" ? "+" : "-"}${Number(t.amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

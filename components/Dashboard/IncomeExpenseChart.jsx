@@ -5,7 +5,33 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-export default function IncomeExpenseChart({ dark }) {
+function getMonthlyData(transactions, monthsBack = 5) {
+  const now = new Date();
+  const labels = [];
+  const incomeData = [];
+  const expenseData = [];
+
+  for (let i = monthsBack; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    labels.push(d.toLocaleDateString("en-US", { month: "short" }));
+    const month = d.getMonth();
+    const year = d.getFullYear();
+
+    const income = transactions
+      .filter((t) => t.type === "income" && new Date(t.date).getMonth() === month && new Date(t.date).getFullYear() === year)
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+    const expenses = transactions
+      .filter((t) => t.type === "expense" && new Date(t.date).getMonth() === month && new Date(t.date).getFullYear() === year)
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+
+    incomeData.push(income);
+    expenseData.push(expenses);
+  }
+
+  return { labels, incomeData, expenseData };
+}
+
+export default function IncomeExpenseChart({ dark, transactions = [] }) {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -70,14 +96,16 @@ export default function IncomeExpenseChart({ dark }) {
       };
     }
 
+    const { labels, incomeData, expenseData } = getMonthlyData(transactions);
+
     chartRef.current = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        labels,
         datasets: [
           {
             label: 'Income',
-            data: [7200, 7500, 8200, 8000, 8200, 8500],
+            data: incomeData,
             borderColor: '#0050cb',
             backgroundColor: gradientIncome,
             borderWidth: 2,
@@ -91,7 +119,7 @@ export default function IncomeExpenseChart({ dark }) {
           },
           {
             label: 'Expenses',
-            data: [3100, 4200, 3800, 3200, 3450, 3100],
+            data: expenseData,
             borderColor: '#a33200',
             backgroundColor: gradientExpenses,
             borderWidth: 2,
@@ -111,18 +139,7 @@ export default function IncomeExpenseChart({ dark }) {
     return () => {
       chartRef.current?.destroy();
     };
-  }, []);
-
-  useEffect(() => {
-    if (!chartRef.current) return;
-    const isDark = dark;
-    const textColor = isDark ? '#c2c6d8' : '#727687';
-    const gridColor = isDark ? 'rgba(194, 198, 216, 0.08)' : 'rgba(114, 118, 135, 0.1)';
-    chartRef.current.options.scales.x.ticks.color = textColor;
-    chartRef.current.options.scales.y.ticks.color = textColor;
-    chartRef.current.options.scales.y.grid.color = gridColor;
-    chartRef.current.update();
-  }, [dark]);
+  }, [dark, transactions]);
 
   return <canvas ref={canvasRef} id="incomeExpensesChart" />;
 }

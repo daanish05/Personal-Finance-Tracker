@@ -1,9 +1,20 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTransactions } from "../../contexts/TransactionContext";
 
 export default function Quickadd() {
+  const router = useRouter();
+  const { addTransaction } = useTransactions();
   const [type, setType] = useState("expense");
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("");
+  const [account, setAccount] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [notes, setNotes] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   return (
     <>
@@ -93,8 +104,48 @@ export default function Quickadd() {
             </p>
           </div>
           {/* Form Container */}
+          {submitted ? (
+            <div className="glass-panel border border-outline-variant rounded-xl p-lg shadow-sm text-center space-y-lg">
+              <span className="material-symbols-outlined text-[64px] text-secondary" style={{ fontVariationSettings: '"FILL" 1' }}>
+                check_circle
+              </span>
+              <h2 className="font-headline-lg text-headline-lg text-on-surface font-bold">
+                Transaction Added!
+              </h2>
+              <p className="text-on-surface-variant">
+                Your {type === "expense" ? "expense" : "income"} has been saved successfully.
+              </p>
+              <div className="flex gap-md justify-center">
+                <button
+                  className="px-xl py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:opacity-90 transition-all"
+                  onClick={() => router.push("/")}
+                >
+                  Go to Dashboard
+                </button>
+                <button
+                  className="px-xl py-3 bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-all"
+                  onClick={() => { setSubmitted(false); setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); }}
+                >
+                  Add Another
+                </button>
+              </div>
+            </div>
+          ) : (
           <div className="glass-panel border border-outline-variant rounded-xl p-lg shadow-sm">
-            <form className="space-y-lg" id="transactionForm">
+            <form className="space-y-lg" id="transactionForm" onSubmit={(e) => {
+              e.preventDefault();
+              addTransaction({
+                type,
+                title,
+                amount: parseFloat(amount),
+                category,
+                account,
+                date,
+                paymentMethod,
+                notes,
+              });
+              setSubmitted(true);
+            }}>
               {/* Title & Amount Row */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
                 <div className="md:col-span-2">
@@ -107,6 +158,8 @@ export default function Quickadd() {
                   <input
                     className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input"
                     id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder={
                       type === "expense"
                         ? "e.g., Monthly SaaS Subscription"
@@ -130,7 +183,9 @@ export default function Quickadd() {
                     <input
                       className="w-full pl-8 pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-mono-data text-on-surface focused-input"
                       id="amount"
-                      placeholder={0.0}
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="0.00"
                       required=""
                       step="0.01"
                       type="number"
@@ -169,6 +224,8 @@ export default function Quickadd() {
                   <div className="relative">
                     <select
                       className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
                       key={type}
                     >
                       <option disabled="" value="">
@@ -207,7 +264,7 @@ export default function Quickadd() {
                     Account
                   </label>
                   <div className="relative">
-                    <select className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none">
+                    <select className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none" value={account} onChange={(e) => setAccount(e.target.value)}>
                       <option disabled="" value="">
                         Select account...
                       </option>
@@ -233,6 +290,8 @@ export default function Quickadd() {
                   <input
                     className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input"
                     type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
                 <div>
@@ -310,9 +369,10 @@ export default function Quickadd() {
                 <textarea
                   className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input resize-none"
                   id="notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
                   placeholder="Additional details about this transaction..."
                   rows={3}
-                  defaultValue={""}
                 />
               </div>
               {/* Receipt Attachment (Drag & Drop) */}
@@ -350,6 +410,7 @@ export default function Quickadd() {
                 <button
                   className="w-full md:w-auto px-xl py-3 bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-all"
                   type="button"
+                  onClick={() => { setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); setDate(new Date().toISOString().split("T")[0]); }}
                 >
                   Clear All
                 </button>
@@ -357,12 +418,14 @@ export default function Quickadd() {
                 <button
                   className="w-full md:w-auto px-xl py-3 text-error font-label-md text-label-md hover:bg-error-container/10 rounded-lg transition-all"
                   type="button"
+                  onClick={() => router.push("/")}
                 >
                   Cancel
                 </button>
               </div>
             </form>
           </div>
+          )}
           {/* Footnote Information */}
           <div className="mt-lg flex items-center justify-center gap-md text-outline">
             <div className="flex items-center gap-xs">

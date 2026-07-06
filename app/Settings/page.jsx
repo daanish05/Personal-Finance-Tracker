@@ -121,9 +121,9 @@ export default function Settings() {
           {/* Top Navbar */}
           <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
             <div className="flex items-center gap-md">
-              <h2 className="font-headline-md text-headline-md font-black text-primary">
+              {/* <h2 className="font-headline-md text-headline-md font-black text-primary">
                 Settings
-              </h2>
+              </h2> */}
               <div className="h-6 w-[1px] bg-outline-variant mx-sm" />
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">
@@ -141,7 +141,7 @@ export default function Settings() {
                 <span className="material-symbols-outlined">notifications</span>
                 <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
               </button>
-              <button className="bg-primary text-white px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+              <button className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
                 Quick Add
               </button>
             </div>
@@ -202,7 +202,7 @@ export default function Settings() {
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="profile"
               >
-                <h3 className="font-headline-md text-headline-md font-bold mb-md">
+                <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Profile
                 </h3>
                 <div className="flex items-center gap-xl mb-lg">
@@ -212,7 +212,7 @@ export default function Settings() {
                       data-alt="A clean, professional studio portrait of a man with short hair wearing a navy blue blazer, high-end corporate photography style, bright minimalist background, sharp focus."
                       src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVtfTwxnGkRqocwLRsW7zs34SrW1Ow9DQdHvZcW5nDsSdillB3tbh3B4O7tuJoKU_7HK44Skl4V_WXTy2loKOLfXH7ntjNihnHhf_G69ktFES3IeX1W46uYRWLCQOpNtcmN6nBnr-VOd8ECgwRvn1CQMwO7gVIZa22Yjb1Q8GdHQ-z42tf0DUfSR5w2u5oYUVelJ81qXJuHp_dUKmUwme7SMF4z-I03GbDQHvKeGiBjXLrNfMu5Yux"
                     />
-                    <button className="absolute bottom-0 right-0 p-1.5 bg-primary text-white rounded-full shadow-lg hover:scale-110 transition-transform">
+                    <button className="absolute bottom-0 right-0 p-1.5 bg-primary text-on-primary rounded-full shadow-lg hover:scale-110 transition-transform">
                       <span className="material-symbols-outlined text-[18px]">
                         photo_camera
                       </span>
@@ -244,7 +244,7 @@ export default function Settings() {
                       Full Name
                     </label>
                     <input
-                      className="w-full px-md py-2.5 bg-surface border border-outline-variant rounded-lg font-body-md focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
+                      className="w-full px-md py-2.5 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
                       type="text"
                       defaultValue="Alex Sterling"
                     />
@@ -254,14 +254,14 @@ export default function Settings() {
                       Email Address
                     </label>
                     <input
-                      className="w-full px-md py-2.5 bg-surface border border-outline-variant rounded-lg font-body-md focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
+                      className="w-full px-md py-2.5 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
                       type="email"
                       defaultValue="alex.sterling@wealthflow.com"
                     />
                   </div>
                 </div>
                 <div className="mt-lg pt-lg border-t border-outline-variant flex justify-end">
-                  <button className="bg-primary text-white px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
+                  <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
                     Save Changes
                   </button>
                 </div>
@@ -271,20 +271,20 @@ export default function Settings() {
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="preferences"
               >
-                <h3 className="font-headline-md text-headline-md font-bold mb-md">
+                <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Preferences
                 </h3>
                 <div className="space-y-lg">
                   <div className="flex items-center justify-between py-2 border-b border-outline-variant/30">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Base Currency
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
                         All financial totals will be shown in this currency.
                       </p>
                     </div>
-                    <select className="px-md py-2 bg-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
+                    <select className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
                       <option>USD ($)</option>
                       <option>EUR (€)</option>
                       <option>GBP (£)</option>
@@ -292,14 +292,14 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-outline-variant/30">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Language
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
                         The language used across the dashboard.
                       </p>
                     </div>
-                    <select className="px-md py-2 bg-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
+                    <select className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
                       <option>English (US)</option>
                       <option>French</option>
                       <option>German</option>
@@ -308,14 +308,14 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Timezone
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
                         Used for transaction timestamps and reporting.
                       </p>
                     </div>
-                    <select className="px-md py-2 bg-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
+                    <select className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all">
                       <option>(GMT-08:00) Pacific Time</option>
                       <option>(GMT-05:00) Eastern Time</option>
                       <option>(GMT+00:00) UTC</option>
@@ -329,7 +329,7 @@ export default function Settings() {
                 id="notifications"
               >
                 <div className="flex items-center justify-between mb-md">
-                  <h3 className="font-headline-md text-headline-md font-bold">
+                  <h3 className="font-headline-md text-headline-md font-bold text-on-surface">
                     Notifications
                   </h3>
                   <div className="flex gap-lg font-label-md text-[10px] uppercase tracking-widest text-on-surface-variant">
@@ -341,7 +341,7 @@ export default function Settings() {
                   {/* Notification Item */}
                   <div className="flex items-center justify-between py-md border-b border-outline-variant/30">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Budget Alerts
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
@@ -370,7 +370,7 @@ export default function Settings() {
                   {/* Notification Item */}
                   <div className="flex items-center justify-between py-md border-b border-outline-variant/30">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Bill Reminders
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
@@ -395,7 +395,7 @@ export default function Settings() {
                   {/* Notification Item */}
                   <div className="flex items-center justify-between py-md">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Monthly Financial Reports
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
@@ -425,20 +425,20 @@ export default function Settings() {
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="security"
               >
-                <h3 className="font-headline-md text-headline-md font-bold mb-md">
+                <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Security
                 </h3>
                 <div className="space-y-lg">
                   <div className="flex items-center justify-between py-md border-b border-outline-variant/30">
                     <div>
-                      <p className="font-label-md text-label-md font-bold">
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
                         Password
                       </p>
                       <p className="text-on-surface-variant text-body-sm">
                         Last changed 4 months ago.
                       </p>
                     </div>
-                    <button className="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">
+                    <button className="px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-variant transition-colors">
                       Change Password
                     </button>
                   </div>
@@ -450,7 +450,7 @@ export default function Settings() {
                         </span>
                       </div>
                       <div>
-                        <p className="font-label-md text-label-md font-bold">
+                        <p className="font-label-md text-label-md font-bold text-on-surface">
                           Two-Factor Authentication (2FA)
                         </p>
                         <p className="text-secondary text-body-sm font-medium">
@@ -463,17 +463,17 @@ export default function Settings() {
                     </button>
                   </div>
                   <div>
-                    <p className="font-label-md text-label-md font-bold mb-md">
+                    <p className="font-label-md text-label-md font-bold mb-md text-on-surface">
                       Active Sessions
                     </p>
                     <div className="space-y-md">
-                      <div className="flex items-center justify-between p-md bg-surface border border-outline-variant rounded-lg">
+                      <div className="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg">
                         <div className="flex items-center gap-md">
                           <span className="material-symbols-outlined text-outline">
                             desktop_windows
                           </span>
                           <div>
-                            <p className="font-label-md text-label-md">
+                            <p className="font-label-md text-label-md text-on-surface">
                               Chrome on macOS (Current)
                             </p>
                             <p className="text-[11px] text-on-surface-variant">
@@ -485,13 +485,13 @@ export default function Settings() {
                           Active
                         </span>
                       </div>
-                      <div className="flex items-center justify-between p-md bg-surface border border-outline-variant rounded-lg">
+                      <div className="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg">
                         <div className="flex items-center gap-md">
                           <span className="material-symbols-outlined text-outline">
                             smartphone
                           </span>
                           <div>
-                            <p className="font-label-md text-label-md">
+                            <p className="font-label-md text-label-md text-on-surface">
                               WealthFlow iOS App
                             </p>
                             <p className="text-[11px] text-on-surface-variant">
@@ -514,7 +514,7 @@ export default function Settings() {
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden"
                 id="data"
               >
-                <h3 className="font-headline-md text-headline-md font-bold mb-md">
+                <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Data Management
                 </h3>
                 <div className="flex flex-col gap-md">
@@ -524,7 +524,7 @@ export default function Settings() {
                         download
                       </span>
                       <div>
-                        <p className="font-label-md text-label-md font-bold">
+                        <p className="font-label-md text-label-md font-bold text-on-surface">
                           Export your data
                         </p>
                         <p className="text-on-surface-variant text-body-sm">
@@ -534,10 +534,10 @@ export default function Settings() {
                       </div>
                     </div>
                     <div className="flex gap-sm">
-                      <button className="px-md py-2 bg-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs">
+                      <button className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs">
                         CSV
                       </button>
-                      <button className="px-md py-2 bg-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs">
+                      <button className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs">
                         JSON
                       </button>
                     </div>
@@ -552,7 +552,7 @@ export default function Settings() {
                         This cannot be undone.
                       </p>
                     </div>
-                    <button className="px-md py-2 bg-error text-white rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
+                    <button className="px-md py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
                       Delete Account
                     </button>
                   </div>

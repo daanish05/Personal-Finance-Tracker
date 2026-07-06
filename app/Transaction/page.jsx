@@ -1,10 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTransactions } from '../../contexts/TransactionContext';
 
 export default function Transaction() {
+  const { transactions, deleteTransactions } = useTransactions();
   const [hoveredRow, setHoveredRow] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [filterType, setFilterType] = useState("all");
+  const [timeframe, setTimeframe] = useState("all");
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (allVisibleSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !visibleIds.includes(id)));
+    } else {
+      setSelectedIds((prev) => [...new Set([...prev, ...visibleIds])]);
+    }
+  };
+
+  const filtered = useMemo(() => {
+    let txs = [...transactions];
+    if (filterType === "income") txs = txs.filter((t) => t.type === "income");
+    else if (filterType === "expense") txs = txs.filter((t) => t.type === "expense");
+
+    if (timeframe !== "all") {
+      const now = new Date();
+      const cutoff = new Date();
+      if (timeframe === "30") cutoff.setDate(now.getDate() - 30);
+      else if (timeframe === "90") cutoff.setDate(now.getDate() - 90);
+      else if (timeframe === "year") cutoff.setFullYear(now.getFullYear() - 1);
+      txs = txs.filter((t) => new Date(t.date) >= cutoff);
+    }
+    return txs;
+  }, [transactions, filterType, timeframe]);
+
+  const visibleIds = filtered.slice(0, 10).map((t) => t.id);
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id));
+
+  const countAll = transactions.length;
+  const countIncome = transactions.filter((t) => t.type === "income").length;
+  const countExpense = transactions.filter((t) => t.type === "expense").length;
+
+  const topCategory = useMemo(() => {
+    const cats = {};
+    transactions.filter((t) => t.type === "expense").forEach((t) => {
+      cats[t.category] = (cats[t.category] || 0) + Number(t.amount);
+    });
+    return Object.entries(cats).sort((a, b) => b[1] - a[1])[0] || ["N/A", 0];
+  }, [transactions]);
+
+  const totalExpenseAmount = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + Number(t.amount), 0);
+  const totalIncomeAmount = transactions.filter((t) => t.type === "income").reduce((s, t) => s + Number(t.amount), 0);
+  const savingsRate = totalIncomeAmount > 0 ? ((totalIncomeAmount - totalExpenseAmount) / totalIncomeAmount * 100).toFixed(1) : "0.0";
 
   return (
     <>
@@ -66,40 +120,40 @@ export default function Transaction() {
             <section className="space-y-sm">
               <h3 className="font-label-md text-label-md font-bold text-outline uppercase tracking-widest px-sm">Type</h3>
               <div className="space-y-base">
-                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group">
+                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group" onClick={() => setFilterType("all")}>
                   <div className="flex items-center gap-sm">
-                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" />
+                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" checked={filterType === "all"} readOnly />
                     <span className="font-body-sm text-body-sm">All Transactions</span>
                   </div>
-                  <span className="font-mono-data text-mono-data text-outline group-hover:text-primary">124</span>
+                  <span className="font-mono-data text-mono-data text-outline group-hover:text-primary">{countAll}</span>
                 </label>
-                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group">
+                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group" onClick={() => setFilterType("income")}>
                   <div className="flex items-center gap-sm">
-                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" />
+                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" checked={filterType === "income"} readOnly />
                     <span className="font-body-sm text-body-sm">Income</span>
                   </div>
-                  <span className="font-mono-data text-mono-data text-outline group-hover:text-secondary">42</span>
+                  <span className="font-mono-data text-mono-data text-outline group-hover:text-secondary">{countIncome}</span>
                 </label>
-                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group">
+                <label className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group" onClick={() => setFilterType("expense")}>
                   <div className="flex items-center gap-sm">
-                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" />
+                    <input className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20" name="type" type="radio" checked={filterType === "expense"} readOnly />
                     <span className="font-body-sm text-body-sm">Expense</span>
                   </div>
-                  <span className="font-mono-data text-mono-data text-outline group-hover:text-error">82</span>
+                  <span className="font-mono-data text-mono-data text-outline group-hover:text-error">{countExpense}</span>
                 </label>
               </div>
             </section>
             <section className="space-y-sm">
               <h3 className="font-label-md text-label-md font-bold text-outline uppercase tracking-widest px-sm">Timeframe</h3>
               <div className="space-y-base">
-                <button className="w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors text-primary font-medium">Last 30 Days</button>
-                <button className="w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors">Last 90 Days</button>
-                <button className="w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors">This Year</button>
+                <button className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "30" ? "text-primary font-medium" : ""}`} onClick={() => setTimeframe("30")}>Last 30 Days</button>
+                <button className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "90" ? "text-primary font-medium" : ""}`} onClick={() => setTimeframe("90")}>Last 90 Days</button>
+                <button className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "year" ? "text-primary font-medium" : ""}`} onClick={() => setTimeframe("year")}>This Year</button>
               </div>
             </section>
             <div className="p-lg rounded-xl bg-primary-container/10 border border-primary-container/20 space-y-sm">
               <p className="font-label-md text-label-md text-primary font-bold">Monthly Forecast</p>
-              <p className="font-body-sm text-body-sm text-on-surface-variant">Your spending is 12% lower than last month. Keep it up!</p>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">{countAll > 0 ? `${countAll} transactions recorded total` : "Add your first transaction to see insights"}</p>
               <div className="h-1 w-full bg-surface-container rounded-full overflow-hidden">
                 <div className="h-full bg-primary w-2/3" />
               </div>
@@ -110,22 +164,22 @@ export default function Transaction() {
               <div className="p-md flex items-center justify-between bg-surface-container-low border-b border-outline-variant">
                 <div className="flex items-center gap-md">
                   <div className="flex items-center gap-sm">
-                    <input className="rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox" />
-                    <span className="font-label-md text-label-md text-on-surface-variant">12 items selected</span>
+                    <input className="rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
+                    <span className="font-label-md text-label-md text-on-surface-variant">{selectedIds.length} item{selectedIds.length !== 1 ? "s" : ""} selected</span>
                   </div>
                   <div className="h-4 w-[1px] bg-outline-variant" />
-                  <button className="text-error font-label-md text-label-md font-bold hover:underline">Delete Selected</button>
+                  <button className="text-error font-label-md text-label-md font-bold hover:underline" onClick={() => { deleteTransactions(selectedIds); setSelectedIds([]); }} disabled={selectedIds.length === 0} style={selectedIds.length === 0 ? { opacity: 0.4, cursor: "not-allowed" } : {}}>Delete Selected</button>
                   <button className="text-primary font-label-md text-label-md font-bold hover:underline">Mark as Paid</button>
                 </div>
                 <div className="flex items-center gap-sm">
-                  <span className="font-label-md text-label-md text-outline">Showing 1-10 of 124</span>
+                  <span className="font-label-md text-label-md text-outline">Showing {Math.min(10, filtered.length)} of {filtered.length}</span>
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-outline-variant bg-surface-container-low">
-                      <th className="p-md w-12"><input className="rounded border-outline-variant" type="checkbox" /></th>
+                      <th className="p-md w-12"><input className="rounded border-outline-variant" type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} /></th>
                       <th className="p-md font-label-md text-label-md text-outline uppercase tracking-wider font-bold">Date</th>
                       <th className="p-md font-label-md text-label-md text-outline uppercase tracking-wider font-bold">Title</th>
                       <th className="p-md font-label-md text-label-md text-outline uppercase tracking-wider font-bold">Category</th>
@@ -135,42 +189,42 @@ export default function Transaction() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/50">
-                    {[
-                      { date: 'May 14, 2024', title: 'Apple Store Subscription', category: 'Technology', account: 'Chase Bank', amount: '-$14.99' },
-                      { date: 'May 12, 2024', title: 'Monthly Salary Deposit', category: 'Income', account: 'Wells Fargo', amount: '+$8,450.00', income: true },
-                      { date: 'May 10, 2024', title: 'Blue Bottle Coffee', category: 'Lifestyle', account: 'Cash', amount: '-$6.50' },
-                      { date: 'May 09, 2024', title: 'Whole Foods Market', category: 'Groceries', account: 'Chase Bank', amount: '-$142.18' },
-                      { date: 'May 08, 2024', title: 'Equinox Gym', category: 'Health', account: 'Chase Bank', amount: '-$260.00' },
-                      { date: 'May 05, 2024', title: 'Airbnb Booking #4521', category: 'Travel', account: 'Amex Gold', amount: '-$1,120.45' },
-                    ].map((row, i) => (
+                    {filtered.length === 0 ? (
+                      <tr>
+                        <td className="p-xl text-center text-on-surface-variant" colSpan={7}>No transactions found.</td>
+                      </tr>
+                    ) : (
+                      filtered.slice(0, 10).map((t, i) => (
                       <tr
-                        key={i}
+                        key={t.id}
                         className="hover:bg-surface-container/50 transition-colors"
                         onMouseEnter={() => setHoveredRow(i)}
                         onMouseLeave={() => setHoveredRow(null)}
                       >
-                        <td className="p-md"><input className="rounded border-outline-variant" type="checkbox" /></td>
-                        <td className="p-md font-mono-data text-mono-data text-on-surface-variant">{row.date}</td>
-                        <td className="p-md font-body-sm text-body-sm font-medium">{row.title}</td>
+                        <td className="p-md"><input className="rounded border-outline-variant" type="checkbox" checked={selectedIds.includes(t.id)} onChange={() => toggleSelect(t.id)} /></td>
+                        <td className="p-md font-mono-data text-mono-data text-on-surface-variant">{new Date(t.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
+                        <td className="p-md font-body-sm text-body-sm font-medium text-on-surface">{t.title}</td>
                         <td className="p-md">
-                          <span className={`px-sm py-1 rounded-full font-label-md text-[11px] font-bold uppercase tracking-wide ${row.income ? 'bg-secondary-container/20 text-secondary' : row.category === 'Lifestyle' ? 'bg-tertiary-fixed/30 text-tertiary' : row.category === 'Groceries' ? 'bg-outline-variant/20 text-outline' : row.category === 'Health' ? 'bg-error-container/20 text-error' : 'bg-primary-container/10 text-primary'}`}>
-                            {row.category}
+                          <span className={`px-sm py-1 rounded-full font-label-md text-[11px] font-bold uppercase tracking-wide ${t.type === "income" ? "bg-secondary-container/20 text-secondary" : "bg-primary-container/10 text-primary"}`}>
+                            {t.category}
                           </span>
                         </td>
                         <td className="p-md">
                           <div className="flex items-center gap-xs text-outline">
                             <span className="material-symbols-outlined text-sm">account_balance</span>
-                            <span className="font-body-sm text-body-sm">{row.account}</span>
+                            <span className="font-body-sm text-body-sm capitalize">{t.account}</span>
                           </div>
                         </td>
-                        <td className={`p-md font-mono-data text-mono-data font-medium text-right ${row.income ? 'text-secondary font-bold' : ''}`}>{row.amount}</td>
+                        <td className={`p-md font-mono-data text-mono-data font-medium text-right ${t.type === "income" ? "text-secondary font-bold" : ""}`}>
+                          {t.type === "income" ? "+" : "-"}${Number(t.amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </td>
                         <td className="p-md">
                           <button className={`material-symbols-outlined text-outline hover:text-on-surface transition-all duration-200 ${hoveredRow === i ? 'opacity-100' : 'opacity-30'}`}>
                             more_horiz
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    )))}
                   </tbody>
                 </table>
               </div>
@@ -201,8 +255,8 @@ export default function Transaction() {
                   <span className="font-label-md text-label-md font-bold uppercase tracking-wider">Top Category</span>
                 </div>
                 <div className="mt-auto">
-                  <p className="font-headline-md text-headline-md font-bold">Lifestyle</p>
-                  <p className="font-body-sm text-body-sm text-outline">$4,230 this month</p>
+                  <p className="font-headline-md text-headline-md font-bold text-on-surface capitalize">{topCategory[0]}</p>
+                  <p className="font-body-sm text-body-sm text-outline">${Number(topCategory[1]).toFixed(2)} total</p>
                 </div>
               </div>
               <div className="p-lg rounded-xl glass-panel flex flex-col gap-sm">
@@ -211,18 +265,18 @@ export default function Transaction() {
                   <span className="font-label-md text-label-md font-bold uppercase tracking-wider">Avg. Saving Rate</span>
                 </div>
                 <div className="mt-auto">
-                  <p className="font-headline-md text-headline-md font-bold">34.2%</p>
-                  <p className="font-body-sm text-body-sm text-outline">+2.1% from Q1</p>
+                  <p className="font-headline-md text-headline-md font-bold text-on-surface">{savingsRate}%</p>
+                  <p className="font-body-sm text-body-sm text-outline">{totalIncomeAmount > 0 ? `$${(totalIncomeAmount - totalExpenseAmount).toFixed(2)} saved` : "No data yet"}</p>
                 </div>
               </div>
               <div className="p-lg rounded-xl glass-panel flex flex-col gap-sm">
                 <div className="flex items-center gap-sm text-tertiary">
                   <span className="material-symbols-outlined text-md">warning</span>
-                  <span className="font-label-md text-label-md font-bold uppercase tracking-wider">High Frequency</span>
+                  <span className="font-label-md text-label-md font-bold uppercase tracking-wider">Total Expenses</span>
                 </div>
                 <div className="mt-auto">
-                  <p className="font-headline-md text-headline-md font-bold">Subscriptions</p>
-                  <p className="font-body-sm text-body-sm text-outline">14 active renewals</p>
+                  <p className="font-headline-md text-headline-md font-bold text-on-surface">${(totalExpenseAmount || 0).toFixed(2)}</p>
+                  <p className="font-body-sm text-body-sm text-outline">{countExpense} transactions</p>
                 </div>
               </div>
             </div>

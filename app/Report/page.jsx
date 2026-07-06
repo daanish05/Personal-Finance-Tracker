@@ -1,4 +1,44 @@
+'use client';
+import { useMemo } from 'react';
+import { useTransactions } from '../../contexts/TransactionContext';
+
 export default function Report() {
+  const { transactions } = useTransactions();
+
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  const categoryData = useMemo(() => {
+    const cats = {};
+    transactions.filter((t) => t.type === "expense").forEach((t) => {
+      cats[t.category] = (cats[t.category] || 0) + Number(t.amount);
+    });
+    const total = Object.values(cats).reduce((s, v) => s + v, 0);
+    return Object.entries(cats)
+      .map(([name, value]) => ({ name, value, pct: total > 0 ? ((value / total) * 100).toFixed(0) : "0" }))
+      .sort((a, b) => b.value - a.value);
+  }, [transactions]);
+
+  const monthlyData = useMemo(() => {
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(currentYear, currentMonth - i, 1);
+      const m = d.getMonth();
+      const y = d.getFullYear();
+      const income = transactions.filter((t) => t.type === "income" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+      const expenses = transactions.filter((t) => t.type === "expense" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+      months.push({ label: d.toLocaleDateString("en-US", { month: "short" }), income, expenses });
+    }
+    return months;
+  }, [transactions, currentMonth, currentYear]);
+
+  const maxMonthly = Math.max(...monthlyData.flatMap((m) => [m.income, m.expenses]), 1);
+
+  const totalExpense = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + Number(t.amount), 0);
+  const totalIncome = transactions.filter((t) => t.type === "income").reduce((s, t) => s + Number(t.amount), 0);
+  const netCashFlow = totalIncome - totalExpense;
+
+  const colors = ["#0050cb", "#006c49", "#cc4204", "#a33200", "#727687", "#b3c5ff"];
   return (
     <>
       <>
@@ -13,7 +53,7 @@ export default function Report() {
                 </span>
                 <input
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                  placeholder="Search goals or metrics..."
+                  placeholder="Search reports..."
                   type="text"
                 />
               </div>
@@ -86,54 +126,50 @@ export default function Report() {
                   </select>
                 </div>
                 <div className="h-64 relative w-full flex items-end justify-between px-md border-b border-outline-variant/30 group">
-                  {/* Simulated Line Chart with SVG */}
-                  <svg
-                    className="absolute inset-0 w-full h-full"
-                    preserveAspectRatio="none"
-                    viewBox="0 0 800 240"
-                  >
-                    <path
-                      d="M0,200 L80,180 L160,190 L240,150 L320,140 L400,100 L480,110 L560,70 L640,60 L720,30 L800,40"
-                      fill="none"
-                      stroke="#0050cb"
-                      strokeWidth={2}
-                      vectorEffect="non-scaling-stroke"
-                    />
-                    <path
-                      d="M0,200 L80,180 L160,190 L240,150 L320,140 L400,100 L480,110 L560,70 L640,60 L720,30 L800,40 V240 H0 Z"
-                      fill="url(#gradient-line)"
-                      opacity="0.1"
-                    />
+                  <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 240">
+                    {(() => {
+                      const pts = [];
+                      let cum = 0;
+                      for (let i = 0; i < 12; i++) {
+                        const d = new Date(currentYear, currentMonth - 11 + i, 1);
+                        const m = d.getMonth();
+                        const y = d.getFullYear();
+                        const inc = transactions.filter((t) => t.type === "income" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+                        const exp = transactions.filter((t) => t.type === "expense" && new Date(t.date).getMonth() === m && new Date(t.date).getFullYear() === y).reduce((s, t) => s + Number(t.amount), 0);
+                        cum += inc - exp;
+                        pts.push(cum);
+                      }
+                      const max = Math.max(...pts, 1);
+                      const min = Math.min(...pts, 0);
+                      const range = max - min || 1;
+                      const line = pts.map((p, i) => {
+                        const x = (i / 11) * 800;
+                        const y = 240 - ((p - min) / range) * 200;
+                        return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+                      }).join(" ");
+                      const fill = `${line} V240 H0 Z`;
+                      return (
+                        <>
+                          <path d={line} fill="none" stroke="#0050cb" strokeWidth={2} vectorEffect="non-scaling-stroke" />
+                          <path d={fill} fill="url(#gradient-line)" opacity="0.1" />
+                        </>
+                      );
+                    })()}
                     <defs>
-                      <linearGradient
-                        id="gradient-line"
-                        x1={0}
-                        x2={0}
-                        y1={0}
-                        y2={1}
-                      >
+                      <linearGradient id="gradient-line" x1={0} x2={0} y1={0} y2={1}>
                         <stop offset="0%" stopColor="#0050cb" />
                         <stop offset="100%" stopColor="transparent" />
                       </linearGradient>
                     </defs>
                   </svg>
-                  {/* Tooltip interaction */}
-                  <div className="absolute left-[70%] top-[20%] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <div className="absolute left-[50%] top-[10%] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <div className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl">
-                      <p className="text-label-md font-bold">$1,240,500.00</p>
-                      <p className="text-[10px] opacity-70 uppercase tracking-widest">
-                        October 2023
-                      </p>
+                      <p className="text-label-md font-bold">${monthlyData.reduce((s, m) => s + m.income - m.expenses, 0).toFixed(0)}</p>
+                      <p className="text-[10px] opacity-70 uppercase tracking-widest">Net Position</p>
                     </div>
                   </div>
-                  {/* X-Axis Labels */}
                   <div className="absolute bottom-[-24px] left-0 w-full flex justify-between font-mono-data text-[10px] text-outline px-md">
-                    <span>JAN</span>
-                    <span>MAR</span>
-                    <span>MAY</span>
-                    <span>JUL</span>
-                    <span>SEP</span>
-                    <span>NOV</span>
+                    {monthlyData.map((m) => <span key={m.label}>{m.label}</span>)}
                   </div>
                 </div>
               </div>
@@ -145,43 +181,19 @@ export default function Report() {
                 <div className="flex flex-col items-center justify-center space-y-md">
                   {/* Donut Chart */}
                   <div className="relative w-48 h-48 flex items-center justify-center">
-                    <svg
-                      className="w-full h-full -rotate-90"
-                      viewBox="0 0 36 36"
-                    >
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#e5eeff"
-                        strokeWidth={3}
-                      />
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#0050cb"
-                        strokeDasharray="45, 100"
-                        strokeWidth={3}
-                      />
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#006c49"
-                        strokeDasharray="25, 100"
-                        strokeDashoffset={-45}
-                        strokeWidth={3}
-                      />
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#cc4204"
-                        strokeDasharray="15, 100"
-                        strokeDashoffset={-70}
-                        strokeWidth={3}
-                      />
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5eeff" strokeWidth={3} />
+                      {categoryData.slice(0, 5).map((cat, i) => {
+                        let offset = 0;
+                        for (let j = 0; j < i; j++) offset += parseFloat(categoryData[j].pct);
+                        return (
+                          <path key={cat.name} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={colors[i % colors.length]} strokeDasharray={`${cat.pct}, 100`} strokeDashoffset={-offset} strokeWidth={3} />
+                        );
+                      })}
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="font-headline-md text-headline-md text-on-surface">
-                        $8,432
+                        ${totalExpense.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       </span>
                       <span className="font-label-md text-label-md text-outline uppercase tracking-wider">
                         Total
@@ -190,39 +202,18 @@ export default function Report() {
                   </div>
                   {/* Legend */}
                   <div className="w-full space-y-sm">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-sm">
-                        <span className="w-2 h-2 rounded-full bg-primary" />
-                        <span className="font-label-md text-label-md text-on-surface-variant">
-                          Housing
-                        </span>
+                    {categoryData.slice(0, 5).map((cat, i) => (
+                      <div key={cat.name} className="flex items-center justify-between">
+                        <div className="flex items-center gap-sm">
+                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
+                          <span className="font-label-md text-label-md text-on-surface-variant capitalize">{cat.name}</span>
+                        </div>
+                        <span className="font-mono-data text-label-md text-on-surface">{cat.pct}%</span>
                       </div>
-                      <span className="font-mono-data text-label-md text-on-surface">
-                        45%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-sm">
-                        <span className="w-2 h-2 rounded-full bg-secondary" />
-                        <span className="font-label-md text-label-md text-on-surface-variant">
-                          Investments
-                        </span>
-                      </div>
-                      <span className="font-mono-data text-label-md text-on-surface">
-                        25%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-sm">
-                        <span className="w-2 h-2 rounded-full bg-tertiary-container" />
-                        <span className="font-label-md text-label-md text-on-surface-variant">
-                          Lifestyle
-                        </span>
-                      </div>
-                      <span className="font-mono-data text-label-md text-on-surface">
-                        15%
-                      </span>
-                    </div>
+                    ))}
+                    {categoryData.length === 0 && (
+                      <p className="text-center text-on-surface-variant text-sm">No expenses yet</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -253,81 +244,23 @@ export default function Report() {
                   </div>
                 </div>
                 <div className="h-64 w-full flex items-end justify-between pt-xl px-md gap-4">
-                  {/* Bar chart items */}
-                  {/* Jan */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[70%] transition-all duration-300 group-hover:h-[75%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[40%] transition-all duration-300 group-hover:h-[45%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      JAN
-                    </span>
-                  </div>
-                  {/* Feb */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[80%] transition-all duration-300 group-hover:h-[85%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[50%] transition-all duration-300 group-hover:h-[55%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      FEB
-                    </span>
-                  </div>
-                  {/* Mar */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[65%] transition-all duration-300 group-hover:h-[70%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[60%] transition-all duration-300 group-hover:h-[65%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      MAR
-                    </span>
-                  </div>
-                  {/* Apr */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[90%] transition-all duration-300 group-hover:h-[95%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[30%] transition-all duration-300 group-hover:h-[35%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      APR
-                    </span>
-                  </div>
-                  {/* May */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[75%] transition-all duration-300 group-hover:h-[80%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[45%] transition-all duration-300 group-hover:h-[50%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      MAY
-                    </span>
-                  </div>
-                  {/* Jun */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[85%] transition-all duration-300 group-hover:h-[90%]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[55%] transition-all duration-300 group-hover:h-[60%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-outline">
-                      JUN
-                    </span>
-                  </div>
-                  {/* Jul (Active/Current) */}
-                  <div className="flex-1 flex flex-col items-center gap-sm group relative">
-                    <div className="w-full flex justify-center gap-1 items-end h-48">
-                      <div className="w-1/3 bg-primary rounded-t-sm h-[95%] shadow-[0_0_15px_rgba(0,102,255,0.2)]" />
-                      <div className="w-1/3 bg-surface-container-highest rounded-t-sm h-[20%]" />
-                    </div>
-                    <span className="font-label-md text-label-md text-primary font-bold">
-                      JUL
-                    </span>
-                    {/* Value Label on Hover */}
-                    <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all text-mono-data text-xs bg-on-surface text-surface px-2 py-1 rounded shadow-lg pointer-events-none">
-                      +$12.4k
-                    </div>
-                  </div>
+                  {monthlyData.map((m, i) => {
+                    const incomePct = maxMonthly > 0 ? (m.income / maxMonthly) * 95 : 0;
+                    const expensePct = maxMonthly > 0 ? (m.expenses / maxMonthly) * 95 : 0;
+                    const isCurrent = i === monthlyData.length - 1;
+                    return (
+                      <div key={m.label} className="flex-1 flex flex-col items-center gap-sm group relative">
+                        <div className="w-full flex justify-center gap-1 items-end h-48">
+                          <div className={`w-1/3 bg-primary rounded-t-sm transition-all duration-300 group-hover:opacity-80 ${isCurrent ? "shadow-[0_0_15px_rgba(0,102,255,0.2)]" : ""}`} style={{ height: `${Math.max(incomePct, 2)}%` }} />
+                          <div className="w-1/3 bg-surface-container-highest rounded-t-sm transition-all duration-300 group-hover:opacity-80" style={{ height: `${Math.max(expensePct, 2)}%` }} />
+                        </div>
+                        <span className={`font-label-md text-label-md ${isCurrent ? "text-primary font-bold" : "text-outline"}`}>{m.label}</span>
+                        <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all text-mono-data text-xs bg-on-surface text-surface px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap">
+                          +${(m.income - m.expenses).toFixed(0)}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -340,16 +273,16 @@ export default function Report() {
                   <p className="font-label-md text-label-md text-outline uppercase tracking-wider">
                     Net Cash Flow
                   </p>
-                  <p className="font-headline-md text-headline-md text-secondary">
-                    +$14,230.12
+                  <p className={`font-headline-md text-headline-md ${netCashFlow >= 0 ? "text-secondary" : "text-error"}`}>
+                    {netCashFlow >= 0 ? "+" : ""}${netCashFlow.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   </p>
                 </div>
                 <div className="space-y-base">
                   <p className="font-label-md text-label-md text-outline uppercase tracking-wider">
-                    Projected EOY
+                    Total Income
                   </p>
                   <p className="font-headline-md text-headline-md text-on-surface">
-                    $1,350,000.00
+                    ${totalIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   </p>
                 </div>
               </div>
