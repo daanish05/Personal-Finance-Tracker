@@ -77,7 +77,7 @@ export default function Sidebar() {
           </a>
           <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
+            href="/Report"
           >
             <span className="material-symbols-outlined text-[20px]">
               bar_chart
@@ -97,7 +97,7 @@ export default function Sidebar() {
         <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
           <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
+            href="/Settings"
           >
             <span className="material-symbols-outlined text-[20px]">
               settings

@@ -115,28 +115,36 @@ export default function Accounts() {
         <main className="ml-60 min-h-screen flex flex-col">
           {/* Top Nav Bar */}
           <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            <div className="flex items-center gap-lg flex-1">
+            <div className="flex items-center gap-md flex-1">
               <div className="relative w-full max-w-[480px]">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-body-md">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
                 </span>
                 <input
-                  className="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none text-body-sm transition-all"
-                  placeholder="Search accounts or data..."
+                  className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  placeholder="Search goals or metrics..."
                   type="text"
                 />
               </div>
             </div>
-            <div className="flex items-center gap-md">
-              <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-2">
-                notifications
-              </button>
+            <div className="flex items-center gap-lg">
               <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
                 <span className="material-symbols-outlined text-[18px]">
                   add
                 </span>
                 Quick Add
               </a>
+              <button className="relative text-on-surface-variant hover:text-primary transition-colors">
+                <span className="material-symbols-outlined">notifications</span>
+                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
+              </button>
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+                <img
+                  className="w-full h-full object-cover"
+                  data-alt="A professional studio headshot of a financial executive, clean high-key lighting, soft neutral background, wearing a charcoal suit. The style is polished, high-end corporate minimalism, reflecting trust and expertise in a premium wealth management environment."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsFYw9n19KwcxpYuXoPIsUrh0vZ8RVuJY0HxCjdxKMWlDhlem0WL2AO0n4r7FQrR5rp2hn3EovvYVud-zI0hDe45xRHZRa9-4PQdropy7dlKF15U99TwHTPuD0IQb6ubLZh3S1iX2fx_FslLKrdmHDN11YZitd32bPUS_uUm10I6ybwRBKyoC2nvMRb2hi3rzva-EJE8wqUKiB90-JAvkp7qDqN8z128GUTPSsHQ2k1SpBEJKezio"
+                />
+              </div>
             </div>
           </header>
           {/* Content Canvas */}
