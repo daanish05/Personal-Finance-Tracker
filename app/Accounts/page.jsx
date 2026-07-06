@@ -1,9 +1,9 @@
 'use client';
 import { useMemo } from 'react';
-import { useTransactions } from '../../contexts/TransactionContext';
+import { useTransactions, formatCurrency } from '../../contexts/TransactionContext';
 
 export default function Accounts() {
-  const { transactions, balance } = useTransactions();
+  const { transactions, balance, defaultCurrency } = useTransactions();
 
   const recentActivity = useMemo(() => {
     return transactions.slice(0, 5);
@@ -175,7 +175,7 @@ export default function Accounts() {
                   Total Portfolio Value
                 </p>
                 <h2 className="font-headline-xl text-headline-xl text-on-surface">
-                  ${totalPortfolio.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {formatCurrency(totalPortfolio, defaultCurrency)}
                 </h2>
                 <div className="flex items-center gap-md mt-md">
                   <span className="flex items-center gap-xs text-secondary font-bold font-label-md text-label-md bg-secondary-container/20 px-sm py-1 rounded-full">
@@ -463,7 +463,7 @@ export default function Accounts() {
                             </span>
                           </td>
                           <td className={`px-lg py-md font-mono-data text-mono-data text-right font-bold ${t.type === "income" ? "text-secondary" : "text-error"}`}>
-                            {t.type === "income" ? "+" : "-"}${Number(t.amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount, t.currency || defaultCurrency)}
                           </td>
                         </tr>
                       ))

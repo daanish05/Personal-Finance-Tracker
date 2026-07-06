@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import { useTheme } from '../ThemeProvider';
-import ThemeToggle from './ThemeToggle';
-
+import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "next-themes";
 export default function Sidebar() {
   const pathname = usePathname();
-  const { dark, toggleDark } = useTheme();
 
+  const { resolvedTheme, setTheme } = useTheme();
+
+  const dark = resolvedTheme === "dark";
+
+  const toggleDark = () => setTheme(dark ? "light" : "dark");
   const isActive = (path) => pathname === path;
 
   return (
@@ -28,31 +31,45 @@ export default function Sidebar() {
         </div>
         <nav className="flex-1 px-md space-y-base">
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/"
           >
             <span
               className="material-symbols-outlined text-[20px]"
-              style={{ fontVariationSettings: isActive('/') ? '"FILL" 1' : '0' }}
+              style={{
+                fontVariationSettings: isActive("/") ? '"FILL" 1' : "0",
+              }}
             >
               dashboard
             </span>
             <span className="font-label-md text-label-md">Dashboard</span>
           </a>
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Transaction') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Transaction") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Transaction"
           >
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Transaction') ? '"FILL" 1' : '0' }}>
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: isActive("/Transaction")
+                  ? '"FILL" 1'
+                  : "0",
+              }}
+            >
               receipt_long
             </span>
             <span className="font-label-md text-label-md">Transactions</span>
           </a>
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Accounts') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Accounts") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Accounts"
           >
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Accounts') ? '"FILL" 1' : '0' }}>
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: isActive("/Accounts") ? '"FILL" 1' : "0",
+              }}
+            >
               account_balance
             </span>
             <span className="font-label-md text-label-md">Accounts</span>
@@ -67,19 +84,29 @@ export default function Sidebar() {
             <span className="font-label-md text-label-md">Budgets</span>
           </a> */}
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Goals') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Goals") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Goals"
           >
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Goals') ? '"FILL" 1' : '0' }}>
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: isActive("/Goals") ? '"FILL" 1' : "0",
+              }}
+            >
               ads_click
             </span>
             <span className="font-label-md text-label-md">Goals</span>
           </a>
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Report') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Report") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Report"
           >
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Report') ? '"FILL" 1' : '0' }}>
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: isActive("/Report") ? '"FILL" 1' : "0",
+              }}
+            >
               bar_chart
             </span>
             <span className="font-label-md text-label-md">Reports</span>
@@ -96,10 +123,15 @@ export default function Sidebar() {
         </nav>
         <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
           <a
-            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive('/Settings') ? 'text-primary font-bold bg-surface-variant/30 sidebar-active' : 'text-on-surface-variant hover:bg-surface-variant/20'}`}
+            className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Settings") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Settings"
           >
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive('/Settings') ? '"FILL" 1' : '0' }}>
+            <span
+              className="material-symbols-outlined text-[20px]"
+              style={{
+                fontVariationSettings: isActive("/Settings") ? '"FILL" 1' : "0",
+              }}
+            >
               settings
             </span>
             <span className="font-label-md text-label-md">Settings</span>

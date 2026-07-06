@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import IncomeExpenseChart from '../components/Dashboard/IncomeExpenseChart';
-import { useTheme } from '../components/ThemeProvider';
-import { useTransactions } from '../contexts/TransactionContext';
+import { useTransactions, formatCurrency } from '../contexts/TransactionContext';
 import Header from '../components/Dashboard/Header';
+
+import { useTheme } from "next-themes";
 
 export default function Home() {
   const { dark } = useTheme();
-  const { totalIncome, totalExpenses, balance, transactions } = useTransactions();
+  const { totalIncome, totalExpenses, balance, transactions, defaultCurrency } = useTransactions();
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
   const monthlyIncome = transactions
@@ -18,8 +19,6 @@ export default function Home() {
     .filter((t) => t.type === "expense" && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear)
     .reduce((sum, t) => sum + Number(t.amount), 0);
   const savings = balance > 0 ? balance : 0;
-
-  const formatCurrency = (n) => n != null ? "$" + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "$0.00";
 
   const [budgets, setBudgets] = useState(() => {
     if (typeof window !== "undefined") {
@@ -83,7 +82,7 @@ export default function Home() {
                   </span>
                 </div>
                 <h2 className="text-headline-md font-bold font-mono-data">
-                  {formatCurrency(balance)}
+                  {formatCurrency(balance, defaultCurrency)}
                 </h2>
                 <div className="mt-md flex items-center gap-base text-secondary font-label-md">
                   <span className="material-symbols-outlined text-[16px]">
@@ -103,7 +102,7 @@ export default function Home() {
                   </span>
                 </div>
                 <h2 className="text-headline-md font-bold font-mono-data">
-                  {formatCurrency(monthlyIncome)}
+                  {formatCurrency(monthlyIncome, defaultCurrency)}
                 </h2>
                 <div className="mt-md flex items-center gap-base text-secondary font-label-md">
                   <span className="material-symbols-outlined text-[16px]">
@@ -123,7 +122,7 @@ export default function Home() {
                   </span>
                 </div>
                 <h2 className="text-headline-md font-bold font-mono-data">
-                  {formatCurrency(monthlyExpenses)}
+                  {formatCurrency(monthlyExpenses, defaultCurrency)}
                 </h2>
                 <div className="mt-md flex items-center gap-base text-tertiary font-label-md">
                   <span className="material-symbols-outlined text-[16px]">
@@ -143,7 +142,7 @@ export default function Home() {
                   </span>
                 </div>
                 <h2 className="text-headline-md font-bold font-mono-data">
-                  {formatCurrency(savings)}
+                  {formatCurrency(savings, defaultCurrency)}
                 </h2>
                 <div className="mt-md flex items-center gap-base text-secondary font-label-md">
                   <span className="material-symbols-outlined text-[16px]">
@@ -239,7 +238,7 @@ export default function Home() {
                                 >
                                   {pct}%
                                   <span className="text-[10px] text-outline ml-1">
-                                    ({formatCurrency(spent)} / {formatCurrency(budget)})
+                                    ({formatCurrency(spent, defaultCurrency)} / {formatCurrency(budget, defaultCurrency)})
                                   </span>
                                 </span>
                               )}
@@ -252,7 +251,7 @@ export default function Home() {
                             />
                           </div>
                           {isOver && (
-                            <p className="text-error text-[11px] font-label-md">Exceeded by {formatCurrency(spent - budget)}</p>
+                            <p className="text-error text-[11px] font-label-md">Exceeded by {formatCurrency(spent - budget, defaultCurrency)}</p>
                           )}
                         </div>
                       );
@@ -341,7 +340,7 @@ export default function Home() {
                           <td className="px-xl py-md text-body-sm text-on-surface-variant">{new Date(t.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
                           <td className="px-xl py-md text-body-sm text-on-surface-variant capitalize">{t.account}</td>
                           <td className={`px-xl py-md text-right font-mono-data ${t.type === "income" ? "text-secondary" : "text-tertiary"}`}>
-                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount, t.currency || defaultCurrency)}
                           </td>
                         </tr>
                       ))

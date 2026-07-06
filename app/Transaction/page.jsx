@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useTransactions } from '../../contexts/TransactionContext';
+import { useTransactions, formatCurrency } from '../../contexts/TransactionContext';
 
 export default function Transaction() {
-  const { transactions, deleteTransactions } = useTransactions();
+  const { transactions, deleteTransactions, defaultCurrency } = useTransactions();
   const [hoveredRow, setHoveredRow] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [filterType, setFilterType] = useState("all");
@@ -216,7 +216,7 @@ export default function Transaction() {
                           </div>
                         </td>
                         <td className={`p-md font-mono-data text-mono-data font-medium text-right ${t.type === "income" ? "text-secondary font-bold" : ""}`}>
-                          {t.type === "income" ? "+" : "-"}${Number(t.amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount, t.currency || defaultCurrency)}
                         </td>
                         <td className="p-md">
                           <button className={`material-symbols-outlined text-outline hover:text-on-surface transition-all duration-200 ${hoveredRow === i ? 'opacity-100' : 'opacity-30'}`}>
@@ -256,7 +256,7 @@ export default function Transaction() {
                 </div>
                 <div className="mt-auto">
                   <p className="font-headline-md text-headline-md font-bold text-on-surface capitalize">{topCategory[0]}</p>
-                  <p className="font-body-sm text-body-sm text-outline">${Number(topCategory[1]).toFixed(2)} total</p>
+                  <p className="font-body-sm text-body-sm text-outline">{formatCurrency(topCategory[1], defaultCurrency)} total</p>
                 </div>
               </div>
               <div className="p-lg rounded-xl glass-panel flex flex-col gap-sm">
@@ -266,7 +266,7 @@ export default function Transaction() {
                 </div>
                 <div className="mt-auto">
                   <p className="font-headline-md text-headline-md font-bold text-on-surface">{savingsRate}%</p>
-                  <p className="font-body-sm text-body-sm text-outline">{totalIncomeAmount > 0 ? `$${(totalIncomeAmount - totalExpenseAmount).toFixed(2)} saved` : "No data yet"}</p>
+                  <p className="font-body-sm text-body-sm text-outline">{totalIncomeAmount > 0 ? `${formatCurrency(totalIncomeAmount - totalExpenseAmount, defaultCurrency)} saved` : "No data yet"}</p>
                 </div>
               </div>
               <div className="p-lg rounded-xl glass-panel flex flex-col gap-sm">
@@ -275,7 +275,7 @@ export default function Transaction() {
                   <span className="font-label-md text-label-md font-bold uppercase tracking-wider">Total Expenses</span>
                 </div>
                 <div className="mt-auto">
-                  <p className="font-headline-md text-headline-md font-bold text-on-surface">${(totalExpenseAmount || 0).toFixed(2)}</p>
+                  <p className="font-headline-md text-headline-md font-bold text-on-surface">{formatCurrency(totalExpenseAmount || 0, defaultCurrency)}</p>
                   <p className="font-body-sm text-body-sm text-outline">{countExpense} transactions</p>
                 </div>
               </div>

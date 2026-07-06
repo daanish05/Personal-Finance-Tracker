@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTransactions } from "../../contexts/TransactionContext";
+import { useTransactions, CURRENCIES, PREDEFINED_TAGS } from "../../contexts/TransactionContext";
 
 export default function Quickadd() {
   const router = useRouter();
-  const { addTransaction } = useTransactions();
+  const { addTransaction, defaultCurrency, setDefaultCurrency } = useTransactions();
   const [type, setType] = useState("expense");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [title, setTitle] = useState("");
@@ -14,7 +14,20 @@ export default function Quickadd() {
   const [account, setAccount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [notes, setNotes] = useState("");
+  const [currency, setCurrency] = useState(defaultCurrency);
+  const [selectedTags, setSelectedTags] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const e = {};
+    if (!title.trim()) e.title = "Title is required";
+    if (!amount || parseFloat(amount) <= 0) e.amount = "Valid amount required";
+    if (!category) e.category = "Select a category";
+    if (!account) e.account = "Select an account";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
   return (
     <>
@@ -124,7 +137,7 @@ export default function Quickadd() {
                 </button>
                 <button
                   className="px-xl py-3 bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-all"
-                  onClick={() => { setSubmitted(false); setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); }}
+                  onClick={() => { setSubmitted(false); setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); setSelectedTags([]); setCurrency(defaultCurrency); setErrors({}); }}
                 >
                   Add Another
                 </button>
@@ -134,6 +147,8 @@ export default function Quickadd() {
           <div className="glass-panel border border-outline-variant rounded-xl p-lg shadow-sm">
             <form className="space-y-lg" id="transactionForm" onSubmit={(e) => {
               e.preventDefault();
+              if (!validate()) return;
+              setDefaultCurrency(currency);
               addTransaction({
                 type,
                 title,
@@ -143,6 +158,8 @@ export default function Quickadd() {
                 date,
                 paymentMethod,
                 notes,
+                currency,
+                tags: selectedTags,
               });
               setSubmitted(true);
             }}>
@@ -156,18 +173,18 @@ export default function Quickadd() {
                     {type === "expense" ? "Transaction Title" : "Income Source"}
                   </label>
                   <input
-                    className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input"
+                    className={`w-full px-md py-3 bg-surface-container-lowest border rounded-lg font-body-md text-on-surface focused-input ${errors.title ? 'border-error' : 'border-outline-variant'}`}
                     id="title"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => { setTitle(e.target.value); setErrors((prev) => ({ ...prev, title: '' })); }}
                     placeholder={
                       type === "expense"
                         ? "e.g., Monthly SaaS Subscription"
                         : "e.g., Freelance Project Payment"
                     }
-                    required=""
                     type="text"
                   />
+                  {errors.title && <p className="text-error text-[11px] font-label-md mt-1">{errors.title}</p>}
                 </div>
                 <div>
                   <label
@@ -181,15 +198,15 @@ export default function Quickadd() {
                       $
                     </span>
                     <input
-                      className="w-full pl-8 pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-mono-data text-on-surface focused-input"
+                      className={`w-full pl-8 pr-md py-3 bg-surface-container-lowest border rounded-lg font-mono-data text-on-surface focused-input ${errors.amount ? 'border-error' : 'border-outline-variant'}`}
                       id="amount"
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      onChange={(e) => { setAmount(e.target.value); setErrors((prev) => ({ ...prev, amount: '' })); }}
                       placeholder="0.00"
-                      required=""
                       step="0.01"
                       type="number"
                     />
+                    {errors.amount && <p className="text-error text-[11px] font-label-md mt-1">{errors.amount}</p>}
                   </div>
                 </div>
               </div>
@@ -223,9 +240,9 @@ export default function Quickadd() {
                   </label>
                   <div className="relative">
                     <select
-                      className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none"
+                      className={`w-full px-md py-3 bg-surface-container-lowest border rounded-lg font-body-md text-on-surface focused-input appearance-none ${errors.category ? 'border-error' : 'border-outline-variant'}`}
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
+                      onChange={(e) => { setCategory(e.target.value); setErrors((prev) => ({ ...prev, category: '' })); }}
                       key={type}
                     >
                       <option disabled="" value="">
@@ -258,13 +275,14 @@ export default function Quickadd() {
                       expand_more
                     </span>
                   </div>
+                  {errors.category && <p className="text-error text-[11px] font-label-md mt-1">{errors.category}</p>}
                 </div>
                 <div>
                   <label className="block font-label-md text-label-md text-outline mb-sm">
                     Account
                   </label>
                   <div className="relative">
-                    <select className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none" value={account} onChange={(e) => setAccount(e.target.value)}>
+                    <select className={`w-full px-md py-3 bg-surface-container-lowest border rounded-lg font-body-md text-on-surface focused-input appearance-none ${errors.account ? 'border-error' : 'border-outline-variant'}`} value={account} onChange={(e) => { setAccount(e.target.value); setErrors((prev) => ({ ...prev, account: '' })); }}>
                       <option disabled="" value="">
                         Select account...
                       </option>
@@ -279,6 +297,7 @@ export default function Quickadd() {
                       expand_more
                     </span>
                   </div>
+                  {errors.account && <p className="text-error text-[11px] font-label-md mt-1">{errors.account}</p>}
                 </div>
               </div>
               {/* Date & Payment Method */}
@@ -344,17 +363,47 @@ export default function Quickadd() {
                   Tags
                 </label>
                 <div className="flex flex-wrap gap-sm">
-                  <span className="px-3 py-1 bg-secondary-container/20 text-secondary border border-secondary/20 rounded-full text-label-md flex items-center gap-xs cursor-pointer hover:bg-secondary-container/40">
-                    #Business
-                    <span className="material-symbols-outlined text-[14px]">
-                      close
-                    </span>
-                  </span>
-                  <span className="px-3 py-1 bg-surface-container border border-outline-variant rounded-full text-label-md text-outline-variant cursor-pointer hover:border-primary hover:text-primary flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-[14px]">
-                      add
-                    </span>
-                    Add Tag
+                  {PREDEFINED_TAGS.map((tag) => {
+                    const active = selectedTags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => setSelectedTags((prev) =>
+                          prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+                        )}
+                        className={`px-3 py-1 rounded-full text-label-md flex items-center gap-xs cursor-pointer transition-all ${
+                          active
+                            ? "bg-secondary-container/20 text-secondary border border-secondary/20"
+                            : "bg-surface-container border border-outline-variant text-outline-variant hover:border-primary hover:text-primary"
+                        }`}
+                      >
+                        #{tag}
+                        {active && (
+                          <span className="material-symbols-outlined text-[14px]">close</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              {/* Currency */}
+              <div>
+                <label className="block font-label-md text-label-md text-outline mb-sm">
+                  Currency
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full px-md py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-on-surface focused-input appearance-none"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                  >
+                    {CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>{c.label}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-outline pointer-events-none">
+                    expand_more
                   </span>
                 </div>
               </div>
@@ -410,7 +459,7 @@ export default function Quickadd() {
                 <button
                   className="w-full md:w-auto px-xl py-3 bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-all"
                   type="button"
-                  onClick={() => { setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); setDate(new Date().toISOString().split("T")[0]); }}
+                  onClick={() => { setTitle(""); setAmount(""); setCategory(""); setAccount(""); setNotes(""); setSelectedTags([]); setCurrency(defaultCurrency); setDate(new Date().toISOString().split("T")[0]); setErrors({}); }}
                 >
                   Clear All
                 </button>

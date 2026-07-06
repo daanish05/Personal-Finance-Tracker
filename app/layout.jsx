@@ -1,9 +1,61 @@
+// import Sidebar from "../components/Dashboard/Sidebar";
+// import ThemeProvider from "../components/ThemeProvider";
+// import TransactionProvider from "../contexts/TransactionContext";
+// import Script from "next/script";
+// import { GeistSans } from "geist/font";
+// import "./globals.css";
 
-import Sidebar from '../components/Dashboard/Sidebar';
-import ThemeProvider from '../components/ThemeProvider';
-import TransactionProvider from '../contexts/TransactionContext';
+// export default function RootLayout({ children }) {
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <head>
+//         <link
+//           rel="stylesheet"
+//           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+//         />
+
+//         <Script
+//           id="theme-init"
+//           strategy="beforeInteractive"
+//           dangerouslySetInnerHTML={{
+//             __html: `
+//               (function () {
+//                 try {
+//                   const theme = localStorage.getItem("theme");
+
+//                   if (
+//                     theme === "dark" ||
+//                     (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+//                   ) {
+//                     document.documentElement.classList.add("dark");
+//                   } else {
+//                     document.documentElement.classList.remove("dark");
+//                   }
+//                 } catch (e) {}
+//               })();
+//             `,
+//           }}
+//         />
+//       </head>
+
+//       <body className={GeistSans.className}>
+//         <ThemeProvider>
+//           <TransactionProvider>
+//             <Sidebar />
+//             {children}
+//           </TransactionProvider>
+//         </ThemeProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+
+import Sidebar from "../components/Dashboard/Sidebar";
+import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
 import "./globals.css";
+import Providers from "../components/ThemeProvider";
 
 export default function RootLayout({ children }) {
   return (
@@ -13,20 +65,15 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         />
-        <style id="theme-vars" dangerouslySetInnerHTML={{
-          __html: `html{background:#f8f9ff}html.dark{background:#1e1e2e}`,
-        }} />
-        <script dangerouslySetInnerHTML={{
-          __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})()`,
-        }} />
       </head>
-      <body className={`${GeistSans.className} bg-surface text-on-surface`}>
-        <ThemeProvider>
+
+      <body className={GeistSans.className}>
+        <Providers>
           <TransactionProvider>
             <Sidebar />
             {children}
           </TransactionProvider>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

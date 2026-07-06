@@ -1,6 +1,33 @@
 "use client";
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
+export const CURRENCIES = [
+  { code: "USD", symbol: "$", label: "US Dollar ($)" },
+  { code: "EUR", symbol: "€", label: "Euro (€)" },
+  { code: "GBP", symbol: "£", label: "British Pound (£)" },
+  { code: "JPY", symbol: "¥", label: "Japanese Yen (¥)" },
+  { code: "INR", symbol: "₹", label: "Indian Rupee (₹)" },
+  { code: "CAD", symbol: "C$", label: "Canadian Dollar (C$)" },
+  { code: "AUD", symbol: "A$", label: "Australian Dollar (A$)" },
+  { code: "BRL", symbol: "R$", label: "Brazilian Real (R$)" },
+  { code: "CHF", symbol: "Fr", label: "Swiss Franc (Fr)" },
+  { code: "SGD", symbol: "S$", label: "Singapore Dollar (S$)" },
+];
+
+export const PREDEFINED_TAGS = [
+  "Business", "Personal", "Travel", "Food", "Health",
+  "Shopping", "Bills", "Entertainment", "Education", "Other",
+];
+
+const currencySymbols = {};
+CURRENCIES.forEach((c) => { currencySymbols[c.code] = c.symbol; });
+
+export function formatCurrency(amount, currency = "USD") {
+  if (amount == null) return "$0.00";
+  const sym = currencySymbols[currency] || "$";
+  return sym + Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 const TransactionContext = createContext({
   transactions: [],
   addTransaction: () => {},
@@ -9,6 +36,8 @@ const TransactionContext = createContext({
   totalExpenses: 0,
   balance: 0,
   recentTransactions: [],
+  defaultCurrency: "USD",
+  setDefaultCurrency: () => {},
 });
 
 export function useTransactions() {
@@ -17,17 +46,26 @@ export function useTransactions() {
 
 export default function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
+  const [defaultCurrency, setDefaultCurrency] = useState("USD");
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("transactions");
       if (saved) setTransactions(JSON.parse(saved));
     } catch (e) {}
+    try {
+      const saved = localStorage.getItem("defaultCurrency");
+      if (saved) setDefaultCurrency(saved);
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
+
+  useEffect(() => {
+    localStorage.setItem("defaultCurrency", defaultCurrency);
+  }, [defaultCurrency]);
 
   const addTransaction = useCallback((t) => {
     setTransactions((prev) => [
@@ -54,7 +92,7 @@ export default function TransactionProvider({ children }) {
 
   return (
     <TransactionContext.Provider
-      value={{ transactions, addTransaction, deleteTransactions, totalIncome, totalExpenses, balance, recentTransactions }}
+      value={{ transactions, addTransaction, deleteTransactions, totalIncome, totalExpenses, balance, recentTransactions, defaultCurrency, setDefaultCurrency }}
     >
       {children}
     </TransactionContext.Provider>

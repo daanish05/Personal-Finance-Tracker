@@ -287,3 +287,140 @@ body {
         border-radius: 10px;
       }
 
+  .max-w-md {
+  max-width: 60%;
+}
+
+
+
+/* =========================
+   LIGHT THEME
+========================= */
+
+:root {
+  --background: #f8f9ff;
+  --surface: #ffffff;
+  --surface-container: #f3f5fb;
+  --surface-container-low: #f8f9ff;
+  --surface-container-lowest: #ffffff;
+
+  --text: #1a1c1e;
+  --text-secondary: #5f6368;
+
+  --primary: #0050cb;
+  --secondary: #2e7d32;
+  --tertiary: #cc4204;
+  --error: #ba1a1a;
+
+  --outline: #c5c7cf;
+  --outline-variant: #dfe2eb;
+}
+
+/* =========================
+   DARK THEME
+========================= */
+
+.dark {
+  --background: #0b1c30;
+  --surface: #11233b;
+  --surface-container: #162b47;
+  --surface-container-low: #1a304f;
+  --surface-container-lowest: #203757;
+
+  --text: #f4f4f5;
+  --text-secondary: #b6bcc8;
+
+  --primary: #72a7ff;
+  --secondary: #6cf8bb;
+  --tertiary: #ff9d6e;
+  --error: #ff8a80;
+
+  --outline: #45556e;
+  --outline-variant: #31445d;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  transition:
+    background-color .25s ease,
+    color .25s ease;
+}
+
+/* =========================
+   OPTIONAL HELPERS
+========================= */
+
+.bg-surface {
+  background: var(--surface);
+}
+
+.bg-surface-container {
+  background: var(--surface-container);
+}
+
+.bg-surface-container-low {
+  background: var(--surface-container-low);
+}
+
+.bg-surface-container-lowest {
+  background: var(--surface-container-lowest);
+}
+
+.text-on-surface {
+  color: var(--text);
+}
+
+.text-on-surface-variant {
+  color: var(--text-secondary);
+}
+
+.border-outline {
+  border-color: var(--outline);
+}
+
+.border-outline-variant {
+  border-color: var(--outline-variant);
+}
+
+.bg-primary {
+  background: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-secondary {
+  background: var(--secondary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.bg-tertiary {
+  background: var(--tertiary);
+}
+
+.text-tertiary {
+  color: var(--tertiary);
+}
+
+.bg-error {
+  background: var(--error);
+}
+
+.text-error {
+  color: var(--error);
+}

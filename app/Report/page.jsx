@@ -1,9 +1,9 @@
 'use client';
 import { useMemo } from 'react';
-import { useTransactions } from '../../contexts/TransactionContext';
+import { useTransactions, formatCurrency } from '../../contexts/TransactionContext';
 
 export default function Report() {
-  const { transactions } = useTransactions();
+  const { transactions, defaultCurrency } = useTransactions();
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
@@ -164,7 +164,7 @@ export default function Report() {
                   </svg>
                   <div className="absolute left-[50%] top-[10%] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <div className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl">
-                      <p className="text-label-md font-bold">${monthlyData.reduce((s, m) => s + m.income - m.expenses, 0).toFixed(0)}</p>
+                      <p className="text-label-md font-bold">{formatCurrency(monthlyData.reduce((s, m) => s + m.income - m.expenses, 0), defaultCurrency)}</p>
                       <p className="text-[10px] opacity-70 uppercase tracking-widest">Net Position</p>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function Report() {
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="font-headline-md text-headline-md text-on-surface">
-                        ${totalExpense.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        {formatCurrency(totalExpense, defaultCurrency)}
                       </span>
                       <span className="font-label-md text-label-md text-outline uppercase tracking-wider">
                         Total
@@ -256,7 +256,7 @@ export default function Report() {
                         </div>
                         <span className={`font-label-md text-label-md ${isCurrent ? "text-primary font-bold" : "text-outline"}`}>{m.label}</span>
                         <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all text-mono-data text-xs bg-on-surface text-surface px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap">
-                          +${(m.income - m.expenses).toFixed(0)}
+                          {formatCurrency(m.income - m.expenses, defaultCurrency)}
                         </div>
                       </div>
                     );
@@ -274,7 +274,7 @@ export default function Report() {
                     Net Cash Flow
                   </p>
                   <p className={`font-headline-md text-headline-md ${netCashFlow >= 0 ? "text-secondary" : "text-error"}`}>
-                    {netCashFlow >= 0 ? "+" : ""}${netCashFlow.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    {netCashFlow >= 0 ? "+" : ""}{formatCurrency(netCashFlow, defaultCurrency)}
                   </p>
                 </div>
                 <div className="space-y-base">
@@ -282,7 +282,7 @@ export default function Report() {
                     Total Income
                   </p>
                   <p className="font-headline-md text-headline-md text-on-surface">
-                    ${totalIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    {formatCurrency(totalIncome, defaultCurrency)}
                   </p>
                 </div>
               </div>
