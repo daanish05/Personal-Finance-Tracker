@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
       <body className={GeistSans.className}>
         <Providers>
           <TransactionProvider>
-            <Sidebar />
+            <Sidebar/>
             {children}
           </TransactionProvider>
         </Providers>

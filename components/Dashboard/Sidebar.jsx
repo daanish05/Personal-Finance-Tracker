@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "next-themes";
@@ -30,7 +31,7 @@ export default function Sidebar() {
           </h1>
         </div>
         <nav className="flex-1 px-md space-y-base">
-          <a
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/"
           >
@@ -43,8 +44,8 @@ export default function Sidebar() {
               dashboard
             </span>
             <span className="font-label-md text-label-md">Dashboard</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Transaction") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Transaction"
           >
@@ -59,8 +60,8 @@ export default function Sidebar() {
               receipt_long
             </span>
             <span className="font-label-md text-label-md">Transactions</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Accounts") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Accounts"
           >
@@ -73,7 +74,7 @@ export default function Sidebar() {
               account_balance
             </span>
             <span className="font-label-md text-label-md">Accounts</span>
-          </a>
+          </Link>
           {/* <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
             href="#"
@@ -83,7 +84,7 @@ export default function Sidebar() {
             </span>
             <span className="font-label-md text-label-md">Budgets</span>
           </a> */}
-          <a
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Goals") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Goals"
           >
@@ -96,8 +97,8 @@ export default function Sidebar() {
               ads_click
             </span>
             <span className="font-label-md text-label-md">Goals</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Report") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Report"
           >
@@ -110,7 +111,7 @@ export default function Sidebar() {
               bar_chart
             </span>
             <span className="font-label-md text-label-md">Reports</span>
-          </a>
+          </Link>
           {/* <a
             className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
             href="#"
@@ -122,7 +123,7 @@ export default function Sidebar() {
           </a> */}
         </nav>
         <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
-          <a
+          <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Settings") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Settings"
           >
@@ -135,7 +136,7 @@ export default function Sidebar() {
               settings
             </span>
             <span className="font-label-md text-label-md">Settings</span>
-          </a>
+          </Link>
           <div className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant">
             <div className="flex items-center gap-md flex-1">
               <span className="material-symbols-outlined text-[20px]">

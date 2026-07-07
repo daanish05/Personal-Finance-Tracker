@@ -8,7 +8,8 @@ import Header from '../components/Dashboard/Header';
 import { useTheme } from "next-themes";
 
 export default function Home() {
-  const { dark } = useTheme();
+  const { resolvedTheme } = useTheme();
+  const dark = resolvedTheme === "dark";
   const { totalIncome, totalExpenses, balance, transactions, defaultCurrency } = useTransactions();
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
