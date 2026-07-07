@@ -3,15 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
-import { useTheme } from "next-themes";
+import { useTheme } from "../ThemeProvider";
 export default function Sidebar() {
   const pathname = usePathname();
 
-  const { resolvedTheme, setTheme } = useTheme();
-
-  const dark = resolvedTheme === "dark";
-
-  const toggleDark = () => setTheme(dark ? "light" : "dark");
+  const { dark, toggleDark } = useTheme();
   const isActive = (path) => pathname === path;
 
   return (

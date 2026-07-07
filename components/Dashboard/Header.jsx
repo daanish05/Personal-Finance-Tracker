@@ -1,8 +1,10 @@
 export default function Header() {
   return (
     <>
-      <header className="h-16 flex items-center justify-between px-xl sticky top-0 z-40 bg-surface/80 backdrop-blur-md">
-        <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 w-96 gap-sm">
+      {/* <header className="h-16 flex items-center justify-between px-xl sticky top-0 z-40 bg-surface/80 backdrop-blur-md"> */}
+      <header
+        className=" sticky top-0 z-40 h-16 flex items-center justify-between px-8 bg-white/75 backdrop-blur-xl border-b border-slate-200/80 shadow-sm" >
+        {/* <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 w-96 gap-sm">
           <span className="material-symbols-outlined text-outline text-[20px] leading-none">
             search
           </span>
@@ -11,6 +13,18 @@ export default function Header() {
             placeholder="Search transactions, accounts..."
             type="text"
           />
+        </div> */}
+        <div className="flex items-center gap-md flex-1">
+          <div className="relative w-full max-w-[480px]">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+              search
+            </span>
+            <input
+              className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+              placeholder="Search, accounts, transactions..."
+              type="text"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-lg">
           <button className="relative text-on-surface-variant hover:text-primary transition-colors">
@@ -21,7 +35,10 @@ export default function Header() {
           </button>
           <div className="h-8 w-[1px] bg-outline-variant/50" />
 
-          <a href="/Quickadd" className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">
+          <a
+            href="/Quickadd"
+            className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+          >
             <span className="material-symbols-outlined text-[18px]">add</span>
             Quick Add
           </a>

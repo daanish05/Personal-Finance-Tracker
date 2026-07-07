@@ -1,6 +1,9 @@
-'use client';
-import { useMemo } from 'react';
-import { useTransactions, formatCurrency } from '../../contexts/TransactionContext';
+"use client";
+import { useMemo } from "react";
+import {
+  useTransactions,
+  formatCurrency,
+} from "../../contexts/TransactionContext";
 
 export default function Accounts() {
   const { transactions, balance, defaultCurrency } = useTransactions();
@@ -147,6 +150,42 @@ export default function Accounts() {
               </div>
             </div>
             <div className="flex items-center gap-lg">
+              <button className="relative text-on-surface-variant hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-[24px]">
+                  notifications
+                </span>
+                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
+              </button>
+              <div className="h-8 w-[1px] bg-outline-variant/50" />
+
+              <a
+                href="/Quickadd"
+                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
+                Quick Add
+              </a>
+              <div className="flex items-center gap-sm cursor-pointer group">
+                <div className="text-right">
+                  <p className="font-label-md text-on-surface font-bold">
+                    Alex Sterling
+                  </p>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                    Premium Member
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-surface-variant overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover"
+                    data-alt="A professional headshot of a person with a friendly expression, set against a soft-focus corporate office background. The lighting is bright and clean, reflecting a high-end, stable financial professional identity. The overall aesthetic is minimalist and modern."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDobLtNGEJ9IlwFaTG64cOqzLMgyQePG3ljFEKoYSOmT1LecjsBWpoWXkhYWfS3eF0MORWzGqohppjalpUGIxaboO5CdZoT6WQGEYhqBo0-iAlgyBvo3AagJVqaJ_VCuzZTXu-RFDVpxm47wFZJsSORT3ajmchqpydg2gQ63j5WDI63IUlDH-VT-7JuqqJaHES_hEFARM9ecXDl63vx7JxIoGVRUOri4B2s_kPN426fU5YbsvNo2uk6"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* <div className="flex items-center gap-lg">
               <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
                 <span className="material-symbols-outlined text-[18px]">
                   add
@@ -164,7 +203,7 @@ export default function Accounts() {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsFYw9n19KwcxpYuXoPIsUrh0vZ8RVuJY0HxCjdxKMWlDhlem0WL2AO0n4r7FQrR5rp2hn3EovvYVud-zI0hDe45xRHZRa9-4PQdropy7dlKF15U99TwHTPuD0IQb6ubLZh3S1iX2fx_FslLKrdmHDN11YZitd32bPUS_uUm10I6ybwRBKyoC2nvMRb2hi3rzva-EJE8wqUKiB90-JAvkp7qDqN8z128GUTPSsHQ2k1SpBEJKezio"
                 />
               </div>
-            </div>
+            </div> */}
           </header>
           {/* Content Canvas */}
           <div className="p-xl max-w-container-max w-full mx-auto space-y-xl">
@@ -441,29 +480,51 @@ export default function Accounts() {
                   <tbody className="divide-y divide-outline-variant/30">
                     {recentActivity.length === 0 ? (
                       <tr>
-                        <td className="px-lg py-xl text-center text-on-surface-variant" colSpan={4}>No activity yet.</td>
+                        <td
+                          className="px-lg py-xl text-center text-on-surface-variant"
+                          colSpan={4}
+                        >
+                          No activity yet.
+                        </td>
                       </tr>
                     ) : (
                       recentActivity.map((t) => (
-                        <tr key={t.id} className="hover:bg-surface-container-low transition-colors group">
+                        <tr
+                          key={t.id}
+                          className="hover:bg-surface-container-low transition-colors group"
+                        >
                           <td className="px-lg py-md">
                             <div className="flex items-center gap-md">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${t.type === "income" ? "bg-secondary/10" : "bg-surface-variant"}`}>
+                              <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${t.type === "income" ? "bg-secondary/10" : "bg-surface-variant"}`}
+                              >
                                 <span className="material-symbols-outlined text-[18px] text-primary">
                                   {t.type === "income" ? "work" : "receipt"}
                                 </span>
                               </div>
-                              <span className="font-body-sm text-body-sm font-medium text-on-surface">{t.title}</span>
+                              <span className="font-body-sm text-body-sm font-medium text-on-surface">
+                                {t.title}
+                              </span>
                             </div>
                           </td>
-                          <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant capitalize">{t.account || "N/A"}</td>
+                          <td className="px-lg py-md font-body-sm text-body-sm text-on-surface-variant capitalize">
+                            {t.account || "N/A"}
+                          </td>
                           <td className="px-lg py-md">
-                            <span className={`${t.type === "income" ? "bg-secondary/10 text-secondary" : "bg-surface-variant text-on-surface-variant"} text-[11px] px-2 py-0.5 rounded-full font-medium capitalize`}>
+                            <span
+                              className={`${t.type === "income" ? "bg-secondary/10 text-secondary" : "bg-surface-variant text-on-surface-variant"} text-[11px] px-2 py-0.5 rounded-full font-medium capitalize`}
+                            >
                               {t.category}
                             </span>
                           </td>
-                          <td className={`px-lg py-md font-mono-data text-mono-data text-right font-bold ${t.type === "income" ? "text-secondary" : "text-error"}`}>
-                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount, t.currency || defaultCurrency)}
+                          <td
+                            className={`px-lg py-md font-mono-data text-mono-data text-right font-bold ${t.type === "income" ? "text-secondary" : "text-error"}`}
+                          >
+                            {t.type === "income" ? "+" : "-"}
+                            {formatCurrency(
+                              t.amount,
+                              t.currency || defaultCurrency,
+                            )}
                           </td>
                         </tr>
                       ))

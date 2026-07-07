@@ -42,15 +42,39 @@
 
 'use client';
 
-import { ThemeProvider } from "next-themes";
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+
+const ThemeContext = createContext({
+  dark: false,
+  toggleDark: () => {},
+});
+
+export function useTheme() {
+  return useContext(ThemeContext);
+}
 
 export default function Providers({ children }) {
+  const [dark, setDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const toggleDark = useCallback(() => {
+    const next = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+    setDark(next);
+  }, []);
+
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem={false}>
+    <ThemeContext.Provider value={{ dark, toggleDark }}>
       {children}
-    </ThemeProvider>
+    </ThemeContext.Provider>
   );
 }

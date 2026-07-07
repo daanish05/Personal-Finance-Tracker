@@ -120,10 +120,10 @@ export default function Settings() {
         <main className="ml-60 min-h-screen">
           {/* Top Navbar */}
           <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            <div className="flex items-center gap-md">
-              {/* <h2 className="font-headline-md text-headline-md font-black text-primary">
+            {/* <div className="flex items-center gap-md">
+              <h2 className="font-headline-md text-headline-md font-black text-primary">
                 Settings
-              </h2> */}
+              </h2>
               <div className="h-6 w-[1px] bg-outline-variant mx-sm" />
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">
@@ -135,15 +135,33 @@ export default function Settings() {
                   type="text"
                 />
               </div>
+            </div> */}
+            <div className="flex items-center gap-md flex-1">
+              <div className="relative w-full max-w-[480px]">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+                  search
+                </span>
+                <input
+                  className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  placeholder="Search settings..."
+                  type="text"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-lg">
               <button className="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">notifications</span>
                 <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
               </button>
-              <button className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+              <a
+                href="/Quickadd"
+                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
                 Quick Add
-              </button>
+              </a>
             </div>
           </header>
           <div className="max-w-container-max mx-auto p-xl flex gap-xl">
