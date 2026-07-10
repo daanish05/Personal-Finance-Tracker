@@ -54,12 +54,7 @@ export function useTheme() {
 }
 
 export default function Providers({ children }) {
-  const [dark, setDark] = useState(() => {
-    if (typeof document !== 'undefined') {
-      return document.documentElement.classList.contains('dark');
-    }
-    return false;
-  });
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains('dark'));

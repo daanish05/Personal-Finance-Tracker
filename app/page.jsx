@@ -14,8 +14,28 @@ export default function Home() {
   const { dark } = useTheme();
   const { totalIncome, totalExpenses, balance, transactions, defaultCurrency } =
     useTransactions();
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+
+  const [mounted, setMounted] = useState(false);
+  const [budgets, setBudgets] = useState({
+    food: 1200, shopping: 800, transport: 500, bills: 0, health: 0,
+  });
+  const [editingBudget, setEditingBudget] = useState(null);
+  const [editValue, setEditValue] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const saved = localStorage.getItem("budgets");
+      if (saved) setBudgets(JSON.parse(saved));
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("budgets", JSON.stringify(budgets));
+  }, [budgets]);
+
+  const currentMonth = mounted ? new Date().getMonth() : -1;
+  const currentYear = mounted ? new Date().getFullYear() : -1;
   const monthlyIncome = transactions
     .filter(
       (t) =>
@@ -33,23 +53,6 @@ export default function Home() {
     )
     .reduce((sum, t) => sum + Number(t.amount), 0);
   const savings = balance > 0 ? balance : 0;
-
-  const [budgets, setBudgets] = useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("budgets");
-        if (saved) return JSON.parse(saved);
-      } catch (e) {}
-    }
-    return { food: 1200, shopping: 800, transport: 500, bills: 0, health: 0 };
-  });
-
-  const [editingBudget, setEditingBudget] = useState(null);
-  const [editValue, setEditValue] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("budgets", JSON.stringify(budgets));
-  }, [budgets]);
 
   const categoryLabels = {
     food: "Food & Dining",

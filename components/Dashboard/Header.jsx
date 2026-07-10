@@ -3,7 +3,8 @@ export default function Header() {
     <>
       {/* <header className="h-16 flex items-center justify-between px-xl sticky top-0 z-40 bg-surface/80 backdrop-blur-md"> */}
       <header
-        className=" sticky top-0 z-40 h-16 flex items-center justify-between px-8 bg-white/75 backdrop-blur-xl border-b border-slate-200/80 shadow-sm" >
+        className=" sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant" >
+        {/* className=" sticky top-0 z-40 h-16 flex items-center justify-between px-8 bg-white/75 backdrop-blur-xl border-b border-slate-200/80 shadow-sm" > */}
         {/* <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 w-96 gap-sm">
           <span className="material-symbols-outlined text-outline text-[20px] leading-none">
             search
@@ -54,7 +55,7 @@ export default function Header() {
             <div className="w-10 h-10 rounded-full border-2 border-surface-variant overflow-hidden">
               <img
                 className="w-full h-full object-cover"
-                data-alt="A professional headshot of a person with a friendly expression, set against a soft-focus corporate office background. The lighting is bright and clean, reflecting a high-end, stable financial professional identity. The overall aesthetic is minimalist and modern."
+                alt="User avatar"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDobLtNGEJ9IlwFaTG64cOqzLMgyQePG3ljFEKoYSOmT1LecjsBWpoWXkhYWfS3eF0MORWzGqohppjalpUGIxaboO5CdZoT6WQGEYhqBo0-iAlgyBvo3AagJVqaJ_VCuzZTXu-RFDVpxm47wFZJsSORT3ajmchqpydg2gQ63j5WDI63IUlDH-VT-7JuqqJaHES_hEFARM9ecXDl63vx7JxIoGVRUOri4B2s_kPN426fU5YbsvNo2uk6"
               />
             </div>

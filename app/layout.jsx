@@ -4,16 +4,18 @@ import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
 import "./globals.css";
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            (function () {
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
               try {
                 const theme = localStorage.getItem("theme");
                 if (
@@ -25,14 +27,15 @@ export default function RootLayout({ children }) {
                   document.documentElement.classList.remove("dark");
                 }
               } catch (e) {}
-            })();`,
-        }}/>
+            `,
+          }}
+        />
       </head>
-        
+
       <body className={GeistSans.className}>
         <Providers>
           <TransactionProvider>
-            <Sidebar/>
+            <Sidebar />
             {children}
           </TransactionProvider>
         </Providers>
