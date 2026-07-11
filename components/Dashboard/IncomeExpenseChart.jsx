@@ -31,7 +31,7 @@ function getMonthlyData(transactions, monthsBack = 5) {
   return { labels, incomeData, expenseData };
 }
 
-export default function IncomeExpenseChart({ dark, transactions = [] }) {
+export default function IncomeExpenseChart({ dark, transactions = [], timeRange = "6m" }) {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -96,7 +96,8 @@ export default function IncomeExpenseChart({ dark, transactions = [] }) {
       };
     }
 
-    const { labels, incomeData, expenseData } = getMonthlyData(transactions);
+    const monthsBack = timeRange === "1y" ? 11 : 5;
+    const { labels, incomeData, expenseData } = getMonthlyData(transactions, monthsBack);
 
     chartRef.current = new Chart(ctx, {
       type: 'line',
@@ -139,7 +140,7 @@ export default function IncomeExpenseChart({ dark, transactions = [] }) {
     return () => {
       chartRef.current?.destroy();
     };
-  }, [dark, transactions]);
+  }, [dark, transactions, timeRange]);
 
   return <canvas ref={canvasRef} id="incomeExpensesChart" />;
 }

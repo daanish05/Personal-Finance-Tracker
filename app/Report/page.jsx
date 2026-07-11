@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   useTransactions,
   formatCurrency,
@@ -7,6 +7,8 @@ import {
 
 export default function Report() {
   const { transactions, defaultCurrency } = useTransactions();
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
@@ -72,6 +74,12 @@ export default function Report() {
     .reduce((s, t) => s + Number(t.amount), 0);
   const netCashFlow = totalIncome - totalExpense;
 
+  const filteredCategoryData = searchQuery.trim()
+    ? categoryData.filter((c) =>
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : categoryData;
+
   const colors = [
     "#0050cb",
     "#006c49",
@@ -96,6 +104,8 @@ export default function Report() {
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
                   placeholder="Search reports..."
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
@@ -319,7 +329,7 @@ export default function Report() {
                         stroke="#e5eeff"
                         strokeWidth={3}
                       />
-                      {categoryData.slice(0, 5).map((cat, i) => {
+                      {filteredCategoryData.slice(0, 5).map((cat, i) => {
                         let offset = 0;
                         for (let j = 0; j < i; j++)
                           offset += parseFloat(categoryData[j].pct);
@@ -347,7 +357,7 @@ export default function Report() {
                   </div>
                   {/* Legend */}
                   <div className="w-full space-y-sm">
-                    {categoryData.slice(0, 5).map((cat, i) => (
+                    {filteredCategoryData.slice(0, 5).map((cat, i) => (
                       <div
                         key={cat.name}
                         className="flex items-center justify-between"
@@ -368,9 +378,11 @@ export default function Report() {
                         </span>
                       </div>
                     ))}
-                    {categoryData.length === 0 && (
+                    {filteredCategoryData.length === 0 && (
                       <p className="text-center text-on-surface-variant text-sm">
-                        No expenses yet
+                        {categoryData.length === 0
+                          ? "No expenses yet"
+                          : "No categories match your search."}
                       </p>
                     )}
                   </div>

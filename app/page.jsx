@@ -21,6 +21,10 @@ export default function Home() {
   });
   const [editingBudget, setEditingBudget] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryAmount, setNewCategoryAmount] = useState("");
+  const [timeRange, setTimeRange] = useState("6m");
+  const [dashboardSearch, setDashboardSearch] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -70,6 +74,35 @@ export default function Home() {
     health: "bg-warning",
   };
 
+  const colorPalette = [
+    "bg-primary", "bg-secondary", "bg-tertiary", "bg-error", "bg-warning",
+    "bg-emerald-500", "bg-violet-500", "bg-cyan-500", "bg-rose-500",
+  ];
+  const getCategoryColor = (key) =>
+    categoryColors[key] ||
+    colorPalette[Object.keys(budgets).indexOf(key) % colorPalette.length];
+  const getLabel = (key) =>
+    categoryLabels[key] ||
+    key
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const filteredTransactions = dashboardSearch.trim()
+    ? transactions.filter((t) => {
+        const q = dashboardSearch.toLowerCase();
+        return (
+          t.title?.toLowerCase().includes(q) ||
+          t.category?.toLowerCase().includes(q) ||
+          t.account?.toLowerCase().includes(q) ||
+          t.notes?.toLowerCase().includes(q) ||
+          t.tags?.some((tag) => tag.toLowerCase().includes(q)) ||
+          formatCurrency(t.amount, t.currency || defaultCurrency)
+            .toLowerCase()
+            .includes(q)
+        );
+      })
+    : transactions;
+
   const monthlySpending = {};
   transactions
     .filter(
@@ -89,7 +122,13 @@ export default function Home() {
         {/* Main Content Shell */}
         <main className="ml-60 min-h-screen flex flex-col">
           {/* Top Nav Bar */}
-          <Header />
+          <Header
+            searchQuery={dashboardSearch}
+            onSearchChange={setDashboardSearch}
+            transactions={transactions}
+            defaultCurrency={defaultCurrency}
+            formatCurrency={formatCurrency}
+          />
           {/* Dashboard Content */}
           <div className="p-xl max-w-container-max mx-auto w-full space-y-gutter">
             {/* Summary Row */}
@@ -195,20 +234,34 @@ export default function Home() {
                       Income vs Expenses
                     </h3>
                     <p className="text-on-surface-variant text-body-sm">
-                      6-month performance analysis
-                    </p>
-                  </div>
-                  <div className="flex gap-sm">
-                    <button className="px-md py-1 rounded border border-outline-variant text-label-md hover:bg-surface-variant transition-colors">
-                      6 Months
-                    </button>
-                    <button className="px-md py-1 rounded border border-outline-variant text-label-md hover:bg-surface-variant transition-colors">
-                      1 Year
-                    </button>
-                  </div>
-                </div>
-                <div className="chart-container">
-                  <IncomeExpenseChart dark={dark} transactions={transactions} />
+                       {timeRange === "6m" ? "6-month" : "12-month"} performance analysis
+                     </p>
+                   </div>
+                   <div className="flex gap-sm">
+                     <button
+                       className={`px-md py-1 rounded border text-label-md transition-colors ${
+                         timeRange === "6m"
+                           ? "bg-primary text-on-primary border-primary"
+                           : "border-outline-variant hover:bg-surface-variant"
+                       }`}
+                       onClick={() => setTimeRange("6m")}
+                     >
+                       6 Months
+                     </button>
+                     <button
+                       className={`px-md py-1 rounded border text-label-md transition-colors ${
+                         timeRange === "1y"
+                           ? "bg-primary text-on-primary border-primary"
+                           : "border-outline-variant hover:bg-surface-variant"
+                       }`}
+                       onClick={() => setTimeRange("1y")}
+                     >
+                       1 Year
+                     </button>
+                   </div>
+                 </div>
+                 <div className="chart-container">
+                   <IncomeExpenseChart dark={dark} transactions={transactions} timeRange={timeRange} />
                 </div>
               </div>
               {/* Right Column: Budget & Insight */}
@@ -228,8 +281,7 @@ export default function Home() {
                     </span>
                   </div>
                   <div className="space-y-xl">
-                    {Object.entries(categoryLabels).map(([key, label]) => {
-                      const budget = budgets[key] || 0;
+                    {Object.entries(budgets).map(([key, budget]) => {
                       if (budget <= 0) return null;
                       const spent = monthlySpending[key] || 0;
                       const pct = Math.min(
@@ -240,8 +292,8 @@ export default function Home() {
                       return (
                         <div key={key} className="space-y-sm">
                           <div className="flex justify-between font-label-md">
-                            <span className="text-on-surface">{label}</span>
-                            <span className="text-on-surface-variant">
+                            <span className="text-on-surface">{getLabel(key)}</span>
+                            <span className="text-on-surface-variant inline-flex items-center gap-1">
                               {editingBudget === key ? (
                                 <span className="inline-flex items-center gap-xs">
                                   <input
@@ -279,26 +331,41 @@ export default function Home() {
                                   </button>
                                 </span>
                               ) : (
-                                <span
-                                  className="cursor-pointer hover:text-primary transition-colors"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setEditingBudget(key);
-                                    setEditValue(String(budget));
-                                  }}
-                                >
-                                  {pct}%
-                                  <span className="text-[10px] text-outline ml-1">
-                                    ({formatCurrency(spent, defaultCurrency)} /{" "}
-                                    {formatCurrency(budget, defaultCurrency)})
+                                <span className="inline-flex items-center gap-1">
+                                  <span
+                                    className="cursor-pointer hover:text-primary transition-colors"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEditingBudget(key);
+                                      setEditValue(String(budget));
+                                    }}
+                                  >
+                                    {pct}%
+                                    <span className="text-[10px] text-outline ml-1">
+                                      ({formatCurrency(spent, defaultCurrency)} /{" "}
+                                      {formatCurrency(budget, defaultCurrency)})
+                                    </span>
                                   </span>
+                                  <button
+                                    className="text-on-surface-variant hover:text-error transition-colors"
+                                    onClick={() => {
+                                      const next = { ...budgets };
+                                      delete next[key];
+                                      setBudgets(next);
+                                    }}
+                                    title="Remove budget"
+                                  >
+                                    <span className="material-symbols-outlined text-[16px]">
+                                      close
+                                    </span>
+                                  </button>
                                 </span>
                               )}
                             </span>
                           </div>
                           <div className="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full transition-all duration-500 ${isOver ? "bg-error" : categoryColors[key]}`}
+                              className={`h-full rounded-full transition-all duration-500 ${isOver ? "bg-error" : getCategoryColor(key)}`}
                               style={{ width: `${pct}%` }}
                             />
                           </div>
@@ -311,39 +378,67 @@ export default function Home() {
                         </div>
                       );
                     })}
-                    {Object.keys(budgets).filter((k) => budgets[k] > 0)
+                    {Object.values(budgets).filter((v) => v > 0)
                       .length === 0 && (
                       <p className="text-on-surface-variant text-body-sm text-center py-lg">
                         No budgets set. Add a budget below to track spending.
                       </p>
                     )}
                   </div>
-                  {/* Quick Add Budget */}
+                  {/* Add Budget Category */}
                   <div className="mt-lg pt-lg border-t border-outline-variant/30">
                     <p className="font-label-md text-label-md text-outline mb-sm">
-                      Add Budget
+                      Add Budget Category
                     </p>
-                    <div className="flex gap-sm">
-                      <select
-                        className="flex-1 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface"
-                        value=""
-                        onChange={(e) => {
-                          const cat = e.target.value;
-                          if (cat) {
-                            setEditingBudget(cat);
-                            setEditValue(String(budgets[cat] || ""));
+                    <div className="flex flex-col gap-sm">
+                      <div className="flex gap-sm">
+                        <input
+                          className="flex-1 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface"
+                          placeholder="Category name"
+                          value={newCategoryName}
+                          onChange={(e) =>
+                            setNewCategoryName(e.target.value)
                           }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                              document
+                                .getElementById("add-budget-btn")
+                                ?.click();
+                          }}
+                        />
+                        <input
+                          className="w-24 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface text-right"
+                          type="number"
+                          placeholder="Amount"
+                          value={newCategoryAmount}
+                          onChange={(e) =>
+                            setNewCategoryAmount(e.target.value)
+                          }
+                        />
+                      </div>
+                      <button
+                        id="add-budget-btn"
+                        className="w-full px-3 py-1.5 bg-primary text-on-primary rounded-lg text-label-md font-bold hover:opacity-90 transition-opacity"
+                        onClick={() => {
+                          const name = newCategoryName.trim();
+                          if (!name) return;
+                          const key = name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^a-z0-9-]/g, "");
+                          if (!key) return;
+                          const amount = parseFloat(newCategoryAmount) || 0;
+                          if (amount <= 0) return;
+                          setBudgets((prev) => ({
+                            ...prev,
+                            ...(prev[key] ? {} : { [key]: amount }),
+                          }));
+                          setNewCategoryName("");
+                          setNewCategoryAmount("");
                         }}
                       >
-                        <option value="" disabled>
-                          Select category
-                        </option>
-                        {Object.entries(categoryLabels).map(([key, label]) => (
-                          <option key={key} value={key}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
+                        Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -381,17 +476,19 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/20">
-                    {transactions.length === 0 ? (
+                    {filteredTransactions.length === 0 ? (
                       <tr>
                         <td
                           className="px-xl py-xl text-center text-on-surface-variant"
                           colSpan={5}
                         >
-                          No transactions yet. Add one via Quick Add!
+                          {transactions.length === 0
+                            ? "No transactions yet. Add one via Quick Add!"
+                            : "No transactions match your search."}
                         </td>
                       </tr>
                     ) : (
-                      transactions.slice(0, 5).map((t) => (
+                      filteredTransactions.slice(0, 5).map((t) => (
                         <tr
                           key={t.id}
                           className="hover:bg-surface-variant/10 transition-colors"

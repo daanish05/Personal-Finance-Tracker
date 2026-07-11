@@ -1,4 +1,16 @@
+"use client";
+import { useState } from "react";
+
 export default function Settings() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const sectionMatches = (section) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      section.toLowerCase().includes(q) ||
+      section.replace(/-/g, " ").toLowerCase().includes(q)
+    );
+  };
   return (
     <>
       <>
@@ -145,6 +157,8 @@ export default function Settings() {
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
                   placeholder="Search settings..."
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
@@ -219,6 +233,7 @@ export default function Settings() {
               <section
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="profile"
+                style={{ display: sectionMatches("profile") ? "" : "none" }}
               >
                 <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Profile
@@ -288,6 +303,7 @@ export default function Settings() {
               <section
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="preferences"
+                style={{ display: sectionMatches("preferences") ? "" : "none" }}
               >
                 <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Preferences
@@ -345,6 +361,7 @@ export default function Settings() {
               <section
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="notifications"
+                style={{ display: sectionMatches("notifications") ? "" : "none" }}
               >
                 <div className="flex items-center justify-between mb-md">
                   <h3 className="font-headline-md text-headline-md font-bold text-on-surface">
@@ -442,6 +459,7 @@ export default function Settings() {
               <section
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl"
                 id="security"
+                style={{ display: sectionMatches("security") ? "" : "none" }}
               >
                 <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Security
@@ -531,6 +549,7 @@ export default function Settings() {
               <section
                 className="p-lg bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden"
                 id="data"
+                style={{ display: sectionMatches("data") ? "" : "none" }}
               >
                 <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                   Data Management

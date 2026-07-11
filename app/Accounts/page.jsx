@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   useTransactions,
   formatCurrency,
@@ -7,6 +7,72 @@ import {
 
 export default function Accounts() {
   const { transactions, balance, defaultCurrency } = useTransactions();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const accounts = useMemo(
+    () => [
+      {
+        id: "chase",
+        name: "Chase Bank",
+        desc: "Checking Account •••• 4821",
+        balance: 42390.12,
+        color: "primary",
+        icon: "account_balance",
+        badge: "Primary",
+        trend: "up",
+      },
+      {
+        id: "amex",
+        name: "Amex Gold",
+        desc: "Credit Card •••• 1004",
+        balance: 1245.8,
+        color: "tertiary",
+        icon: "credit_card",
+        badge: null,
+        trend: "down",
+      },
+      {
+        id: "savings",
+        name: "High-Yield Savings",
+        desc: "Emergency Fund •••• 9201",
+        balance: 156000.0,
+        color: "secondary",
+        icon: "savings",
+        badge: null,
+        trend: "up",
+      },
+      {
+        id: "fidelity",
+        name: "Fidelity Brokerage",
+        desc: "Portfolio Managed • Active",
+        balance: 1280450.6,
+        color: "primary",
+        icon: "monitoring",
+        badge: null,
+        trend: "up",
+        wide: true,
+      },
+      {
+        id: "cash",
+        name: "Petty Cash",
+        desc: "On Hand • Physical",
+        balance: 2818.0,
+        color: "on-surface",
+        icon: "payments",
+        badge: null,
+        trend: "flat",
+      },
+    ],
+    [],
+  );
+
+  const filteredAccounts = searchQuery.trim()
+    ? accounts.filter(
+        (a) =>
+          a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          a.desc.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : accounts;
 
   const recentActivity = useMemo(() => {
     return transactions.slice(0, 5);
@@ -146,6 +212,8 @@ export default function Accounts() {
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
                   placeholder="Search accounts..."
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
@@ -280,174 +348,102 @@ export default function Accounts() {
             </section>
             {/* Bento Grid of Accounts */}
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-              {/* Account Card: Chase Bank (Primary) */}
-              <div className="group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 relative overflow-hidden cursor-pointer">
-                <div className="flex justify-between items-start mb-lg">
-                  <div className="p-sm bg-primary/10 rounded-lg">
-                    <span className="material-symbols-outlined text-primary">
-                      account_balance
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-xs">
-                    <span className="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">
-                      Primary
-                    </span>
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
-                      more_vert
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md mb-xs">
-                    Chase Bank
-                  </h3>
-                  <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
-                    Checking Account •••• 4821
-                  </p>
-                  <div className="flex justify-between items-end">
-                    <span className="font-headline-md text-headline-md text-on-surface">
-                      $42,390.12
-                    </span>
-                    <div className="w-20 h-8">
-                      <svg
-                        className="w-full h-full text-secondary stroke-2 fill-none"
-                        viewBox="0 0 100 40"
-                      >
-                        <path d="M0,35 Q10,30 20,38 T40,25 T60,30 T80,15 T100,20" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Account Card: Amex Gold (Credit) */}
-              <div className="group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-tertiary/5 transition-all duration-300 relative overflow-hidden cursor-pointer">
-                <div className="flex justify-between items-start mb-lg">
-                  <div className="p-sm bg-tertiary/10 rounded-lg">
-                    <span className="material-symbols-outlined text-tertiary">
-                      credit_card
-                    </span>
-                  </div>
-                  <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
-                    more_vert
+              {filteredAccounts.length === 0 ? (
+                <div className="col-span-full text-center py-xl text-on-surface-variant">
+                  <span className="material-symbols-outlined text-[48px] text-outline mb-md">
+                    search_off
                   </span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md mb-xs">
-                    Amex Gold
-                  </h3>
-                  <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
-                    Credit Card •••• 1004
+                  <p className="font-body-md text-body-md">
+                    No accounts match your search.
                   </p>
-                  <div className="flex justify-between items-end">
-                    <span className="font-headline-md text-headline-md text-on-surface">
-                      $1,245.80
-                    </span>
-                    <div className="w-20 h-8">
-                      <svg
-                        className="w-full h-full text-error stroke-2 fill-none"
-                        viewBox="0 0 100 40"
-                      >
-                        <path d="M0,10 Q20,15 40,30 T80,35 T100,40" />
-                      </svg>
+                </div>
+              ) : (
+                filteredAccounts.map((acct) => {
+                  const color = acct.color;
+                  const isWide = acct.wide;
+                  const trendPath =
+                    acct.trend === "up"
+                      ? "M0,35 Q10,30 20,38 T40,25 T60,30 T80,15 T100,20"
+                      : acct.trend === "down"
+                        ? "M0,10 Q20,15 40,30 T80,35 T100,40"
+                        : "M0,40 L20,38 L40,36 L60,32 L80,30 L100,28";
+                  const trendColor =
+                    acct.trend === "up"
+                      ? "text-secondary"
+                      : acct.trend === "down"
+                        ? "text-error"
+                        : "text-on-surface-variant";
+                  return (
+                    <div
+                      key={acct.id}
+                      className={`group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-${color}/5 transition-all duration-300 relative overflow-hidden cursor-pointer ${isWide ? "lg:col-span-2 flex flex-col md:flex-row gap-lg" : ""}`}
+                    >
+                      <div className={isWide ? "flex-1" : ""}>
+                        <div className="flex justify-between items-start mb-lg">
+                          <div className={`p-sm bg-${color}/10 rounded-lg`}>
+                            <span
+                              className={`material-symbols-outlined text-${color}`}
+                            >
+                              {acct.icon}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-xs">
+                            {acct.badge && (
+                              <span className="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">
+                                {acct.badge}
+                              </span>
+                            )}
+                            <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
+                              more_vert
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-headline-md text-headline-md mb-xs">
+                            {acct.name}
+                          </h3>
+                          <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
+                            {acct.desc}
+                          </p>
+                          <div className="flex justify-between items-end">
+                            <span className="font-headline-md text-headline-md text-on-surface">
+                              {formatCurrency(acct.balance, defaultCurrency)}
+                            </span>
+                            {!isWide && (
+                              <div className="w-20 h-8">
+                                <svg
+                                  className={`w-full h-full ${trendColor} stroke-2 fill-none`}
+                                  viewBox="0 0 100 40"
+                                >
+                                  <path d={trendPath} />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                          {isWide && (
+                            <span className="font-headline-lg text-headline-lg text-on-surface">
+                              {formatCurrency(acct.balance, defaultCurrency)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      {isWide && (
+                        <div className="flex-1 flex flex-col justify-end min-h-[120px]">
+                          <div className="flex justify-between items-center mb-sm">
+                            <span className="font-label-md text-label-md text-on-surface-variant">
+                              Year to Date
+                            </span>
+                            <span className="text-secondary font-bold">
+                              +12.4%
+                            </span>
+                          </div>
+                          <div className="h-24 w-full" />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </div>
-              </div>
-              {/* Account Card: Savings */}
-              <div className="group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-secondary/5 transition-all duration-300 relative overflow-hidden cursor-pointer">
-                <div className="flex justify-between items-start mb-lg">
-                  <div className="p-sm bg-secondary/10 rounded-lg">
-                    <span className="material-symbols-outlined text-secondary">
-                      savings
-                    </span>
-                  </div>
-                  <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
-                    more_vert
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md mb-xs">
-                    High-Yield Savings
-                  </h3>
-                  <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
-                    Emergency Fund •••• 9201
-                  </p>
-                  <div className="flex justify-between items-end">
-                    <span className="font-headline-md text-headline-md text-on-surface">
-                      $156,000.00
-                    </span>
-                    <div className="w-20 h-8">
-                      <svg
-                        className="w-full h-full text-secondary stroke-2 fill-none"
-                        viewBox="0 0 100 40"
-                      >
-                        <path d="M0,40 L20,38 L40,36 L60,32 L80,30 L100,28" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Account Card: Investment */}
-              <div className="group lg:col-span-2 bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col md:flex-row gap-lg">
-                <div className="flex-1">
-                  <div className="flex justify-between items-start mb-lg">
-                    <div className="p-sm bg-primary/10 rounded-lg">
-                      <span className="material-symbols-outlined text-primary">
-                        monitoring
-                      </span>
-                    </div>
-                  </div>
-                  <h3 className="font-headline-md text-headline-md mb-xs">
-                    Fidelity Brokerage
-                  </h3>
-                  <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
-                    Portfolio Managed • Active
-                  </p>
-                  <span className="font-headline-lg text-headline-lg text-on-surface">
-                    $1,280,450.60
-                  </span>
-                </div>
-                <div className="flex-1 flex flex-col justify-end min-h-[120px]">
-                  <div className="flex justify-between items-center mb-sm">
-                    <span className="font-label-md text-label-md text-on-surface-variant">
-                      Year to Date
-                    </span>
-                    <span className="text-secondary font-bold">+12.4%</span>
-                  </div>
-                  <div className="h-24 w-full" />
-                </div>
-              </div>
-              {/* Account Card: Cash */}
-              <div className="group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-on-surface/5 transition-all duration-300 relative overflow-hidden cursor-pointer">
-                <div className="flex justify-between items-start mb-lg">
-                  <div className="p-sm bg-on-surface/10 rounded-lg">
-                    <span className="material-symbols-outlined text-on-surface">
-                      payments
-                    </span>
-                  </div>
-                  <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
-                    more_vert
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md mb-xs">
-                    Petty Cash
-                  </h3>
-                  <p className="font-label-md text-label-md text-on-surface-variant mb-lg">
-                    On Hand • Physical
-                  </p>
-                  <div className="flex justify-between items-end">
-                    <span className="font-headline-md text-headline-md text-on-surface">
-                      $2,818.00
-                    </span>
-                    <div className="w-20 h-8 flex items-center justify-center gap-1">
-                      <div className="w-1 h-1 rounded-full bg-on-surface-variant/20" />
-                      <div className="w-1 h-1 rounded-full bg-on-surface-variant/20" />
-                      <div className="w-1 h-1 rounded-full bg-on-surface-variant/20" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  );
+                })
+              )}
             </section>
             {/* Bottom Table: Recent Account Activity (Asymmetric Layout element) */}
             <section className="space-y-lg">

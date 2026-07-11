@@ -50,6 +50,7 @@ export default function Goals() {
   const { transactions, balance, defaultCurrency } = useTransactions();
 
   const [goals, setGoals] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -76,6 +77,12 @@ export default function Goals() {
     totalTarget > 0
       ? Math.min(Math.round((totalAllocated / totalTarget) * 100), 100)
       : 0;
+
+  const filteredGoals = searchQuery.trim()
+    ? goals.filter((g) =>
+        g.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : goals;
 
   const monthlySavings = useMemo(() => {
     const data = [];
@@ -165,6 +172,8 @@ export default function Goals() {
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
                   placeholder="Search goals or metrics..."
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
@@ -279,17 +288,19 @@ export default function Goals() {
             </section>
             {/* Goals Grid (Dynamic) */}
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-              {goals.length === 0 && (
+              {filteredGoals.length === 0 && (
                 <div className="col-span-full text-center py-xl text-on-surface-variant">
                   <span className="material-symbols-outlined text-[48px] text-outline mb-md">
                     flag
                   </span>
                   <p className="font-body-md text-body-md">
-                    No goals yet. Click the + button to create your first goal.
+                    {goals.length === 0
+                      ? "No goals yet. Click the + button to create your first goal."
+                      : "No goals match your search."}
                   </p>
                 </div>
               )}
-              {goals.map((goal) => {
+              {filteredGoals.map((goal) => {
                 const ci = GOAL_COLORS[goal.colorIdx] || GOAL_COLORS[0];
                 const pct =
                   goal.target > 0

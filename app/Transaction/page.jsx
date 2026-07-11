@@ -10,6 +10,7 @@ export default function Transaction() {
   const { transactions, deleteTransactions, defaultCurrency } =
     useTransactions();
   const [hoveredRow, setHoveredRow] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [filterType, setFilterType] = useState("all");
   const [timeframe, setTimeframe] = useState("all");
@@ -43,8 +44,19 @@ export default function Transaction() {
       else if (timeframe === "year") cutoff.setFullYear(now.getFullYear() - 1);
       txs = txs.filter((t) => new Date(t.date) >= cutoff);
     }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      txs = txs.filter(
+        (t) =>
+          t.title?.toLowerCase().includes(q) ||
+          t.category?.toLowerCase().includes(q) ||
+          t.account?.toLowerCase().includes(q) ||
+          t.notes?.toLowerCase().includes(q) ||
+          t.tags?.some((tag) => tag.toLowerCase().includes(q)),
+      );
+    }
     return txs;
-  }, [transactions, filterType, timeframe]);
+  }, [transactions, filterType, timeframe, searchQuery]);
 
   const visibleIds = filtered.slice(0, 10).map((t) => t.id);
   const allVisibleSelected =
@@ -101,6 +113,8 @@ export default function Transaction() {
                   className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
                   placeholder="Search transactions..."
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
