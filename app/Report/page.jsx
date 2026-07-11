@@ -92,11 +92,11 @@ export default function Report() {
     <>
       <>
         {/* Main Content */}
-        <main className="ml-60 min-h-screen">
+        <main className="ml-0 md:ml-60 min-h-screen">
           {/* Top Navigation Bar */}
-          <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            <div className="flex items-center gap-md flex-1">
-              <div className="relative w-full max-w-[480px]"
+          <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+            <div className="flex items-center gap-md flex-1 min-w-0">
+              <div className="relative w-full max-w-full md:max-w-[480px]"
               style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
@@ -207,7 +207,7 @@ export default function Report() {
             {/* Dashboard Bento Grid */}
             <div className="grid grid-cols-12 gap-gutter">
               {/* Section 3: Net Worth Growth (Spans 8 columns) */}
-              <div className="col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
+              <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
                 <div className="flex justify-between items-center">
                   <h3 className="font-headline-md text-headline-md text-on-surface">
                     Net Worth Growth
@@ -326,7 +326,7 @@ export default function Report() {
                 </div>
               </div>
               {/* Section 1: Spending by Category (Spans 4 columns) */}
-              <div className="col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
+              <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
                 <h3 className="font-headline-md text-headline-md text-on-surface">
                   Spending by Category
                 </h3>

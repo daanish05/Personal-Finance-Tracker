@@ -1,18 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "../ThemeProvider";
 export default function Sidebar() {
   const pathname = usePathname();
-
   const { dark, toggleDark } = useTheme();
   const isActive = (path) => pathname === path;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>
-      <aside className="fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300">
+      {/* Mobile hamburger */}
+      <button
+        className="fixed top-3 left-3 z-50 md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low border border-outline-variant shadow-md hover:bg-surface-variant transition-colors"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
+      >
+        <span className="material-symbols-outlined text-on-surface-variant">
+          {sidebarOpen ? "close" : "menu"}
+        </span>
+      </button>
+
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300 z-40 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
         <div className="px-lg py-xl flex items-center gap-sm">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <Link href="/">

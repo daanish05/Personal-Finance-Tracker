@@ -120,25 +120,15 @@ export default function Transaction() {
 
   return (
     <>
-      <main className="ml-60 flex-1 min-h-screen flex flex-col">
-        <header className="h-16 flex items-center justify-between px-xl sticky top-0 z-40 bg-surface/80 backdrop-blur-md">
-          <div className="flex items-center gap-lg flex-1">
-            {/* <div className="flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 w-96 gap-sm">
-              <span className="material-symbols-outlined text-outline text-[20px] leading-none">
-                search
-              </span>
-              <input
-                className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
-                placeholder="Search transactions, accounts..."
-                type="text"/>
-            </div> */}
-            <div className="flex items-center gap-md flex-1">
-              <div
-                className="relative w-full max-w-[480px]"
-                style={{
-                  border: "1px solid var(--outline-variant)",
-                  borderRadius: "8px",
-                }}
+      <main className="ml-0 md:ml-60 flex-1 min-h-screen flex flex-col">
+        <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+          <div className="flex items-center gap-md flex-1 min-w-0">
+            <div
+              className="relative w-full max-w-full md:max-w-[480px]"
+              style={{
+                border: "1px solid var(--outline-variant)",
+                borderRadius: "8px",
+              }}
               >
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
@@ -336,7 +326,6 @@ export default function Transaction() {
                 )}
               </div>
             </div>
-          </div>
           <div className="flex items-center gap-lg">
             <button className="relative text-on-surface-variant hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-[24px]">

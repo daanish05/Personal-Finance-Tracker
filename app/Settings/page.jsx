@@ -129,27 +129,11 @@ export default function Settings() {
           </div>
         </aside> */}
         {/* Main Content Area */}
-        <main className="ml-60 min-h-screen">
+        <main className="ml-0 md:ml-60 min-h-screen">
           {/* Top Navbar */}
-          <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            {/* <div className="flex items-center gap-md">
-              <h2 className="font-headline-md text-headline-md font-black text-primary">
-                Settings
-              </h2>
-              <div className="h-6 w-[1px] bg-outline-variant mx-sm" />
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">
-                  search
-                </span>
-                <input
-                  className="pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-full text-body-sm focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none transition-all w-64"
-                  placeholder="Search settings..."
-                  type="text"
-                />
-              </div>
-            </div> */}
-            <div className="flex items-center gap-md flex-1">
-              <div className="relative w-full max-w-[480px]"
+          <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+            <div className="flex items-center gap-md flex-1 min-w-0">
+              <div className="relative w-full max-w-full md:max-w-[480px]"
               style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
