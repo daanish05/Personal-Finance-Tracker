@@ -204,7 +204,8 @@ export default function Accounts() {
           {/* Top Nav Bar */}
           <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
             <div className="flex items-center gap-md flex-1">
-              <div className="relative w-full max-w-[480px]">
+              <div className="relative w-full max-w-[480px]" 
+              style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
                 </span>
