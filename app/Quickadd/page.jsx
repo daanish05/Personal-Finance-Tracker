@@ -261,7 +261,39 @@ export default function Quickadd() {
                   <label className="block font-label-md text-label-md text-outline">
                     Transaction Type
                   </label>
-                  <div className="inline-flex p-1 bg-surface-container-low border border-outline-variant rounded-lg w-fit">
+                  <div className="relative inline-flex p-1 bg-surface-container-low border border-outline-variant rounded-lg w-fit">
+                    {/* Glider */}
+                    <div
+                      className={`absolute top-1 left-1 h-[calc(100%-0.5rem)] w-24 rounded-md bg-primary shadow-sm transition-transform duration-300 ease-out ${
+                        type === "expense"
+                          ? "translate-x-0"
+                          : "translate-x-full"
+                      }`}/>
+                    <button
+                      type="button"
+                      onClick={() => setType("expense")}
+                      className={`relative z-10 w-24 py-2 rounded-md font-label-md text-label-md transition-colors duration-300 ${
+                        type === "expense"
+                          ? "text-on-primary"
+                          : "text-on-surface-variant"
+                      }`}
+                    >
+                      Expense
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setType("income")}
+                      className={`relative z-10 w-24 py-2 rounded-md font-label-md text-label-md transition-colors duration-300 ${
+                        type === "income"
+                          ? "text-on-primary"
+                          : "text-on-surface-variant"
+                      }`}
+                    >
+                      Income
+                    </button>
+                  </div>
+                  {/* <div className="inline-flex p-1 bg-surface-container-low border border-outline-variant rounded-lg w-fit">
                     <button
                       className={`px-lg py-2 rounded-md font-label-md text-label-md transition-all ${type === "expense" ? "bg-primary text-on-primary shadow-sm" : "text-on-surface-variant hover:bg-surface-variant"}`}
                       onClick={() => setType("expense")}
@@ -276,7 +308,7 @@ export default function Quickadd() {
                     >
                       Income
                     </button>
-                  </div>
+                  </div> */}
                 </div>
                 {/* Category & Account Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
@@ -383,7 +415,70 @@ export default function Quickadd() {
                     <label className="block font-label-md text-label-md text-outline mb-sm">
                       Payment Method
                     </label>
-                    <div className="flex gap-sm">
+                    <div className="relative flex bg-white p-1 rounded-xl shadow-md">
+                      {/* Glider */}
+                      <div
+                        className={`absolute top-1 bottom-1 w-1/3 rounded-lg bg-primary-container transition-transform duration-300 ease-out ${
+                          paymentMethod === "card"
+                            ? "translate-x-0"
+                            : paymentMethod === "cash"
+                              ? "translate-x-full"
+                              : "translate-x-[192%]"
+                        }`}
+                      />
+                      
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod("card")}
+                        className={`relative z-10 flex-1 flex flex-col items-center justify-center py-2 transition-colors duration-300 ${
+                          paymentMethod === "card"
+                            ? "text-primary"
+                            : "text-outline-variant hover:text-on-surface"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined mb-1">
+                          credit_card
+                        </span>
+                        <span className="text-[10px] uppercase font-bold tracking-tighter">
+                          Card
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod("cash")}
+                        className={`relative z-10 flex-1 flex flex-col items-center justify-center py-2 transition-colors duration-300 ${
+                          paymentMethod === "cash"
+                            ? "text-primary"
+                            : "text-outline-variant hover:text-on-surface"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined mb-1">
+                          payments
+                        </span>
+                        <span className="text-[10px] uppercase font-bold tracking-tighter">
+                          Cash
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod("transfer")}
+                        className={`relative z-10 flex-1 flex flex-col items-center justify-center py-2 transition-colors duration-300 ${
+                          paymentMethod === "transfer"
+                            ? "text-primary"
+                            : "text-outline-variant hover:text-on-surface"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined mb-1">
+                          account_balance
+                        </span>
+                        <span className="text-[10px] uppercase font-bold tracking-tighter">
+                          Transfer
+                        </span>
+                      </button>
+                    </div>
+                    {/* <div className="flex gap-sm">
                       <button
                         className={`flex-1 flex flex-col items-center justify-center p-2 rounded-lg transition-all ${paymentMethod === "card" ? "border border-primary bg-primary-container/10 text-primary" : "border border-outline-variant text-outline-variant hover:border-outline hover:text-on-surface"}`}
                         onClick={() => setPaymentMethod("card")}
@@ -420,7 +515,7 @@ export default function Quickadd() {
                           Transfer
                         </span>
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 {/* Tags & Multi-select */}
