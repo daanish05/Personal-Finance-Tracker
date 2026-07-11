@@ -32,7 +32,8 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className={GeistSans.className}>
+      <body className={GeistSans.className}
+            className="scroll-smooth bg-surface-container-low text-on-surface antialiased transition-colors duration-300 dark:bg-surface-container-low-dark dark:text-on-surface-dark">
         <Providers>
           <TransactionProvider>
             <Sidebar />

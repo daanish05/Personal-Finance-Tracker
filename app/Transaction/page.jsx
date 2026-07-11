@@ -492,9 +492,9 @@ export default function Transaction() {
                   >
                     Delete Selected
                   </button>
-                  <button className="text-primary font-label-md text-label-md font-bold hover:underline">
+                  {/* <button className="text-primary font-label-md text-label-md font-bold hover:underline">
                     Mark as Paid
-                  </button>
+                  </button> */}
                 </div>
                 <div className="flex items-center gap-sm">
                   <span className="font-label-md text-label-md text-outline">

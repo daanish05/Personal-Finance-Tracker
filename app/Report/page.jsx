@@ -290,7 +290,14 @@ export default function Report() {
                     </defs>
                   </svg>
                   <div className="absolute left-[50%] top-[10%] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <div className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl">
+                    <div className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl"
+                      style={{
+                        color:
+                        netCashFlow >= 0
+                        ? "var(--cashflow-positive)"
+                        : "var(--cashflow-negative)",
+                      }}
+                      >
                       <p className="text-label-md font-bold">
                         {formatCurrency(
                           monthlyData.reduce(
@@ -457,10 +464,10 @@ export default function Report() {
           </div>
           {/* Sticky Footer Summary */}
           <footer className="mt-xl border-t border-outline-variant bg-surface-container-low/50 py-lg px-xl">
-            <div className="max-w-container-max mx-auto flex justify-between items-center" >
+            <div className="max-w-container-max mx-auto flex justify-between items-center">
               <div className="flex gap-xl" align="center">
                 <div className="space-y-base">
-                  <p className="font-label-md text-label-md text-outline uppercase tracking-wider" >
+                  <p className="font-label-md text-label-md text-outline uppercase tracking-wider">
                     Net Cash Flow
                   </p>
                   <p
