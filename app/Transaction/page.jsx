@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useMemo } from "react";
 import {
   useTransactions,
@@ -76,7 +77,14 @@ export default function Transaction() {
       txs.sort((a, b) => Number(a.amount) - Number(b.amount));
     }
     return txs;
-  }, [transactions, filterType, timeframe, searchQuery, categoryFilter, sortBy]);
+  }, [
+    transactions,
+    filterType,
+    timeframe,
+    searchQuery,
+    categoryFilter,
+    sortBy,
+  ]);
 
   const visibleIds = filtered.slice(0, 10).map((t) => t.id);
   const allVisibleSelected =
@@ -125,8 +133,13 @@ export default function Transaction() {
                 type="text"/>
             </div> */}
             <div className="flex items-center gap-md flex-1">
-              <div className="relative w-full max-w-[480px]"
-              style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
+              <div
+                className="relative w-full max-w-[480px]"
+                style={{
+                  border: "1px solid var(--outline-variant)",
+                  borderRadius: "8px",
+                }}
+              >
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                   search
                 </span>
@@ -160,9 +173,7 @@ export default function Transaction() {
                 <button
                   className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
                   onClick={() =>
-                    setActiveFilter(
-                      activeFilter === "date" ? null : "date",
-                    )
+                    setActiveFilter(activeFilter === "date" ? null : "date")
                   }
                 >
                   <span className="material-symbols-outlined text-sm">
@@ -270,9 +281,7 @@ export default function Transaction() {
                 <button
                   className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "amount-desc" || sortBy === "amount-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
                   onClick={() =>
-                    setActiveFilter(
-                      activeFilter === "amount" ? null : "amount",
-                    )
+                    setActiveFilter(activeFilter === "amount" ? null : "amount")
                   }
                 >
                   <span className="material-symbols-outlined text-sm">
@@ -708,12 +717,14 @@ export default function Transaction() {
         </div>
       </main>
       <button className="fixed bottom-gutter right-gutter w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50">
-        <span
-          className="material-symbols-outlined"
-          style={{ fontVariationSettings: '"FILL" 1' }}
-        >
-          add
-        </span>
+        <Link href="/Quickadd">
+          <span
+            className="material-symbols-outlined"
+            style={{ fontVariationSettings: '"FILL" 1' }}
+          >
+            add
+          </span>
+        </Link>
       </button>
     </>
   );

@@ -15,16 +15,20 @@ export default function Sidebar() {
       <aside className="fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300">
         <div className="px-lg py-xl flex items-center gap-sm">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-            <span
-              className="material-symbols-outlined text-on-primary text-[20px]"
-              style={{ fontVariationSettings: '"FILL" 1' }}
-            >
-              account_balance_wallet
-            </span>
+            <Link href="/">
+              <span
+                className="material-symbols-outlined text-on-primary text-[20px]"
+                style={{ fontVariationSettings: '"FILL" 1' }}
+              >
+                account_balance_wallet
+              </span>
+            </Link>
           </div>
-          <h1 className="font-headline-md text-headline-md font-bold text-primary">
-            WealthFlow
-          </h1>
+          <Link href="/">
+            <h1 className="font-headline-md text-headline-md font-bold text-primary">
+              WealthFlow
+            </h1>
+          </Link>
         </div>
         <nav className="flex-1 px-md space-y-base">
           <Link
