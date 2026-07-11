@@ -120,7 +120,8 @@ export default function Report() {
 
               <a
                 href="/Quickadd"
-                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">
+                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+              >
                 <span className="material-symbols-outlined text-[18px]">
                   add
                 </span>
@@ -456,10 +457,10 @@ export default function Report() {
           </div>
           {/* Sticky Footer Summary */}
           <footer className="mt-xl border-t border-outline-variant bg-surface-container-low/50 py-lg px-xl">
-            <div className="max-w-container-max mx-auto flex justify-between items-center">
-              <div className="flex gap-xl">
+            <div className="max-w-container-max mx-auto flex justify-between items-center" >
+              <div className="flex gap-xl" align="center">
                 <div className="space-y-base">
-                  <p className="font-label-md text-label-md text-outline uppercase tracking-wider">
+                  <p className="font-label-md text-label-md text-outline uppercase tracking-wider" >
                     Net Cash Flow
                   </p>
                   <p
@@ -478,9 +479,9 @@ export default function Report() {
                   </p>
                 </div>
               </div>
-              <button className="bg-primary-container text-on-primary-container px-lg py-3 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all">
+              {/* <button className="bg-primary-container text-on-primary-container px-lg py-3 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all">
                 View Comprehensive Tax Report
-              </button>
+              </button> */}
             </div>
           </footer>
         </main>
