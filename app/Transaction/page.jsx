@@ -15,6 +15,14 @@ export default function Transaction() {
   const [filterType, setFilterType] = useState("all");
   const [timeframe, setTimeframe] = useState("all");
   const [selectedIds, setSelectedIds] = useState([]);
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [sortBy, setSortBy] = useState("date-desc");
+  const [categoryFilter, setCategoryFilter] = useState(null);
+
+  const allCategories = useMemo(
+    () => [...new Set(transactions.map((t) => t.category))],
+    [transactions],
+  );
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -55,8 +63,20 @@ export default function Transaction() {
           t.tags?.some((tag) => tag.toLowerCase().includes(q)),
       );
     }
+    if (categoryFilter) {
+      txs = txs.filter((t) => t.category === categoryFilter);
+    }
+    if (sortBy === "date-desc") {
+      txs.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortBy === "date-asc") {
+      txs.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (sortBy === "amount-desc") {
+      txs.sort((a, b) => Number(b.amount) - Number(a.amount));
+    } else if (sortBy === "amount-asc") {
+      txs.sort((a, b) => Number(a.amount) - Number(b.amount));
+    }
     return txs;
-  }, [transactions, filterType, timeframe, searchQuery]);
+  }, [transactions, filterType, timeframe, searchQuery, categoryFilter, sortBy]);
 
   const visibleIds = filtered.slice(0, 10).map((t) => t.id);
   const allVisibleSelected =
@@ -129,24 +149,177 @@ export default function Transaction() {
                 onBlur={() => setIsSearchFocused(false)}/>
             </div> */}
             <div className="flex items-center gap-sm -ml-1">
-              <button className="flex items-center gap-xs px-sm py-1.5 text-on-surface-variant border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors text-label-sm">
-                <span className="material-symbols-outlined text-sm">
-                  calendar_today
-                </span>
-                <span className="font-label-md text-label-md">Date</span>
-              </button>
-              <button className="flex items-center gap-xs px-sm py-1.5 text-on-surface-variant border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors text-label-sm">
-                <span className="material-symbols-outlined text-sm">
-                  filter_list
-                </span>
-                <span className="font-label-md text-label-md">Category</span>
-              </button>
-              <button className="flex items-center gap-xs px-sm py-1.5 text-on-surface-variant border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors text-label-sm">
-                <span className="material-symbols-outlined text-sm">
-                  payments
-                </span>
-                <span className="font-label-md text-label-md">Amount</span>
-              </button>
+              {/* Date Filter */}
+              <div className="relative">
+                <button
+                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+                  onClick={() =>
+                    setActiveFilter(
+                      activeFilter === "date" ? null : "date",
+                    )
+                  }
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    calendar_today
+                  </span>
+                  <span className="font-label-md text-label-md">
+                    {sortBy === "date-asc"
+                      ? "Oldest"
+                      : sortBy === "date-desc"
+                        ? "Newest"
+                        : "Date"}
+                  </span>
+                </button>
+                {activeFilter === "date" && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setActiveFilter(null)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 w-40 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
+                      <button
+                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-desc" ? "text-primary font-bold" : "text-on-surface"}`}
+                        onClick={() => {
+                          setSortBy("date-desc");
+                          setActiveFilter(null);
+                        }}
+                      >
+                        Newest First
+                      </button>
+                      <button
+                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-asc" ? "text-primary font-bold" : "text-on-surface"}`}
+                        onClick={() => {
+                          setSortBy("date-asc");
+                          setActiveFilter(null);
+                        }}
+                      >
+                        Oldest First
+                      </button>
+                      {sortBy !== "date-desc" && sortBy !== "date-asc" && (
+                        <button
+                          className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
+                          onClick={() => {
+                            setSortBy("date-desc");
+                            setActiveFilter(null);
+                          }}
+                        >
+                          No Sort
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              {/* Category Filter */}
+              <div className="relative">
+                <button
+                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${categoryFilter ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+                  onClick={() =>
+                    setActiveFilter(
+                      activeFilter === "category" ? null : "category",
+                    )
+                  }
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    filter_list
+                  </span>
+                  <span className="font-label-md text-label-md">
+                    {categoryFilter ? categoryFilter : "Category"}
+                  </span>
+                </button>
+                {activeFilter === "category" && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setActiveFilter(null)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto">
+                      <button
+                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${!categoryFilter ? "text-primary font-bold" : "text-on-surface"}`}
+                        onClick={() => {
+                          setCategoryFilter(null);
+                          setActiveFilter(null);
+                        }}
+                      >
+                        All Categories
+                      </button>
+                      {allCategories.map((cat) => (
+                        <button
+                          key={cat}
+                          className={`w-full text-left px-3 py-2 font-label-md text-label-md capitalize transition-colors hover:bg-surface-container-high ${categoryFilter === cat ? "text-primary font-bold" : "text-on-surface"}`}
+                          onClick={() => {
+                            setCategoryFilter(cat);
+                            setActiveFilter(null);
+                          }}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              {/* Amount Filter */}
+              <div className="relative">
+                <button
+                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "amount-desc" || sortBy === "amount-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+                  onClick={() =>
+                    setActiveFilter(
+                      activeFilter === "amount" ? null : "amount",
+                    )
+                  }
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    payments
+                  </span>
+                  <span className="font-label-md text-label-md">
+                    {sortBy === "amount-asc"
+                      ? "Lowest"
+                      : sortBy === "amount-desc"
+                        ? "Highest"
+                        : "Amount"}
+                  </span>
+                </button>
+                {activeFilter === "amount" && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setActiveFilter(null)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
+                      <button
+                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-desc" ? "text-primary font-bold" : "text-on-surface"}`}
+                        onClick={() => {
+                          setSortBy("amount-desc");
+                          setActiveFilter(null);
+                        }}
+                      >
+                        Highest First
+                      </button>
+                      <button
+                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-asc" ? "text-primary font-bold" : "text-on-surface"}`}
+                        onClick={() => {
+                          setSortBy("amount-asc");
+                          setActiveFilter(null);
+                        }}
+                      >
+                        Lowest First
+                      </button>
+                      {sortBy !== "amount-desc" && sortBy !== "amount-asc" && (
+                        <button
+                          className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
+                          onClick={() => {
+                            setSortBy("date-desc");
+                            setActiveFilter(null);
+                          }}
+                        >
+                          No Sort
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-lg">
