@@ -366,6 +366,28 @@ export default function Accounts() {
                 filteredAccounts.map((acct) => {
                   const color = acct.color;
                   const isWide = acct.wide;
+                  const iconBg = {
+                    primary: "bg-primary/10",
+                    tertiary: "bg-tertiary/10",
+                    secondary: "bg-secondary/10",
+                    "on-surface": "bg-on-surface/10",
+                  };
+                  const iconColor = {
+                    primary: "text-primary",
+                    tertiary: "text-tertiary",
+                    secondary: "text-secondary",
+                    "on-surface": "text-on-surface",
+                  };
+                  const shadowMap = {
+                    primary: "hover:shadow-primary/5",
+                    tertiary: "hover:shadow-tertiary/5",
+                    secondary: "hover:shadow-secondary/5",
+                    "on-surface": "hover:shadow-on-surface/5",
+                  };
+                  const shadowClass =
+                    isWide && acct.id === "fidelity"
+                      ? "hover:shadow-primary/10"
+                      : shadowMap[color] || "hover:shadow-primary/5";
                   const trendPath =
                     acct.trend === "up"
                       ? "M0,35 Q10,30 20,38 T40,25 T60,30 T80,15 T100,20"
@@ -381,13 +403,13 @@ export default function Accounts() {
                   return (
                     <div
                       key={acct.id}
-                      className={`group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl hover:shadow-xl hover:shadow-${color}/5 transition-all duration-300 relative overflow-hidden cursor-pointer ${isWide ? "lg:col-span-2 flex flex-col md:flex-row gap-lg" : ""}`}
+                      className={`group bg-surface-container-lowest border border-outline-variant p-lg rounded-xl ${shadowClass} transition-all duration-300 relative overflow-hidden cursor-pointer ${isWide ? "lg:col-span-2 flex flex-col md:flex-row gap-lg" : ""}`}
                     >
                       <div className={isWide ? "flex-1" : ""}>
                         <div className="flex justify-between items-start mb-lg">
-                          <div className={`p-sm bg-${color}/10 rounded-lg`}>
+                          <div className={`p-sm ${iconBg[color] || "bg-primary/10"} rounded-lg`}>
                             <span
-                              className={`material-symbols-outlined text-${color}`}
+                              className={`material-symbols-outlined ${iconColor[color] || "text-primary"}`}
                             >
                               {acct.icon}
                             </span>
