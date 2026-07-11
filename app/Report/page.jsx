@@ -101,7 +101,12 @@ export default function Report() {
                   search
                 </span>
                 <input
-                  className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
+                  transition-all duration-200
+                  hover:border-primary/40 hover:shadow-md
+                  focus:ring-2 focus:ring-primary/10 focus:border-primary
+                  outline-none"
                   placeholder="Search reports..."
                   type="text"
                   value={searchQuery}

@@ -24,6 +24,7 @@ export default function Home() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryAmount, setNewCategoryAmount] = useState("");
   const [timeRange, setTimeRange] = useState("6m");
+  const [budgetsLoaded, setBudgetsLoaded] = useState(false);
   const [dashboardSearch, setDashboardSearch] = useState("");
 
   useEffect(() => {
@@ -32,11 +33,14 @@ export default function Home() {
       const saved = localStorage.getItem("budgets");
       if (saved) setBudgets(JSON.parse(saved));
     } catch (e) {}
+    setBudgetsLoaded(true);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("budgets", JSON.stringify(budgets));
-  }, [budgets]);
+    if (budgetsLoaded) {
+      localStorage.setItem("budgets", JSON.stringify(budgets));
+    }
+  }, [budgets, budgetsLoaded]);
 
   const currentMonth = mounted ? new Date().getMonth() : -1;
   const currentYear = mounted ? new Date().getFullYear() : -1;

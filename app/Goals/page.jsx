@@ -50,6 +50,7 @@ export default function Goals() {
   const { transactions, balance, defaultCurrency } = useTransactions();
 
   const [goals, setGoals] = useState([]);
+  const [goalsLoaded, setGoalsLoaded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
@@ -65,11 +66,14 @@ export default function Goals() {
       const saved = localStorage.getItem("goals");
       if (saved) setGoals(JSON.parse(saved));
     } catch (e) {}
+    setGoalsLoaded(true);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("goals", JSON.stringify(goals));
-  }, [goals]);
+    if (goalsLoaded) {
+      localStorage.setItem("goals", JSON.stringify(goals));
+    }
+  }, [goals, goalsLoaded]);
 
   const totalTarget = goals.reduce((s, g) => s + (g.target || 0), 0);
   const totalAllocated = goals.reduce((s, g) => s + (g.current || 0), 0);
@@ -169,7 +173,12 @@ export default function Goals() {
                   search
                 </span>
                 <input
-                  className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                  className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
+                  transition-all duration-200
+                  hover:border-primary/40 hover:shadow-md
+                  focus:ring-2 focus:ring-primary/10 focus:border-primary
+                  outline-none"
                   placeholder="Search goals or metrics..."
                   type="text"
                   value={searchQuery}
