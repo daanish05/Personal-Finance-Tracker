@@ -170,7 +170,7 @@ export default function Settings() {
           </header>
           <div className="max-w-container-max mx-auto p-xl flex gap-xl">
             {/* Content Sidebar */}
-            <nav className="w-64 flex-shrink-0 sticky top-24 self-start space-y-1">
+            {/* <nav className="w-64 flex-shrink-0 sticky top-24 self-start space-y-1">
               <a
                 className="flex items-center justify-between group px-md py-sm rounded-lg hover:bg-surface-container transition-colors text-primary font-bold"
                 href="#profile"
@@ -216,7 +216,7 @@ export default function Settings() {
                   database
                 </span>
               </a>
-            </nav>
+            </nav> */}
             {/* Settings Content */}
             <div className="flex-1 space-y-xl settings-scroll">
               {/* Profile Section */}
@@ -283,7 +283,11 @@ export default function Settings() {
                     />
                   </div>
                 </div>
-                <div className="mt-lg pt-lg border-t border-outline-variant flex justify-end">
+                <div className="mt-lg pt-lg border-t border-outline-variant flex justify-end" 
+                style={{ gap: "1rem", alignItems: "center" }}>
+                  <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
+                    Edit Profile
+                  </button>
                   <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
                     Save Changes
                   </button>
