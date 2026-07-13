@@ -495,8 +495,7 @@ export default function Goals() {
             >
               <div
                 className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl w-full max-w-md mx-md"
-                onClick={(e) => e.stopPropagation()}
-              >
+                onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between p-xl border-b border-outline-variant/30">
                   <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                     New Goal

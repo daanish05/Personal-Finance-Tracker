@@ -431,3 +431,7 @@ body {
 }
 
 
+/* Accounts Add Width */
+.max-w-lg{
+  max-width: 100%;
+} 
