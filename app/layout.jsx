@@ -3,7 +3,7 @@ import Providers from "../components/ThemeProvider";
 import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
 import "./globals.css";
-
+import Script from "next/script";
 
 export default function RootLayout({ children }) {
   return (
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         />
-        <script
+        <Script
           dangerouslySetInnerHTML={{
             __html: `
               try {

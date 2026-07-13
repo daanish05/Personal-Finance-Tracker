@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Settings() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -285,9 +286,11 @@ export default function Settings() {
                 </div>
                 <div className="mt-lg pt-lg border-t border-outline-variant flex justify-end" 
                 style={{ gap: "1rem", alignItems: "center" }}>
+                  <Link href="/EditProfile">
                   <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
                     Edit Profile
                   </button>
+                  </Link>
                   <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
                     Save Changes
                   </button>
