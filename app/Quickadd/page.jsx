@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UserProfile from "../../components/UserProfile";
 import {
@@ -12,6 +12,14 @@ export default function Quickadd() {
   const router = useRouter();
   const { addTransaction, defaultCurrency, setDefaultCurrency } =
     useTransactions();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("bankAccounts");
+      if (saved) setBankAccounts(JSON.parse(saved));
+    } catch (e) {}
+  }, []);
   const [type, setType] = useState("expense");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [title, setTitle] = useState("");
@@ -370,14 +378,17 @@ export default function Quickadd() {
                         <option disabled="" value="">
                           Select account...
                         </option>
-                        <option value="chase">
-                          Chase Sapphire (**** 1234)
-                        </option>
-                        <option value="amex">Amex Platinum (**** 5678)</option>
-                        <option value="cash">Petty Cash</option>
-                        <option value="savings">
-                          WealthFlow High-Yield Savings
-                        </option>
+                        {bankAccounts.length === 0 ? (
+                          <option disabled="" value="">
+                            No accounts found — add one in Accounts
+                          </option>
+                        ) : (
+                          bankAccounts.map((a) => (
+                            <option key={a.id} value={a.name}>
+                              {a.name} — {a.desc}
+                            </option>
+                          ))
+                        )}
                       </select>
                       <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-outline pointer-events-none">
                         expand_more

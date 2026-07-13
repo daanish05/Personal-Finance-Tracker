@@ -186,7 +186,7 @@ export default function Accounts() {
     primary: "bg-primary/10",
     tertiary: "bg-tertiary/10",
     secondary: "bg-secondary/10",
-    "on-surface": "bg-on-surface/10",
+    "on-surface": "bg-surface-variant/40",
   };
   const iconColor = {
     primary: "text-primary",
@@ -198,7 +198,7 @@ export default function Accounts() {
     primary: "hover:shadow-primary/5",
     tertiary: "hover:shadow-tertiary/5",
     secondary: "hover:shadow-secondary/5",
-    "on-surface": "hover:shadow-on-surface/5",
+    "on-surface": "hover:shadow-surface/30",
   };
 
   return (
@@ -628,26 +628,18 @@ export default function Accounts() {
                   </label>
 
                   <div className="flex gap-3">
-                    {COLORS.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        className={`w-10 h-10 rounded-full border-2 transition-all ${
-                          form.color === c
-                            ? "border-on-surface scale-110"
-                            : "border-transparent"
-                        } ${
-                          c === "primary"
-                            ? "bg-primary/30"
-                            : c === "secondary"
-                              ? "bg-secondary/30"
-                              : c === "tertiary"
-                                ? "bg-tertiary/30"
-                                : "bg-on-surface/30"
-                        }`}
-                        onClick={() => setForm({ ...form, color: c })}
-                      />
-                    ))}
+                    {COLORS.map((c) => {
+                      const hex = c === "primary" ? "var(--primary)" : c === "secondary" ? "var(--secondary)" : c === "tertiary" ? "var(--tertiary)" : "var(--text)";
+                      return (
+                        <button
+                          key={c}
+                          type="button"
+                          className={`w-10 h-10 rounded-full transition-all ${form.color === c ? "scale-110" : ""}`}
+                          style={{ background: hex, border: form.color === c ? "3px solid var(--text)" : "3px solid transparent" }}
+                          onClick={() => setForm({ ...form, color: c })}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 
