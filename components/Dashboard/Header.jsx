@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import UserProfile from "../UserProfile";
 
 export default function Header({
   searchQuery = "",
@@ -39,8 +40,14 @@ export default function Header({
     <>
       <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
         <div className="flex items-center gap-md flex-1 min-w-0">
-          <div className="relative w-full max-w-full md:max-w-[480px]" ref={dropdownRef}
-          style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
+          <div
+            className="relative w-full max-w-full md:max-w-[480px]"
+            ref={dropdownRef}
+            style={{
+              border: "1px solid var(--outline-variant)",
+              borderRadius: "8px",
+            }}
+          >
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
               search
             </span>
@@ -49,7 +56,7 @@ export default function Header({
               // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
               className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
                   transition-all duration-200
-                  hover:border-primary/40 hover:shadow-md
+                  hover:border-primary/40 hover:shadow-md 
                   focus:ring-2 focus:ring-primary/10 focus:border-primary
                   outline-none"
               placeholder="Search, accounts, transactions..."
@@ -75,7 +82,8 @@ export default function Header({
             {showDropdown && searchQuery.trim() && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto">
                 <div className="px-4 py-2 text-xs text-outline font-label-md uppercase tracking-wider border-b border-outline-variant/30">
-                  {results.length} result{results.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
+                  {results.length} result{results.length !== 1 ? "s" : ""} for
+                  &ldquo;{searchQuery}&rdquo;
                 </div>
                 {results.length === 0 ? (
                   <div className="px-4 py-6 text-center text-on-surface-variant text-body-sm">
@@ -91,8 +99,12 @@ export default function Header({
                         setShowDropdown(false);
                       }}
                     >
-                      <div className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${t.type === "income" ? "bg-primary/10" : "bg-surface-variant/40"}`}>
-                        <span className={`material-symbols-outlined text-[16px] ${t.type === "income" ? "text-primary" : "text-primary"}`}>
+                      <div
+                        className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${t.type === "income" ? "bg-primary/10" : "bg-surface-variant/40"}`}
+                      >
+                        <span
+                          className={`material-symbols-outlined text-[16px] ${t.type === "income" ? "text-primary" : "text-primary"}`}
+                        >
                           {t.type === "income" ? "work" : "receipt"}
                         </span>
                       </div>
@@ -109,10 +121,15 @@ export default function Header({
                           })}
                         </p>
                       </div>
-                      <span className={`font-mono-data text-label-md font-medium shrink-0 ${t.type === "income" ? "text-secondary" : "text-tertiary"}`}>
+                      <span
+                        className={`font-mono-data text-label-md font-medium shrink-0 ${t.type === "income" ? "text-secondary" : "text-tertiary"}`}
+                      >
                         {t.type === "income" ? "+" : "-"}
                         {formatCurrency
-                          ? formatCurrency(t.amount, t.currency || defaultCurrency)
+                          ? formatCurrency(
+                              t.amount,
+                              t.currency || defaultCurrency,
+                            )
                           : `${t.amount}`}
                       </span>
                     </div>
@@ -142,23 +159,7 @@ export default function Header({
             <span className="material-symbols-outlined text-[18px]">add</span>
             Quick Add
           </a>
-          <div className="flex items-center gap-sm cursor-pointer group">
-            <div className="text-right">
-              <p className="font-label-md text-on-surface font-bold">
-                Alex Sterling
-              </p>
-              <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Premium Member
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full border-2 border-surface-variant overflow-hidden">
-              <img
-                className="w-full h-full object-cover"
-                alt="User avatar"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDobLtNGEJ9IlwFaTG64cOqzLMgyQePG3ljFEKoYSOmT1LecjsBWpoWXkhYWfS3eF0MORWzGqohppjalpUGIxaboO5CdZoT6WQGEYhqBo0-iAlgyBvo3AagJVqaJ_VCuzZTXu-RFDVpxm47wFZJsSORT3ajmchqpydg2gQ63j5WDI63IUlDH-VT-7JuqqJaHES_hEFARM9ecXDl63vx7JxIoGVRUOri4B2s_kPN426fU5YbsvNo2uk6"
-              />
-            </div>
-          </div>
+          <UserProfile />
         </div>
       </header>
     </>

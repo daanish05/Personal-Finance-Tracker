@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import UserProfile from "../../components/UserProfile";
 import {
   useTransactions,
   formatCurrency,
@@ -133,23 +134,7 @@ export default function Report() {
                 </span>
                 Quick Add
               </a>
-              <div className="flex items-center gap-sm cursor-pointer group">
-                <div className="text-right">
-                  <p className="font-label-md text-on-surface font-bold">
-                    Alex Sterling
-                  </p>
-                  <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                    Premium Member
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full border-2 border-surface-variant overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover"
-                    data-alt="A professional headshot of a person with a friendly expression, set against a soft-focus corporate office background. The lighting is bright and clean, reflecting a high-end, stable financial professional identity. The overall aesthetic is minimalist and modern."
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDobLtNGEJ9IlwFaTG64cOqzLMgyQePG3ljFEKoYSOmT1LecjsBWpoWXkhYWfS3eF0MORWzGqohppjalpUGIxaboO5CdZoT6WQGEYhqBo0-iAlgyBvo3AagJVqaJ_VCuzZTXu-RFDVpxm47wFZJsSORT3ajmchqpydg2gQ63j5WDI63IUlDH-VT-7JuqqJaHES_hEFARM9ecXDl63vx7JxIoGVRUOri4B2s_kPN426fU5YbsvNo2uk6"
-                  />
-                </div>
-              </div>
+              <UserProfile />
             </div>
             {/* <div className="flex items-center gap-lg">
               <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
