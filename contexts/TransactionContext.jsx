@@ -51,7 +51,10 @@ export default function TransactionProvider({ children }) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("transactions");
-      if (saved) setTransactions(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setTransactions(parsed.filter(t => t && typeof t === "object"));
+      }
     } catch (e) {}
     try {
       const saved = localStorage.getItem("defaultCurrency");
@@ -79,12 +82,12 @@ export default function TransactionProvider({ children }) {
   }, []);
 
   const totalIncome = transactions
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t) => t?.type === "income")
+    .reduce((sum, t) => sum + Number(t?.amount ?? 0), 0);
 
   const totalExpenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t) => t?.type === "expense")
+    .reduce((sum, t) => sum + Number(t?.amount ?? 0), 0);
 
   const balance = totalIncome - totalExpenses;
 

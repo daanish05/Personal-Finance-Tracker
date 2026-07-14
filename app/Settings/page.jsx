@@ -272,7 +272,7 @@ export default function Settings() {
                         checked={notifications.budgetAlerts.email}
                         onChange={() => toggleNotif("budgetAlerts", "email")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="relative w-10 h-5 bg-outline-variant/30 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1/2 after:left-[4px] after:-translate-y-1/2 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer w-12 justify-center">
                       <input
@@ -281,7 +281,25 @@ export default function Settings() {
                         checked={notifications.budgetAlerts.push}
                         onChange={() => toggleNotif("budgetAlerts", "push")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="
+                      relative
+                      w-10 h-5 
+                      bg-outline-variant/30 
+                      rounded-full 
+                      peer-checked:after:translate-x-full 
+                      peer-checked:after:border-white 
+                      after:content-[''] 
+                      after:absolute 
+                      after:top-1/2
+                      after:left-[4px] 
+                      after:-translate-y-1/2 
+                      after:bg-white 
+                      after:border-gray-300 
+                      after:border 
+                      after:rounded-full 
+                      after:h-4 after:w-4 
+                      after:transition-all 
+                      peer-checked:bg-primary" />
                     </label>
                   </div>
                 </div>
@@ -298,7 +316,7 @@ export default function Settings() {
                         checked={notifications.billReminders.email}
                         onChange={() => toggleNotif("billReminders", "email")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="relative w-10 h-5 bg-outline-variant/30 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1/2 after:left-[4px] after:-translate-y-1/2 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer w-12 justify-center">
                       <input
@@ -307,7 +325,7 @@ export default function Settings() {
                         checked={notifications.billReminders.push}
                         onChange={() => toggleNotif("billReminders", "push")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="relative w-10 h-5 bg-outline-variant/30 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1/2 after:left-[4px] after:-translate-y-1/2 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                     </label>
                   </div>
                 </div>
@@ -324,7 +342,7 @@ export default function Settings() {
                         checked={notifications.monthlyReports.email}
                         onChange={() => toggleNotif("monthlyReports", "email")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="relative w-10 h-5 bg-outline-variant/30 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1/2 after:left-[4px] after:-translate-y-1/2 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer w-12 justify-center">
                       <input
@@ -333,7 +351,7 @@ export default function Settings() {
                         checked={notifications.monthlyReports.push}
                         onChange={() => toggleNotif("monthlyReports", "push")}
                       />
-                      <div className="w-10 h-5 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[8px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      <div className="relative w-10 h-5 bg-outline-variant/30 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1/2 after:left-[4px] after:-translate-y-1/2 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                     </label>
                   </div>
                 </div>

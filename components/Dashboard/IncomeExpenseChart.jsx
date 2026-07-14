@@ -3,8 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
 
-Chart.register(...registerables);
-
 function getMonthlyData(transactions, monthsBack = 5) {
   const now = new Date();
   const labels = [];
@@ -36,6 +34,8 @@ export default function IncomeExpenseChart({ dark, transactions = [], timeRange 
   const chartRef = useRef(null);
 
   useEffect(() => {
+    Chart.register(...registerables);
+
     const ctx = canvasRef.current.getContext('2d');
 
     const gradientIncome = ctx.createLinearGradient(0, 0, 0, 400);

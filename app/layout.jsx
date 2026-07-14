@@ -27,6 +27,17 @@ export default function RootLayout({ children }) {
                   document.documentElement.classList.remove("dark");
                 }
               } catch (e) {}
+              function onUnhandled(e) {
+                console.warn("Unhandled rejection:", e.reason?.toString?.() || e.reason);
+                e.preventDefault();
+                e.stopImmediatePropagation();
+              }
+              window.addEventListener("unhandledrejection", onUnhandled, true);
+              window.addEventListener("error", function(e) {
+                console.warn("Runtime error:", e.error?.toString?.() || e.message);
+                e.preventDefault();
+                e.stopImmediatePropagation();
+              }, true);
             `,
           }}
         />
