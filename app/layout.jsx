@@ -20,7 +20,11 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const theme = localStorage.getItem("theme");
+                var _s = document.createElement("style");
+                _s.id = "no-transition-fix";
+                _s.textContent = "*,*::before,*::after{transition:none!important}";
+                document.head.appendChild(_s);
+                var theme = localStorage.getItem("theme");
                 if (
                   theme === "dark" ||
                   (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
@@ -29,6 +33,12 @@ export default function RootLayout({ children }) {
                 } else {
                   document.documentElement.classList.remove("dark");
                 }
+                requestAnimationFrame(function() {
+                  requestAnimationFrame(function() {
+                    var el = document.getElementById("no-transition-fix");
+                    if (el) el.remove();
+                  });
+                });
               } catch (e) {}
             `,
           }}

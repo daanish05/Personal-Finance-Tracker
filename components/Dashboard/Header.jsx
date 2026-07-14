@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import UserProfile from "../UserProfile";
+import Link from "next/link";
+
+import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../ThemeProvider";
 
 export default function Header({
   searchQuery = "",
@@ -36,21 +41,37 @@ export default function Header({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  const pathname = usePathname();
+  const { dark, toggleDark } = useTheme();
+  const isActive = (path) => pathname === path;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
       <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-        {/* <div className="flex items-center gap-md flex-1 min-w-0"> */}
-        <div className="flex items-center flex-1 min-w-0">
-          {/* <div
-            className="relative w-full max-w-full md:max-w-[480px]" */}
-          <div
-            className="relative w-full max-w-[180px] sm:max-w-[220px] md:max-w-[480px]"
+        <div className="absolute left-4 top-1/2 -translate-y-1/2">
+          <Link href="/" className="md:hidden">
+            <div className="w-10 h-10 bg-primary rounded flex items-center justify-center">
+              <span
+                className="material-symbols-outlined text-on-primary text-[20px]"
+                style={{ fontVariationSettings: '"FILL" 1' }}
+              >
+                account_balance_wallet
+              </span>
+            </div>  
+          </Link>
+
+          {/* <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
+            <span className="material-symbols-outlined">menu</span>
+          </button> */}
+        </div>
+        <div className="flex items-center flex-1 min-w-0 ml-5 sm:ml-4 md:ml-0">
+          <div  
+            className="relative w-full max-w-[200px] sm:max-w-[200px] md:max-w-[480px]"
             ref={dropdownRef}
             style={{
               border: "1px solid var(--outline-variant)",
-              borderRadius: "8px",
-            }}
-          >
+              borderRadius: "8px", }}>
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
               search
             </span>

@@ -52,57 +52,37 @@ export default function Quickadd() {
               '\n      .material-symbols-outlined {\n        font-variation-settings:\n          "FILL" 0,\n          "wght" 400,\n          "GRAD" 0,\n          "opsz" 24;\n        display: inline-block;\n        vertical-align: middle;\n        line-height: 1;\n      }\n      .focused-input {\n        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n      }\n      .focused-input:focus {\n        outline: none;\n        border-color: #0066ff;\n        box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);\n      }\n    ',
           }}
         />
-        {/* Shell: TopNavBar (Predicted from JSON) */}
-        <header
-          className="sticky top-0 z-40 flex justify-between items-center w-full px-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant"
-          style={{
-            marginLeft: "240px",
-            width: "calc(100% - 240px)",
-          }}
-        >
-          {/* <span className="font-headline-md text-headline-md font-black text-primary">
-              WealthFlow
-            </span> */}
-          <div
-            className="relative w-full max-w-[480px]"
-            style={{
-              border: "1px solid var(--outline-variant)",
-              borderRadius: "8px",
-            }}
-          >
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
-              search
-            </span>
-            <input
-              // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-              className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
-                  transition-all duration-200
-                  hover:border-primary/40 hover:shadow-md
-                  focus:ring-2 focus:ring-primary/10 focus:border-primary
-                  outline-none"
-              placeholder="Search date..."
-              type="text"
-            />
-          </div>
-          <div className="flex items-center gap-md">
-            {/* <div className="relative hidden md:block">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">
+        {/* Main Content Canvas */}
+        <main className="ml-0 md:ml-60 min-h-screen flex flex-col">
+          <header className="sticky top-0 z-40 flex justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+            <div
+              className="relative w-full max-w-[480px]"
+              style={{
+                border: "1px solid var(--outline-variant)",
+                borderRadius: "8px",
+              }}
+            >
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
                 search
               </span>
               <input
-                className="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-sm focused-input w-64"
-                placeholder="Search data..."
+                className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
+                    transition-all duration-200
+                    hover:border-primary/40 hover:shadow-md
+                    focus:ring-2 focus:ring-primary/10 focus:border-primary
+                    outline-none"
+                placeholder="Search date..."
                 type="text"
               />
-            </div> */}
-            <button className="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <UserProfile />
-          </div>
-        </header>
-        {/* Main Content Canvas */}
-        <main className="container mx-auto max-w-[800px] px-md py-xl">
+            </div>
+            <div className="flex items-center gap-md">
+              <button className="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+                <span className="material-symbols-outlined">notifications</span>
+              </button>
+              <UserProfile />
+            </div>
+          </header>
+          <div className="flex-1 container mx-auto max-w-[800px] px-md py-xl">
           {/* Page Header */}
           <div className="mb-lg flex flex-col gap-base">
             <div className="flex items-center gap-sm text-primary mb-xs">
@@ -645,6 +625,7 @@ export default function Quickadd() {
               </span>
             </div>
           </div>
+        </div>
         </main>
       </>
     </>

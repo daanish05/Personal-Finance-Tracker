@@ -232,7 +232,8 @@ export default function Accounts() {
               </span>
               <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
             </button>
-            <div className="h-8 w-[1px] bg-outline-variant/50" />
+            <div className="h-8 w-[1px] bg-outline-variant/50"/>
+            
             <button
               onClick={openAdd}
               className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
@@ -629,13 +630,26 @@ export default function Accounts() {
 
                   <div className="flex gap-3">
                     {COLORS.map((c) => {
-                      const hex = c === "primary" ? "var(--primary)" : c === "secondary" ? "var(--secondary)" : c === "tertiary" ? "var(--tertiary)" : "var(--text)";
+                      const hex =
+                        c === "primary"
+                          ? "var(--primary)"
+                          : c === "secondary"
+                            ? "var(--secondary)"
+                            : c === "tertiary"
+                              ? "var(--tertiary)"
+                              : "var(--text)";
                       return (
                         <button
                           key={c}
                           type="button"
                           className={`w-10 h-10 rounded-full transition-all ${form.color === c ? "scale-110" : ""}`}
-                          style={{ background: hex, border: form.color === c ? "3px solid var(--text)" : "3px solid transparent" }}
+                          style={{
+                            background: hex,
+                            border:
+                              form.color === c
+                                ? "3px solid var(--text)"
+                                : "3px solid transparent",
+                          }}
                           onClick={() => setForm({ ...form, color: c })}
                         />
                       );
@@ -694,5 +708,7 @@ export default function Accounts() {
       <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 left-60 -z-10 w-[400px] h-[400px] bg-secondary/5 blur-[100px] rounded-full pointer-events-none" />
     </>
+
+    
   );
 }

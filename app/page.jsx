@@ -134,7 +134,7 @@ export default function Home() {
     <>
       <>
         {/* Main Content Shell */}
-        <main className="ml-60 min-h-screen flex flex-col">
+        <main className="ml-0 md:ml-60 min-h-screen flex flex-col">
           {/* Top Nav Bar */}
           <Header
             searchQuery={dashboardSearch}

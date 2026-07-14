@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useUser } from "./UserProvider";
 
 export default function UserProfile() {
@@ -10,7 +11,7 @@ export default function UserProfile() {
         <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">Premium Member</p>
       </div> */}
       <div className="text-right">
-        <p className="font-label-md text-on-surface font-bold">{profile.name}</p>
+        <p className="hidden md:block font-label-md text-on-surface font-bold">{profile.name}</p>
         {/* <p className="font-label-md text-on-surface font-bold">
           {profile.name}
         </p> */}
@@ -20,11 +21,13 @@ export default function UserProfile() {
       </div>
       <div className="w-12 h-12 rounded-full border-2 border-surface-variant overflow-hidden">
         {profile.avatar ? (
+          <Link href="/Settings">
           <img
             className="w-full h-full object-cover"
             alt="User avatar"
             src={profile.avatar}
-          />
+          />\
+          </Link>
         ) : (
           <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
             {profile.name.charAt(0)}

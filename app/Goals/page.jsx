@@ -197,7 +197,7 @@ export default function Goals() {
               </button>
               <div className="h-8 w-[1px] bg-outline-variant/50" />
 
-              <a
+              {/* <a
                 href="/Quickadd"
                 className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
               >
@@ -205,31 +205,10 @@ export default function Goals() {
                   add
                 </span>
                 Quick Add
-              </a>
+              </a> */}
               <UserProfile />
             </div>
-            {/* <div className="flex items-center gap-lg">
-              <a
-                href="/Quickadd"
-                className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  add
-                </span>
-                Quick Add
-              </a>
-              <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-                <span className="material-symbols-outlined">notifications</span>
-                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
-              </button>
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-                <img
-                  className="w-full h-full object-cover"
-                  data-alt="A professional studio headshot of a financial executive, clean high-key lighting, soft neutral background, wearing a charcoal suit. The style is polished, high-end corporate minimalism, reflecting trust and expertise in a premium wealth management environment."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsFYw9n19KwcxpYuXoPIsUrh0vZ8RVuJY0HxCjdxKMWlDhlem0WL2AO0n4r7FQrR5rp2hn3EovvYVud-zI0hDe45xRHZRa9-4PQdropy7dlKF15U99TwHTPuD0IQb6ubLZh3S1iX2fx_FslLKrdmHDN11YZitd32bPUS_uUm10I6ybwRBKyoC2nvMRb2hi3rzva-EJE8wqUKiB90-JAvkp7qDqN8z128GUTPSsHQ2k1SpBEJKezio"
-                />
-              </div>
-            </div> */}
+{/* old header actions commented out */}
           </header>
           {/* Goals Content */}
           <div className="max-w-[1280px] mx-auto px-xl py-xl space-y-xl">
