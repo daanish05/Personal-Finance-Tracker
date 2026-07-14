@@ -1,7 +1,9 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useUser } from "../../components/UserProvider";
+
 
 export default function EditProfile() {
   const { profile, updateProfile } = useUser();
@@ -28,15 +30,30 @@ export default function EditProfile() {
     setTimeout(() => setToastVisible(false), 3000);
   };
 
+  //   const handleSubmit = (e) => {
+  //     e.preventDefault();
+  //     updateProfile(form);
+  //     setSavedForm({ ...form });
+  //     showToast("Profile updated successfully");
+  //   };
+
+  //   const handleCancel = () => {
+  //     setForm({ ...savedForm });
+  //   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateProfile(form);
+
+    updateProfile(form); // Save the profile
+
     setSavedForm({ ...form });
     showToast("Profile updated successfully");
+
+    router.back(); // Go back after saving
   };
 
   const handleCancel = () => {
-    setForm({ ...savedForm });
+    router.back(); // Discard changes and go back
   };
 
   const updateField = (field, value) => {
@@ -98,49 +115,84 @@ export default function EditProfile() {
             </a>
           </div>
         </header>
-        <div className="max-w-container-max mx-auto p-xl flex gap-xl" 
-        className="p-xl" >
+        <div
+          className="max-w-container-max mx-auto p-xl flex gap-xl"
+          className="p-xl"
+        >
           <div className="max-w-4xl mx-auto">
             <nav className="mb-lg">
               <ol className="flex items-center gap-2 text-on-surface-variant">
                 <li>
-                  <Link className="font-label-md text-label-md hover:text-primary transition-colors" href="/Settings">
+                  <Link
+                    className="font-label-md text-label-md hover:text-primary transition-colors"
+                    href="/Settings"
+                  >
                     Profile
                   </Link>
                 </li>
                 <li>
-                  <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                  <span className="material-symbols-outlined text-[16px]">
+                    chevron_right
+                  </span>
                 </li>
                 <li>
-                  <span className="font-label-md text-label-md font-bold text-on-surface">Edit Profile</span>
+                  <span className="font-label-md text-label-md font-bold text-on-surface">
+                    Edit Profile
+                  </span>
                 </li>
               </ol>
             </nav>
             <header className="mb-xl">
-              <h1 className="font-headline-lg text-headline-lg text-on-surface">Account Settings</h1>
-              <p className="font-body-md text-body-md text-outline-variant mt-1">Manage your professional presence and personal wealth identity.</p>
+              <h1 className="font-headline-lg text-headline-lg text-on-surface">
+                Account Settings
+              </h1>
+              <p className="font-body-md text-body-md text-outline-variant mt-1">
+                Manage your professional presence and personal wealth identity.
+              </p>
             </header>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-xl">
-              <section className="lg:col-span-4" style={{ display: sectionMatches("profile") ? "" : "none" }}>
+              <section
+                className="lg:col-span-4"
+                style={{ display: sectionMatches("profile") ? "" : "none" }}
+              >
                 <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg sticky top-24">
-                  <h2 className="font-label-md text-label-md font-bold text-on-surface mb-md">Profile Picture</h2>
+                  <h2 className="font-label-md text-label-md font-bold text-on-surface mb-md">
+                    Profile Picture
+                  </h2>
                   <div className="flex flex-col items-center">
                     <div className="relative group">
                       <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-high shadow-sm">
                         {profile.avatar ? (
-                          <img className="w-full h-full object-cover" alt="Profile" src={profile.avatar} />
+                          <img
+                            className="w-full h-full object-cover"
+                            alt="Profile"
+                            src={profile.avatar}
+                          />
                         ) : (
                           <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-4xl">
                             {profile.name.charAt(0)}
                           </div>
                         )}
                       </div>
-                      <input type="file" accept="image/*" ref={avatarInputRef} className="hidden" onChange={handleAvatarUpload} />
-                      <button className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full border-2 border-surface hover:scale-110 transition-transform shadow-lg" onClick={() => avatarInputRef.current?.click()}>
-                        <span className="material-symbols-outlined text-[18px]">photo_camera</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={avatarInputRef}
+                        className="hidden"
+                        onChange={handleAvatarUpload}
+                      />
+                      <button
+                        className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full border-2 border-surface hover:scale-110 transition-transform shadow-lg"
+                        onClick={() => avatarInputRef.current?.click()}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">
+                          photo_camera
+                        </span>
                       </button>
                     </div>
-                    <p className="mt-md font-body-sm text-body-sm text-outline text-center">JPG, GIF or PNG. Max size 2MB.</p>
+                    <p className="mt-md font-body-sm text-body-sm text-outline text-center">
+                      JPG, GIF or PNG. Max size 2MB.
+                    </p>
                     <div className="w-full mt-lg space-y-2">
                       <button
                         className="w-full py-2 bg-surface-container-high text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-colors border border-outline-variant"
@@ -161,12 +213,17 @@ export default function EditProfile() {
                   </div>
                 </div>
               </section>
-              <section className="lg:col-span-8 space-y-lg" style={{ display: sectionMatches("profile") ? "" : "none" }}>
+              <section
+                className="lg:col-span-8 space-y-lg"
+                style={{ display: sectionMatches("profile") ? "" : "none" }}
+              >
                 <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl">
                   <form className="space-y-lg" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
                       <div className="space-y-base">
-                        <label className="font-label-md text-label-md text-on-surface-variant block">Full Name</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant block">
+                          Full Name
+                        </label>
                         <input
                           className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-3 font-body-md text-body-md text-on-surface"
                           type="text"
@@ -175,7 +232,9 @@ export default function EditProfile() {
                         />
                       </div>
                       <div className="space-y-base">
-                        <label className="font-label-md text-label-md text-on-surface-variant block">Email Address</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant block">
+                          Email Address
+                        </label>
                         <input
                           className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-3 font-body-md text-body-md text-on-surface"
                           type="email"
@@ -184,7 +243,9 @@ export default function EditProfile() {
                         />
                       </div>
                       <div className="space-y-base">
-                        <label className="font-label-md text-label-md text-on-surface-variant block">Phone Number</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant block">
+                          Phone Number
+                        </label>
                         <input
                           className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-3 font-body-md text-body-md text-on-surface"
                           type="tel"
@@ -193,17 +254,23 @@ export default function EditProfile() {
                         />
                       </div>
                       <div className="space-y-base">
-                        <label className="font-label-md text-label-md text-on-surface-variant block">Location</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant block">
+                          Location
+                        </label>
                         <input
                           className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-3 font-body-md text-body-md text-on-surface"
                           type="text"
                           value={form.location}
-                          onChange={(e) => updateField("location", e.target.value)}
+                          onChange={(e) =>
+                            updateField("location", e.target.value)
+                          }
                         />
                       </div>
                     </div>
                     <div className="space-y-base">
-                      <label className="font-label-md text-label-md text-on-surface-variant block">Financial Bio &amp; Goals</label>
+                      <label className="font-label-md text-label-md text-on-surface-variant block">
+                        Financial Bio &amp; Goals
+                      </label>
                       <textarea
                         className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-3 font-body-md text-body-md text-on-surface resize-none"
                         placeholder="Share your long-term investment philosophy or personal financial goals..."
@@ -213,24 +280,32 @@ export default function EditProfile() {
                       />
                     </div>
                     <div className="space-y-md border-t border-outline-variant pt-lg mt-xl">
-                      <h3 className="font-label-md text-label-md font-bold text-on-surface">Connected Socials</h3>
+                      <h3 className="font-label-md text-label-md font-bold text-on-surface">
+                        Connected Socials
+                      </h3>
                       <div className="space-y-md">
                         <div className="flex items-center gap-md">
                           <div className="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary border border-primary/20">
-                            <span className="material-symbols-outlined">link</span>
+                            <span className="material-symbols-outlined">
+                              link
+                            </span>
                           </div>
                           <div className="flex-1">
                             <input
                               className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-2 font-body-sm text-body-sm text-on-surface"
                               type="url"
                               value={form.linkedin}
-                              onChange={(e) => updateField("linkedin", e.target.value)}
+                              onChange={(e) =>
+                                updateField("linkedin", e.target.value)
+                              }
                             />
                           </div>
                         </div>
                         <div className="flex items-center gap-md">
                           <div className="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary border border-secondary/20">
-                            <span className="material-symbols-outlined">public</span>
+                            <span className="material-symbols-outlined">
+                              public
+                            </span>
                           </div>
                           <div className="flex-1">
                             <input
@@ -238,7 +313,9 @@ export default function EditProfile() {
                               placeholder="Personal Website"
                               type="url"
                               value={form.website}
-                              onChange={(e) => updateField("website", e.target.value)}
+                              onChange={(e) =>
+                                updateField("website", e.target.value)
+                              }
                             />
                           </div>
                         </div>
@@ -278,10 +355,17 @@ export default function EditProfile() {
           className={`fixed bottom-lg right-lg transition-all duration-300 z-[100] ${toastVisible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}`}
         >
           <div className="bg-inverse-surface text-inverse-on-surface px-lg py-md rounded-xl flex items-center gap-md shadow-2xl">
-            <span className="material-symbols-outlined text-secondary-fixed">check_circle</span>
+            <span className="material-symbols-outlined text-secondary-fixed">
+              check_circle
+            </span>
             <span className="font-label-md text-label-md">{toastMessage}</span>
-            <button className="ml-xl hover:opacity-70" onClick={() => setToastVisible(false)}>
-              <span className="material-symbols-outlined text-[20px]">close</span>
+            <button
+              className="ml-xl hover:opacity-70"
+              onClick={() => setToastVisible(false)}
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                close
+              </span>
             </button>
           </div>
         </div>

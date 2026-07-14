@@ -32,8 +32,9 @@ export default function Sidebar() {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300 z-40 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
-        <div className="px-lg py-xl flex items-center gap-sm">
+      <aside className={`fixed left-0 top-0  h-full w-60 flex flex-col border-r border-outline-variant bg-surface-container-low transition-all duration-300 z-40 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
+        {/* <div className="px-lg py-xl flex items-center gap-sm"> */}
+        <div className="px-lg pt-30 pb-10 md:pt-xl md:pb-xl flex items-center gap-sm">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <Link href="/">
               <span

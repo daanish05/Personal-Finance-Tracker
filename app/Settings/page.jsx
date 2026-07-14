@@ -175,7 +175,7 @@ export default function Settings() {
                 <span className="material-symbols-outlined text-[18px]">
                   add
                 </span>
-                <span className="text-sm">Add</span>
+                <span className="text-sm">Quick Add</span>
               </a>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function Settings() {
                 <button
                   type="button"
                   onClick={() => window.history.back()}
-                  className="flex items-center justify-center p-1 rounded hover:bg-gray-40"
+                  className="flex items-center justify-center p-1 rounded hover:bg-gray-50"
                 >
                   <span className="material-symbols-outlined text-[20px]">
                     arrow_back
@@ -288,12 +288,15 @@ export default function Settings() {
                   <h4 className="font-headline-md text-headline-md font-bold">
                     {profile.name}
                   </h4>
+                  <p className="text-on-surface-variant font-body-sm opacity-100">
+                    {profile.email}
+                  </p>
                   <p className="text-on-surface-variant font-body-sm opacity-70">
                     Member since January 2023
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-lg">
+              {/* <div className="grid grid-cols-2 gap-lg">
                 <div className="space-y-2">
                   <label className="font-label-md text-label-md text-on-surface-variant">
                     Full Name
@@ -316,8 +319,28 @@ export default function Settings() {
                     defaultValue={profile.email}
                   />
                 </div>
-              </div>
+              </div> */}
               <div
+                className="
+                mt-lg pt-lg border-t border-outline-variant
+                flex flex-col sm:flex-row
+                gap-4
+                items-stretch sm:items-center
+                justify-end">
+                <Link href="/EditProfile">
+                  <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all w-full sm:w-auto">
+                    Edit Profile
+                  </button>
+                </Link>
+
+                {/* <button
+                  className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all w-full sm:w-auto"
+                  onClick={handleProfileSave}
+                >
+                  Save Changes
+                </button> */}
+              </div>
+              {/* <div
                 className="mt-lg pt-lg border-t border-outline-variant flex justify-end"
                 style={{ gap: "1rem", alignItems: "center" }}
               >
@@ -332,7 +355,7 @@ export default function Settings() {
                 >
                   Save Changes
                 </button>
-              </div>
+              </div> */}
             </section>
 
             <section
@@ -754,7 +777,7 @@ export default function Settings() {
               <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                 Data Management
               </h3>
-              <div className="flex flex-col gap-md">
+              {/* <div className="flex flex-col gap-md">
                 <div className="p-lg border border-outline-variant rounded-lg bg-surface-container-low flex items-center justify-between">
                   <div className="flex items-center gap-md">
                     <span className="material-symbols-outlined text-primary text-[32px]">
@@ -797,6 +820,63 @@ export default function Settings() {
                   </div>
                   <button
                     className="px-md py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all"
+                    onClick={handleDeleteAccount}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div> */}
+              <div className="flex flex-col gap-md">
+                {/* Export Data */}
+                <div className="p-lg border border-outline-variant rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-start md:items-center gap-md">
+                    <span className="material-symbols-outlined text-primary text-[32px]">
+                      download
+                    </span>
+
+                    <div>
+                      <p className="font-label-md text-label-md font-bold text-on-surface">
+                        Export your data
+                      </p>
+                      <p className="text-on-surface-variant text-body-sm">
+                        Download your full history and profile in a portable
+                        format.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex w-full md:w-auto gap-sm">
+                    <button
+                      className="flex-1 md:flex-none px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors"
+                      onClick={() => handleExport("CSV")}
+                    >
+                      CSV
+                    </button>
+
+                    <button
+                      className="flex-1 md:flex-none px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors"
+                      onClick={() => handleExport("JSON")}
+                    >
+                      JSON
+                    </button>
+                  </div>
+                </div>
+
+                {/* Delete Account */}
+                <div className="p-lg border border-error/30 bg-error-container/10 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <p className="font-label-md text-label-md font-bold text-error">
+                      Delete Account
+                    </p>
+
+                    <p className="text-on-surface-variant text-body-sm">
+                      Permanently remove your account and all associated data.
+                      This cannot be undone.
+                    </p>
+                  </div>
+
+                  <button
+                    className="w-full md:w-auto px-md py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all"
                     onClick={handleDeleteAccount}
                   >
                     Delete Account
