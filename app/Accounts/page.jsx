@@ -232,12 +232,22 @@ export default function Accounts() {
               </span>
               <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
             </button>
-            <div className="h-8 w-[1px] bg-outline-variant/50"/>
-            
+            <div className="h-8 w-[1px] bg-outline-variant/50" />
             <button
               onClick={openAdd}
-              className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
-            >
+              className="
+              hidden md:flex
+              items-center
+              gap-sm
+              bg-primary
+              text-on-primary
+              px-lg
+              py-2
+              rounded-lg
+              font-label-md
+              hover:opacity-90
+              transition-all
+              active:scale-95">
               <span className="material-symbols-outlined text-[18px]">add</span>
               Add Account
             </button>
@@ -707,8 +717,13 @@ export default function Accounts() {
 
       <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 left-60 -z-10 w-[400px] h-[400px] bg-secondary/5 blur-[100px] rounded-full pointer-events-none" />
+      <button
+        onClick={openAdd}
+        className="md:hidden fixed bottom-6 right-6 z-50 flex items-center gap-0 bg-primary text-on-primary px-3 py-3 rounded-full shadow-xl hover:opacity-90 active:scale-95 transition-all"
+      >
+        <span className="material-symbols-outlined text-[20px]">add</span>
+        <span className="font-medium"></span>
+      </button>
     </>
-
-    
   );
 }
