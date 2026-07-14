@@ -116,8 +116,8 @@ export default function Settings() {
         }}
       />
       <main className="ml-0 md:ml-60 min-h-screen">
-        <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-          {/* <div className="flex items-center gap-md flex-1 min-w-0">
+        {/* <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+          <div className="flex items-center gap-md flex-1 min-w-0">
             <div
               className="relative w-full max-w-full md:max-w-[480px]"
               style={{
@@ -136,7 +136,7 @@ export default function Settings() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-          </div> */}
+          </div>
           <div className="flex items-center gap-lg">
             <button className="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
               <span className="material-symbols-outlined">notifications</span>
@@ -150,6 +150,77 @@ export default function Settings() {
               Quick Add
             </a>
           </div>
+        </header> */}
+        <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+          {/* Mobile Header */}
+          <div className="flex md:hidden items-center justify-between px-4 py-3">
+            {/* Logo */}
+            <Link href="/">
+              <h1 className="font-headline-md text-headline-md font-bold text-primary">
+                WealthFlow
+              </h1>
+            </Link>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-2">
+              <button className="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
+                <span className="material-symbols-outlined">notifications</span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
+              </button>
+
+              <a
+                href="/Quickadd"
+                className="flex items-center gap-1 bg-primary text-on-primary px-3 py-2 rounded-lg"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
+                <span className="text-sm">Add</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Desktop Header */}
+          <div className="hidden md:flex justify-between items-center w-full px-lg py-md">
+            <div className="flex items-center gap-md flex-1 min-w-0">
+              <div
+                className="relative w-full max-w-[480px]"
+                style={{
+                  border: "1px solid var(--outline-variant)",
+                  borderRadius: "8px",
+                }}
+              >
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+                  search
+                </span>
+
+                <input
+                  className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2"
+                  placeholder="Search settings..."
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-lg">
+              <button className="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
+                <span className="material-symbols-outlined">notifications</span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
+              </button>
+
+              <a
+                href="/Quickadd"
+                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
+                Quick Add
+              </a>
+            </div>
+          </div>
         </header>
         <div className="max-w-container-max mx-auto p-xl flex gap-xl">
           <div className="flex-1 space-y-xl settings-scroll">
@@ -158,9 +229,21 @@ export default function Settings() {
               id="profile"
               style={{ display: sectionMatches("profile") ? "" : "none" }}
             >
-              <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
-                Profile
-              </h3>
+              <div className="flex items-center gap-2 mb-md">
+                <button
+                  type="button"
+                  onClick={() => window.history.back()}
+                  className="flex items-center justify-center p-1 rounded hover:bg-gray-40"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    arrow_back
+                  </span>
+                </button>
+
+                <h3 className="font-headline-md text-headline-md font-bold text-on-surface">
+                  Profile
+                </h3>
+              </div>
               <div className="flex items-center gap-xl mb-lg">
                 <div className="relative group">
                   {profile.avatar ? (
@@ -386,7 +469,7 @@ export default function Settings() {
                         onChange={() => toggleNotif("budgetAlerts", "push")}
                       />
                       <div
-                      className="
+                        className="
                       relative
                       w-11 h-5.5
                       bg-outline-variant/30 
@@ -426,8 +509,8 @@ export default function Settings() {
                         checked={notifications.billReminders.email}
                         onChange={() => toggleNotif("billReminders", "email")}
                       />
-                      <div 
-                      className="
+                      <div
+                        className="
                       relative
                       w-11 h-5.5
                       bg-outline-variant/30 
@@ -445,7 +528,8 @@ export default function Settings() {
                       after:rounded-full 
                       after:h-5 after:w-5 
                       after:transition-all 
-                      peer-checked:bg-primary" />
+                      peer-checked:bg-primary"
+                      />
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer w-12 justify-center">
                       <input
@@ -454,8 +538,8 @@ export default function Settings() {
                         checked={notifications.billReminders.push}
                         onChange={() => toggleNotif("billReminders", "push")}
                       />
-                      <div 
-                      className="
+                      <div
+                        className="
                       relative
                       w-11 h-5.5
                       bg-outline-variant/30 
@@ -473,7 +557,8 @@ export default function Settings() {
                       after:rounded-full 
                       after:h-5 after:w-5 
                       after:transition-all 
-                      peer-checked:bg-primary" />
+                      peer-checked:bg-primary"
+                      />
                     </label>
                   </div>
                 </div>
@@ -494,8 +579,8 @@ export default function Settings() {
                         checked={notifications.monthlyReports.email}
                         onChange={() => toggleNotif("monthlyReports", "email")}
                       />
-                      <div 
-                      className="
+                      <div
+                        className="
                       relative
                       w-11 h-5.5
                       bg-outline-variant/30 
@@ -513,7 +598,8 @@ export default function Settings() {
                       after:rounded-full 
                       after:h-5 after:w-5 
                       after:transition-all 
-                      peer-checked:bg-primary" />
+                      peer-checked:bg-primary"
+                      />
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer w-12 justify-center">
                       <input
@@ -522,8 +608,8 @@ export default function Settings() {
                         checked={notifications.monthlyReports.push}
                         onChange={() => toggleNotif("monthlyReports", "push")}
                       />
-                      <div 
-                      className="
+                      <div
+                        className="
                       relative
                       w-11 h-5.5
                       bg-outline-variant/30 
@@ -541,7 +627,8 @@ export default function Settings() {
                       after:rounded-full 
                       after:h-5 after:w-5 
                       after:transition-all 
-                      peer-checked:bg-primary" />
+                      peer-checked:bg-primary"
+                      />
                     </label>
                   </div>
                 </div>
