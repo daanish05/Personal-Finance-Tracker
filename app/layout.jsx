@@ -3,6 +3,7 @@ import Providers from "../components/ThemeProvider";
 import UserProvider from "../components/UserProvider";
 import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
+import Script from "next/script";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
@@ -13,7 +14,9 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         />
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               try {
@@ -27,17 +30,6 @@ export default function RootLayout({ children }) {
                   document.documentElement.classList.remove("dark");
                 }
               } catch (e) {}
-              function onUnhandled(e) {
-                console.warn("Unhandled rejection:", e.reason?.toString?.() || e.reason);
-                e.preventDefault();
-                e.stopImmediatePropagation();
-              }
-              window.addEventListener("unhandledrejection", onUnhandled, true);
-              window.addEventListener("error", function(e) {
-                console.warn("Runtime error:", e.error?.toString?.() || e.message);
-                e.preventDefault();
-                e.stopImmediatePropagation();
-              }, true);
             `,
           }}
         />

@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useTransactions, CURRENCIES } from "../../contexts/TransactionContext";
@@ -42,6 +43,7 @@ export default function Settings() {
     updateProfile({ name, email });
     showToast("Profile saved successfully");
   };
+  const router = useRouter();
 
   const handleCurrencyChange = (e) => {
     setDefaultCurrency(e.target.value);

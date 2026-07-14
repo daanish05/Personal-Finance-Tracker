@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import IncomeExpenseChart from "../components/Dashboard/IncomeExpenseChart";
 import {
   useTransactions,
@@ -17,7 +18,11 @@ export default function Home() {
 
   const [mounted, setMounted] = useState(false);
   const [budgets, setBudgets] = useState({
-    food: 1200, shopping: 800, transport: 500, bills: 0, health: 0,
+    food: 1200,
+    shopping: 800,
+    transport: 500,
+    bills: 0,
+    health: 0,
   });
   const [editingBudget, setEditingBudget] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -79,17 +84,22 @@ export default function Home() {
   };
 
   const colorPalette = [
-    "bg-primary", "bg-secondary", "bg-tertiary", "bg-error", "bg-warning",
-    "bg-emerald-500", "bg-violet-500", "bg-cyan-500", "bg-rose-500",
+    "bg-primary",
+    "bg-secondary",
+    "bg-tertiary",
+    "bg-error",
+    "bg-warning",
+    "bg-emerald-500",
+    "bg-violet-500",
+    "bg-cyan-500",
+    "bg-rose-500",
   ];
   const getCategoryColor = (key) =>
     categoryColors[key] ||
     colorPalette[Object.keys(budgets).indexOf(key) % colorPalette.length];
   const getLabel = (key) =>
     categoryLabels[key] ||
-    key
-      .replace(/[-_]/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+    key.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
   const filteredTransactions = dashboardSearch.trim()
     ? transactions.filter((t) => {
@@ -124,7 +134,7 @@ export default function Home() {
     <>
       <>
         {/* Main Content Shell */}
-        <main className="ml-0 md:ml-60 min-h-screen flex flex-col">
+        <main className="ml-60 min-h-screen flex flex-col">
           {/* Top Nav Bar */}
           <Header
             searchQuery={dashboardSearch}
@@ -238,34 +248,39 @@ export default function Home() {
                       Income vs Expenses
                     </h3>
                     <p className="text-on-surface-variant text-body-sm">
-                       {timeRange === "6m" ? "6-month" : "12-month"} performance analysis
-                     </p>
-                   </div>
-                   <div className="flex gap-sm">
-                     <button
-                       className={`px-md py-1 rounded border text-label-md transition-colors ${
-                         timeRange === "6m"
-                           ? "bg-primary text-on-primary border-primary"
-                           : "border-outline-variant hover:bg-surface-variant"
-                       }`}
-                       onClick={() => setTimeRange("6m")}
-                     >
-                       6 Months
-                     </button>
-                     <button
-                       className={`px-md py-1 rounded border text-label-md transition-colors ${
-                         timeRange === "1y"
-                           ? "bg-primary text-on-primary border-primary"
-                           : "border-outline-variant hover:bg-surface-variant"
-                       }`}
-                       onClick={() => setTimeRange("1y")}
-                     >
-                       1 Year
-                     </button>
-                   </div>
-                 </div>
-                 <div className="chart-container">
-                   <IncomeExpenseChart dark={dark} transactions={transactions} timeRange={timeRange} />
+                      {timeRange === "6m" ? "6-month" : "12-month"} performance
+                      analysis
+                    </p>
+                  </div>
+                  <div className="flex gap-sm">
+                    <button
+                      className={`px-md py-1 rounded border text-label-md transition-colors ${
+                        timeRange === "6m"
+                          ? "bg-primary text-on-primary border-primary"
+                          : "border-outline-variant hover:bg-surface-variant"
+                      }`}
+                      onClick={() => setTimeRange("6m")}
+                    >
+                      6 Months
+                    </button>
+                    <button
+                      className={`px-md py-1 rounded border text-label-md transition-colors ${
+                        timeRange === "1y"
+                          ? "bg-primary text-on-primary border-primary"
+                          : "border-outline-variant hover:bg-surface-variant"
+                      }`}
+                      onClick={() => setTimeRange("1y")}
+                    >
+                      1 Year
+                    </button>
+                  </div>
+                </div>
+                <div className="chart-container">
+                  <IncomeExpenseChart
+                    dark={dark}
+                    transactions={transactions}
+                    timeRange={timeRange}
+                  />
                 </div>
               </div>
               {/* Right Column: Budget & Insight */}
@@ -296,7 +311,9 @@ export default function Home() {
                       return (
                         <div key={key} className="space-y-sm">
                           <div className="flex justify-between font-label-md">
-                            <span className="text-on-surface">{getLabel(key)}</span>
+                            <span className="text-on-surface">
+                              {getLabel(key)}
+                            </span>
                             <span className="text-on-surface-variant inline-flex items-center gap-1">
                               {editingBudget === key ? (
                                 <span className="inline-flex items-center gap-xs">
@@ -346,7 +363,8 @@ export default function Home() {
                                   >
                                     {pct}%
                                     <span className="text-[10px] text-outline ml-1">
-                                      ({formatCurrency(spent, defaultCurrency)} /{" "}
+                                      ({formatCurrency(spent, defaultCurrency)}{" "}
+                                      /{" "}
                                       {formatCurrency(budget, defaultCurrency)})
                                     </span>
                                   </span>
@@ -382,8 +400,8 @@ export default function Home() {
                         </div>
                       );
                     })}
-                    {Object.values(budgets).filter((v) => v > 0)
-                      .length === 0 && (
+                    {Object.values(budgets).filter((v) => v > 0).length ===
+                      0 && (
                       <p className="text-on-surface-variant text-body-sm text-center py-lg">
                         No budgets set. Add a budget below to track spending.
                       </p>
@@ -400,9 +418,7 @@ export default function Home() {
                           className="flex-1 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface"
                           placeholder="Category name"
                           value={newCategoryName}
-                          onChange={(e) =>
-                            setNewCategoryName(e.target.value)
-                          }
+                          onChange={(e) => setNewCategoryName(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter")
                               document
@@ -415,9 +431,7 @@ export default function Home() {
                           type="number"
                           placeholder="Amount"
                           value={newCategoryAmount}
-                          onChange={(e) =>
-                            setNewCategoryAmount(e.target.value)
-                          }
+                          onChange={(e) => setNewCategoryAmount(e.target.value)}
                         />
                       </div>
                       <button
@@ -550,6 +564,7 @@ export default function Home() {
             </p>
           </footer>
         </main>
+
       </>
     </>
   );

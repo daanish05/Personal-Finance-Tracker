@@ -39,9 +39,12 @@ export default function Header({
   return (
     <>
       <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-        <div className="flex items-center gap-md flex-1 min-w-0">
+        {/* <div className="flex items-center gap-md flex-1 min-w-0"> */}
+        <div className="flex items-center flex-1 min-w-0">
+          {/* <div
+            className="relative w-full max-w-full md:max-w-[480px]" */}
           <div
-            className="relative w-full max-w-full md:max-w-[480px]"
+            className="relative w-full max-w-[180px] sm:max-w-[220px] md:max-w-[480px]"
             ref={dropdownRef}
             style={{
               border: "1px solid var(--outline-variant)",
@@ -146,22 +149,32 @@ export default function Header({
         </div>
         <div className="flex items-center gap-lg">
           <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-            <span className="material-symbols-outlined text-[24px]">
+            <span className="material-symbols-outlined text-[30px]">
               notifications
             </span>
             <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
           </button>
           <div className="h-8 w-[1px] bg-outline-variant/50" />
-          <a
+          {/* <a
             href="/Quickadd"
-            className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+            className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95" 
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             Quick Add
-          </a>
+          </a> */}
           <UserProfile />
         </div>
       </header>
+      <a
+        href="/Quickadd"
+        className="fixed bottom-5 right-5 md:hidden z-50
+             w-14 h-14 rounded-full
+             bg-primary text-on-primary
+             flex items-center justify-center
+             shadow-xl hover:scale-105 active:scale-95 transition-all"
+      >
+        <span className="material-symbols-outlined text-[28px]">add</span>
+      </a>
     </>
   );
 }
