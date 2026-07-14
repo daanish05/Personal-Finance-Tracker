@@ -15,7 +15,7 @@ export default function Sidebar() {
     <>
       {/* Mobile hamburger */}
       <button
-        className="fixed top-3 left-3 z-50 md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low border border-outline-variant shadow-md hover:bg-surface-variant transition-colors"
+        className="fixed top-19 left-5 z-50 md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-low border border-outline-variant shadow-md hover:bg-surface-variant transition-colors"
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle sidebar"
       >
