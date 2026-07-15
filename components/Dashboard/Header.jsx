@@ -186,7 +186,7 @@ export default function Header({
           <UserProfile />
         </div>
       </header>
-      <a
+      {/* <a
         href="/Quickadd"
         className="fixed bottom-5 right-5 md:hidden z-50
              w-14 h-14 rounded-full
@@ -195,7 +195,7 @@ export default function Header({
              shadow-xl hover:scale-105 active:scale-95 transition-all"
       >
         <span className="material-symbols-outlined text-[28px]">add</span>
-      </a>
+      </a> */}
     </>
   );
 }

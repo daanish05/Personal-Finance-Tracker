@@ -400,11 +400,17 @@ export default function EditProfile() {
                         Cancel
                       </button>
                       <button
-                        className="px-xl py-3 bg-primary text-white rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20"
+                        className="px-6 py-3 text-sm md:px-6 md:py-3 md:text-base bg-primary text-white rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20"
                         type="submit"
                       >
                         Save Changes
                       </button>
+                      {/* <button
+                        className="px-xl py-3 bg-primary text-white rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20"
+                        type="submit"
+                      >
+                        Save Changes
+                      </button> */}
                     </div>
                   </form>
                 </div>
