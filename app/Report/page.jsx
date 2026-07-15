@@ -1,10 +1,12 @@
 "use client";
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import UserProfile from "../../components/UserProfile";
 import {
   useTransactions,
   formatCurrency,
 } from "../../contexts/TransactionContext";
+import Header from "../../components/Dashboard/Header";
 
 export default function Report() {
   const { transactions, defaultCurrency } = useTransactions();
@@ -95,7 +97,14 @@ export default function Report() {
         {/* Main Content */}
         <main className="ml-0 md:ml-60 min-h-screen">
           {/* Top Navigation Bar */}
-          <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+          <Header
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            transactions={transactions}
+            formatCurrency={formatCurrency}
+            defaultCurrency={defaultCurrency}
+          />
+          {/* <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
             <div className="flex items-center gap-md flex-1 min-w-0">
               <div className="relative w-full max-w-full md:max-w-[480px]"
               style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
@@ -125,7 +134,7 @@ export default function Report() {
               </button>
               <div className="h-8 w-[1px] bg-outline-variant/50" />
 
-              <a
+              {/* <a
                 href="/Quickadd"
                 className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
               >
@@ -133,34 +142,18 @@ export default function Report() {
                   add
                 </span>
                 Quick Add
-              </a>
+              </a> 
               <UserProfile />
             </div>
-            {/* <div className="flex items-center gap-lg">
-              <a href="/Quickadd" className="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-sm active:scale-95">
-                <span className="material-symbols-outlined text-[18px]">
-                  add
-                </span>
-                Quick Add
-              </a>
-              <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-                <span className="material-symbols-outlined">notifications</span>
-                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
-              </button>
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-                <img
-                  className="w-full h-full object-cover"
-                  data-alt="A professional studio headshot of a financial executive, clean high-key lighting, soft neutral background, wearing a charcoal suit. The style is polished, high-end corporate minimalism, reflecting trust and expertise in a premium wealth management environment."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsFYw9n19KwcxpYuXoPIsUrh0vZ8RVuJY0HxCjdxKMWlDhlem0WL2AO0n4r7FQrR5rp2hn3EovvYVud-zI0hDe45xRHZRa9-4PQdropy7dlKF15U99TwHTPuD0IQb6ubLZh3S1iX2fx_FslLKrdmHDN11YZitd32bPUS_uUm10I6ybwRBKyoC2nvMRb2hi3rzva-EJE8wqUKiB90-JAvkp7qDqN8z128GUTPSsHQ2k1SpBEJKezio"
-                />
-              </div>
-            </div> */}
-          </header>
-          <div className="p-xl max-w-container-max mx-auto space-y-xl">
+          </header> */}
+          {/* <div className="p-xl max-w-container-max mx-auto space-y-xl"> */}
+          <div className="p-4 md:p-xl max-w-container-max mx-auto space-y-6 md:space-y-xl">
             {/* Hero Header Section */}
-            <div className="flex justify-between items-end">
-              <div>
-                <h2 className="font-headline-lg text-headline-lg text-on-surface">
+            {/* <div className="flex justify-between items-end"> */}
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+              <div className="mt-6 md:mt-0">
+                {/* <h2 className="font-headline-lg text-headline-lg text-on-surface"> */}
+                <h2 className="text-2xl md:text-headline-lg font-headline-lg font-label-md text-label-md text-primary font-bold uppercase tracking-widest">
                   Financial Intelligence
                 </h2>
                 <p className="font-body-md text-body-md text-outline">
@@ -168,20 +161,24 @@ export default function Report() {
                   trajectory.
                 </p>
               </div>
-              <div className="flex gap-sm">
-                <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
+              {/* <div className="flex gap-sm"> */}
+              <div className="flex flex-wrap gap-2 w-full md:w-auto">
+                {/* <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all"> */}
+                <button className="flex-1 md:flex-none flex items-center justify-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
                   <span className="material-symbols-outlined text-[18px]">
                     picture_as_pdf
                   </span>
                   PDF
                 </button>
-                <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
+                {/* <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all"> */}
+                <button className="flex-1 md:flex-none flex items-center justify-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
                   <span className="material-symbols-outlined text-[18px]">
                     csv
                   </span>
                   CSV
                 </button>
-                <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
+                {/* <button className="flex items-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all"> */}
+                <button className="flex-1 md:flex-none flex items-center justify-center gap-sm px-md py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-all">
                   <span className="material-symbols-outlined text-[18px]">
                     table_view
                   </span>
@@ -192,9 +189,10 @@ export default function Report() {
             {/* Dashboard Bento Grid */}
             <div className="grid grid-cols-12 gap-gutter">
               {/* Section 3: Net Worth Growth (Spans 8 columns) */}
-              <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
+              <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-4 md:p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
                 <div className="flex justify-between items-center">
-                  <h3 className="font-headline-md text-headline-md text-on-surface">
+                  {/* <h3 className="font-headline-md text-headline-md text-on-surface"> */}
+                  <h3 className="text-lg md:text-headline-md font-headline-md">
                     Net Worth Growth
                   </h3>
                   <select className="bg-transparent font-label-md text-label-md text-outline focus:outline-none cursor-pointer">
@@ -203,7 +201,8 @@ export default function Report() {
                     <option>All Time</option>
                   </select>
                 </div>
-                <div className="h-64 relative w-full flex items-end justify-between px-md border-b border-outline-variant/30 group">
+                {/* <div className="h-64 relative w-full flex items-end justify-between px-md border-b border-outline-variant/30 group"> */}
+                <div className="relative w-full h-52 md:h-64 flex items-end justify-between px-2 md:px-md border-b border-outline-variant/30 group overflow-x-auto">
                   <svg
                     className="absolute inset-0 w-full h-full"
                     preserveAspectRatio="none"
@@ -281,14 +280,15 @@ export default function Report() {
                     </defs>
                   </svg>
                   <div className="absolute left-[50%] top-[10%] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <div className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl"
+                    <div
+                      className="bg-on-surface text-surface px-md py-sm rounded-lg glass-panel shadow-xl"
                       style={{
                         color:
-                        netCashFlow >= 0
-                        ? "var(--cashflow-positive)"
-                        : "var(--cashflow-negative)",
+                          netCashFlow >= 0
+                            ? "var(--cashflow-positive)"
+                            : "var(--cashflow-negative)",
                       }}
-                      >
+                    >
                       <p className="text-label-md font-bold">
                         {formatCurrency(
                           monthlyData.reduce(
@@ -303,7 +303,8 @@ export default function Report() {
                       </p>
                     </div>
                   </div>
-                  <div className="absolute bottom-[-24px] left-0 w-full flex justify-between font-mono-data text-[10px] text-outline px-md">
+                  {/* <div className="absolute bottom-[-24px] left-0 w-full flex justify-between font-mono-data text-[10px] text-outline px-md"> */}
+                  <div className="absolute bottom-[-24px] left-0 w-full flex justify-between text-[8px] md:text-[10px] px-2 md:px-md">
                     {monthlyData.map((m) => (
                       <span key={m.label}>{m.label}</span>
                     ))}
@@ -311,8 +312,9 @@ export default function Report() {
                 </div>
               </div>
               {/* Section 1: Spending by Category (Spans 4 columns) */}
-              <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
-                <h3 className="font-headline-md text-headline-md text-on-surface">
+              <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-4 md:p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
+                {/* <h3 className="font-headline-md text-headline-md text-on-surface"> */}
+                <h3 className="text-lg md:text-headline-md font-headline-md">
                   Spending by Category
                 </h3>
                 <div className="flex flex-col items-center justify-center space-y-md">
@@ -346,7 +348,7 @@ export default function Report() {
                       })}
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="font-headline-md text-headline-md text-on-surface">
+                      <span className="text-xl md:text-headline-md text-headline-md text-on-surface">
                         {formatCurrency(totalExpense, defaultCurrency)}
                       </span>
                       <span className="font-label-md text-label-md text-outline uppercase tracking-wider">
@@ -388,17 +390,20 @@ export default function Report() {
                 </div>
               </div>
               {/* Section 2: Monthly Cash Flow (Spans Full Width for emphasis) */}
-              <div className="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
-                <div className="flex justify-between items-center">
+              <div className="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl p-4 md:p-lg space-y-lg transition-all hover:shadow-[0_20px_50px_rgba(0,102,255,0.05)]">
+                {/* <div className="flex justify-between items-center"> */}
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                   <div>
-                    <h3 className="font-headline-md text-headline-md text-on-surface">
+                    {/* <h3 className="font-headline-md text-headline-md text-on-surface"> */}
+                    <h3 className="text-lg md:text-headline-md font-headline-md">
                       Monthly Cash Flow
                     </h3>
                     <p className="font-label-md text-label-md text-outline">
                       Income vs Expenses over the current fiscal year
                     </p>
                   </div>
-                  <div className="flex items-center gap-md">
+                  {/* <div className="flex items-center gap-md"> */}
+                  <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center gap-sm">
                       <span className="w-3 h-3 bg-primary rounded-sm" />
                       <span className="font-label-md text-label-md text-on-surface-variant">
@@ -413,7 +418,8 @@ export default function Report() {
                     </div>
                   </div>
                 </div>
-                <div className="h-64 w-full flex items-end justify-between pt-xl px-md gap-4">
+                {/* <div className="h-64 w-full flex items-end justify-between pt-xl px-md gap-4"> */}
+                <div className="h-56 md:h-64 w-full flex items-end justify-between pt-xl px-2 md:px-md gap-2 md:gap-4 overflow-x-auto">
                   {monthlyData.map((m, i) => {
                     const incomePct =
                       maxMonthly > 0 ? (m.income / maxMonthly) * 95 : 0;
@@ -436,7 +442,12 @@ export default function Report() {
                           />
                         </div>
                         <span
-                          className={`font-label-md text-label-md ${isCurrent ? "text-primary font-bold" : "text-outline"}`}
+                          className={`text-[10px] md:text-label-md ${
+                            isCurrent
+                              ? "text-primary font-bold"
+                              : "text-outline"
+                          }`}
+                          // className={`font-label-md text-label-md ${isCurrent ? "text-primary font-bold" : "text-outline"}`}
                         >
                           {m.label}
                         </span>
@@ -462,7 +473,8 @@ export default function Report() {
                     Net Cash Flow
                   </p>
                   <p
-                    className={`font-headline-md text-headline-md ${netCashFlow >= 0 ? "text-secondary" : "text-error"}`}
+                    // className={`font-headline-md text-headline-md ${netCashFlow >= 0 ? "text-secondary" : "text-error"}`}
+                    className={`text-lg md:text-headline-md font-headline-md ${netCashFlow >= 0 ? "text-secondary" : "text-error"}`}
                   >
                     {netCashFlow >= 0 ? "+" : ""}
                     {formatCurrency(netCashFlow, defaultCurrency)}
@@ -472,7 +484,8 @@ export default function Report() {
                   <p className="font-label-md text-label-md text-outline uppercase tracking-wider">
                     Total Income
                   </p>
-                  <p className="font-headline-md text-headline-md text-on-surface">
+                  {/* <p className="font-headline-md text-headline-md text-on-surface"> */}
+                  <p className="text-lg md:text-headline-md font-headline-md">
                     {formatCurrency(totalIncome, defaultCurrency)}
                   </p>
                 </div>
@@ -483,6 +496,16 @@ export default function Report() {
             </div>
           </footer>
         </main>
+        <button className="fixed bottom-gutter right-gutter w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50">
+          <Link href="/Qucikadd">
+            <span
+              className="material-symbols-outlined"
+              style={{ fontVariationSettings: '"FILL" 1' }}
+            >
+              add
+            </span>
+          </Link>
+        </button>
         {/* Micro-interaction Scripts */}
       </>
     </>
