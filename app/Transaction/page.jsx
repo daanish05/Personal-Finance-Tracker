@@ -7,6 +7,7 @@ import {
   useTransactions,
   formatCurrency,
 } from "../../contexts/TransactionContext";
+import Header from "../../components/Dashboard/Header";
 
 export default function Transaction() {
   const { transactions, deleteTransactions, defaultCurrency } =
@@ -20,6 +21,7 @@ export default function Transaction() {
   const [activeFilter, setActiveFilter] = useState(null);
   const [sortBy, setSortBy] = useState("date-desc");
   const [categoryFilter, setCategoryFilter] = useState(null);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const allCategories = useMemo(
     () => [...new Set(transactions.map((t) => t.category))],
@@ -122,61 +124,74 @@ export default function Transaction() {
   return (
     <>
       <main className="ml-0 md:ml-60 flex-1 min-h-screen flex flex-col">
-        <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-          <div className="flex items-center gap-md flex-1 min-w-0">
-            <div
-              className="relative w-full max-w-full md:max-w-[480px]"
-              style={{
-                border: "1px solid var(--outline-variant)",
-                borderRadius: "8px",
-              }}
-              >
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+        {/* Top Navigation Bar - Mobile only */}
+        <div className="md:hidden">
+          <Header
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            transactions={transactions}
+            formatCurrency={formatCurrency}
+            defaultCurrency={defaultCurrency}
+            placeholder="Search transactions..."
+          />
+        </div>
+        {/* Top Navigation Bar - Desktop only */}
+        <div className="hidden md:block">
+          <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+            <div className="flex items-center gap-md flex-1 min-w-0">
+              <div
+                className="relative w-full max-w-full md:max-w-[480px]"
+                style={{
+                  border: "1px solid var(--outline-variant)",
+                  borderRadius: "8px",
+                }}
+                >
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
+                    search
+                  </span>
+                  <input
+                    // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
+                    className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
+                    transition-all duration-200
+                    hover:border-primary/40 hover:shadow-md
+                    focus:ring-2 focus:ring-primary/10 focus:border-primary
+                    outline-none"
+                    placeholder="Search transactions..."
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* <div className={`flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 max-w-[480px] w-full gap-sm transition-all ${isSearchFocused ? 'ring-2 ring-primary/10' : ''}`}>
+                <span className="material-symbols-outlined text-outline text-[20px] leading-none">
                   search
                 </span>
-                <input
-                  // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                  className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
-                  transition-all duration-200
-                  hover:border-primary/40 hover:shadow-md
-                  focus:ring-2 focus:ring-primary/10 focus:border-primary
-                  outline-none"
-                  placeholder="Search transactions..."
+                <input className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
+                  placeholder="Search transactions, accounts..."
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            {/* <div className={`flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 max-w-[480px] w-full gap-sm transition-all ${isSearchFocused ? 'ring-2 ring-primary/10' : ''}`}>
-              <span className="material-symbols-outlined text-outline text-[20px] leading-none">
-                search
-              </span>
-              <input className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
-                placeholder="Search transactions, accounts..."
-                type="text"
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}/>
-            </div> */}
-            <div className="flex items-center gap-sm -ml-1">
-              {/* Date Filter */}
-              <div className="relative">
-                <button
-                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
-                  onClick={() =>
-                    setActiveFilter(activeFilter === "date" ? null : "date")
-                  }
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    calendar_today
-                  </span>
-                  <span className="font-label-md text-label-md">
-                    {sortBy === "date-asc"
-                      ? "Oldest"
-                      : sortBy === "date-desc"
-                        ? "Newest"
-                        : "Date"}
-                  </span>
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}/>
+              </div> */}
+              <div className="flex items-center gap-sm -ml-1">
+                {/* Date Filter */}
+                <div className="relative">
+                  <button
+                    className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+                    onClick={() =>
+                      setActiveFilter(activeFilter === "date" ? null : "date")
+                    }
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      calendar_today
+                    </span>
+                    <span className="font-label-md text-label-md">
+                      {sortBy === "date-asc"
+                        ? "Oldest"
+                        : sortBy === "date-desc"
+                          ? "Newest"
+                          : "Date"}
+                    </span>
                 </button>
                 {activeFilter === "date" && (
                   <>
@@ -345,8 +360,122 @@ export default function Transaction() {
             <UserProfile />
           </div>
         </header>
+          </div>
+        {/* Mobile Filters - overlays content */}
+        <div className="relative md:hidden z-10 px-gutter">
+          <button
+            className="w-full flex items-center justify-between p-md bg-surface-container-lowest border border-outline-variant rounded-xl"
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+          >
+            <span className="font-label-md text-label-md text-on-surface font-bold">
+              Filters
+            </span>
+            <span className="material-symbols-outlined text-on-surface-variant">
+              {showMobileFilters ? "expand_less" : "expand_more"}
+            </span>
+          </button>
+          {showMobileFilters && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowMobileFilters(false)}
+              />
+              <div className="absolute left-gutter right-gutter top-full mt-sm z-50 p-md bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl space-y-lg">
+                <section className="space-y-sm">
+                  <h3 className="font-label-md text-label-md font-bold text-outline uppercase tracking-widest">
+                    Type
+                  </h3>
+                  <div className="space-y-base">
+                    <label
+                      className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group"
+                      onClick={() => setFilterType("all")}
+                    >
+                      <div className="flex items-center gap-sm">
+                        <input
+                          className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20"
+                          name="mobile-type"
+                          type="radio"
+                          checked={filterType === "all"}
+                          readOnly
+                        />
+                        <span className="font-body-sm text-body-sm">
+                          All Transactions
+                        </span>
+                      </div>
+                      <span className="font-mono-data text-mono-data text-outline group-hover:text-primary">
+                        {countAll}
+                      </span>
+                    </label>
+                    <label
+                      className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group"
+                      onClick={() => setFilterType("income")}
+                    >
+                      <div className="flex items-center gap-sm">
+                        <input
+                          className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20"
+                          name="mobile-type"
+                          type="radio"
+                          checked={filterType === "income"}
+                          readOnly
+                        />
+                        <span className="font-body-sm text-body-sm">Income</span>
+                      </div>
+                      <span className="font-mono-data text-mono-data text-outline group-hover:text-secondary">
+                        {countIncome}
+                      </span>
+                    </label>
+                    <label
+                      className="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors group"
+                      onClick={() => setFilterType("expense")}
+                    >
+                      <div className="flex items-center gap-sm">
+                        <input
+                          className="w-4 h-4 text-primary border-outline-variant focus:ring-primary/20"
+                          name="mobile-type"
+                          type="radio"
+                          checked={filterType === "expense"}
+                          readOnly
+                        />
+                        <span className="font-body-sm text-body-sm">Expense</span>
+                      </div>
+                      <span className="font-mono-data text-mono-data text-outline group-hover:text-error">
+                        {countExpense}
+                      </span>
+                    </label>
+                  </div>
+                </section>
+                <section className="space-y-sm">
+                  <h3 className="font-label-md text-label-md font-bold text-outline uppercase tracking-widest">
+                    Timeframe
+                  </h3>
+                  <div className="space-y-base">
+                    <button
+                      className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "30" ? "text-primary font-medium" : ""}`}
+                      onClick={() => setTimeframe("30")}
+                    >
+                      Last 30 Days
+                    </button>
+                    <button
+                      className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "90" ? "text-primary font-medium" : ""}`}
+                      onClick={() => setTimeframe("90")}
+                    >
+                      Last 90 Days
+                    </button>
+                    <button
+                      className={`w-full text-left p-sm rounded-lg hover:bg-surface-container-high font-body-sm text-body-sm transition-colors ${timeframe === "year" ? "text-primary font-medium" : ""}`}
+                      onClick={() => setTimeframe("year")}
+                    >
+                      This Year
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </>
+          )}
+        </div>
         <div className="flex flex-1 gap-gutter p-gutter max-w-[1440px] mx-auto w-full">
-          <aside className="w-64 shrink-0 space-y-gutter">
+          {/* Desktop Sidebar Filters */}
+          <aside className="hidden md:block w-64 shrink-0 space-y-gutter">
             <section className="space-y-sm">
               <h3 className="font-label-md text-label-md font-bold text-outline uppercase tracking-widest px-sm">
                 Type
