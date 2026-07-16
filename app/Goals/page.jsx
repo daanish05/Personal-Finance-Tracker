@@ -175,6 +175,7 @@ export default function Goals() {
               transactions={transactions}
               formatCurrency={formatCurrency}
               defaultCurrency={defaultCurrency}
+              placeholder="Search goals or metrics..."
             />
           </div>
           {/* Top Navigation Bar - Desktop only */}

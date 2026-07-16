@@ -13,6 +13,7 @@ export default function Header({
   transactions = [],
   defaultCurrency = "USD",
   formatCurrency,
+  placeholder = "Search, accounts, transactions...",
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -83,7 +84,7 @@ export default function Header({
                   hover:border-primary/40 hover:shadow-md 
                   focus:ring-2 focus:ring-primary/10 focus:border-primary
                   outline-none"
-              placeholder="Search, accounts, transactions..."
+              placeholder={placeholder}
               type="text"
               value={searchQuery}
               onChange={(e) => {

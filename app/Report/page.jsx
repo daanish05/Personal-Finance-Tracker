@@ -96,16 +96,15 @@ export default function Report() {
       <>
         {/* Main Content */}
         <main className="ml-0 md:ml-60 min-h-screen">
-          {/* Top Navigation Bar - Mobile only */}
-          <div className="md:hidden">
-            <Header
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              transactions={transactions}
-              formatCurrency={formatCurrency}
-              defaultCurrency={defaultCurrency}
-            />
-          </div>
+          {/* Top Navigation Bar */}
+          <Header
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            transactions={transactions}
+            formatCurrency={formatCurrency}
+            defaultCurrency={defaultCurrency}
+            placeholder="Search reports..."
+          />
           {/* <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
             <div className="flex items-center gap-md flex-1 min-w-0">
               <div className="relative w-full max-w-full md:max-w-[480px]"
