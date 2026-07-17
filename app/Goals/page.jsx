@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import UserProfile from "../../components/UserProfile";
 import {
   useTransactions,
   formatCurrency,
@@ -167,63 +166,14 @@ export default function Goals() {
       <>
         {/* Main Content Area */}
         <main className="ml-0 md:ml-60 min-h-screen">
-          {/* Top Navigation Bar - Mobile only */}
-          <div className="md:hidden">
-            <Header
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              transactions={transactions}
-              formatCurrency={formatCurrency}
-              defaultCurrency={defaultCurrency}
-              placeholder="Search goals or metrics..."
-            />
-          </div>
-          {/* Top Navigation Bar - Desktop only */}
-          <div className="hidden md:block">
-            <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-              <div className="flex items-center gap-md flex-1 min-w-0">
-                <div className="relative w-full max-w-full md:max-w-[480px]"
-                style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
-                    search
-                  </span>
-                  <input
-                    // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                    className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
-                    transition-all duration-200
-                    hover:border-primary/40 hover:shadow-md
-                    focus:ring-2 focus:ring-primary/10 focus:border-primary
-                    outline-none"
-                    placeholder="Search goals or metrics..."
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-lg">
-                <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-[24px]">
-                    notifications
-                  </span>
-                  <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
-                </button>
-                <div className="h-8 w-[1px] bg-outline-variant/50" />
-
-                {/* <a
-                  href="/Quickadd"
-                  className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-[18px]">
-                    add
-                  </span>
-                  Quick Add
-                </a> */}
-                <UserProfile />
-              </div>
-  {/* old header actions commented out */}
-            </header>
-          </div>
+          <Header
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            transactions={transactions}
+            formatCurrency={formatCurrency}
+            defaultCurrency={defaultCurrency}
+            placeholder="Search goals or metrics..."
+          />
           {/* Goals Content */}
           <div className="max-w-[1280px] mx-auto px-xl py-xl space-y-xl">
             {/* Hero Overview Section */}
@@ -482,8 +432,7 @@ export default function Goals() {
           typeof document !== "undefined" &&
           createPortal(
             <div
-              className="max-w-md"
-              className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] pb-[10vh] bg-black/40 backdrop-blur-sm overflow-y-auto"
               onClick={() => setShowForm(false)}
             >
               <div

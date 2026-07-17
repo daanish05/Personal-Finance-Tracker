@@ -1,7 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import UserProfile from "../../components/UserProfile";
 import {
   useTransactions,
   formatCurrency,
@@ -105,49 +104,6 @@ export default function Report() {
             defaultCurrency={defaultCurrency}
             placeholder="Search reports..."
           />
-          {/* <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            <div className="flex items-center gap-md flex-1 min-w-0">
-              <div className="relative w-full max-w-full md:max-w-[480px]"
-              style={{ border: "1px solid var(--outline-variant)", borderRadius: "8px" }}>
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
-                  search
-                </span>
-                <input
-                  // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                  className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
-                  transition-all duration-200
-                  hover:border-primary/40 hover:shadow-md
-                  focus:ring-2 focus:ring-primary/10 focus:border-primary
-                  outline-none"
-                  placeholder="Search reports..."
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-lg">
-              <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-                <span className="material-symbols-outlined text-[24px]">
-                  notifications
-                </span>
-                <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
-              </button>
-              <div className="h-8 w-[1px] bg-outline-variant/50" />
-
-              {/* <a
-                href="/Quickadd"
-                className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  add
-                </span>
-                Quick Add
-              </a> 
-              <UserProfile />
-            </div>
-          </header> */}
-          {/* <div className="p-xl max-w-container-max mx-auto space-y-xl"> */}
           <div className="p-4 md:p-xl max-w-container-max mx-auto space-y-6 md:space-y-xl">
             {/* Hero Header Section */}
             {/* <div className="flex justify-between items-end"> */}

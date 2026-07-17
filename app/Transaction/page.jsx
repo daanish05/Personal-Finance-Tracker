@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import UserProfile from "../../components/UserProfile";
 import {
   useTransactions,
   formatCurrency,
@@ -124,243 +123,184 @@ export default function Transaction() {
   return (
     <>
       <main className="ml-0 md:ml-60 flex-1 min-h-screen flex flex-col">
-        {/* Top Navigation Bar - Mobile only */}
-        <div className="md:hidden">
-          <Header
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            transactions={transactions}
-            formatCurrency={formatCurrency}
-            defaultCurrency={defaultCurrency}
-            placeholder="Search transactions..."
-          />
-        </div>
-        {/* Top Navigation Bar - Desktop only */}
-        <div className="hidden md:block">
-          <header className="sticky top-0 z-40 flex flex-wrap gap-y-2 justify-between items-center w-full px-lg pl-14 md:pl-lg py-md bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-            <div className="flex items-center gap-md flex-1 min-w-0">
-              <div
-                className="relative w-full max-w-full md:max-w-[480px]"
-                style={{
-                  border: "1px solid var(--outline-variant)",
-                  borderRadius: "8px",
-                }}
-                >
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
-                    search
-                  </span>
-                  <input
-                    // className="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm focus:ring-2 focus:ring-primary/10 transition-all"
-                    className="w-full bg-surface-container-low rounded-lg pl-10 pr-4 py-2 font-body-sm text-body-sm border border-transparent
-                    transition-all duration-200
-                    hover:border-primary/40 hover:shadow-md
-                    focus:ring-2 focus:ring-primary/10 focus:border-primary
-                    outline-none"
-                    placeholder="Search transactions..."
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* <div className={`flex items-center bg-surface-container-low border border-outline-variant/50 rounded-lg px-md h-10 max-w-[480px] w-full gap-sm transition-all ${isSearchFocused ? 'ring-2 ring-primary/10' : ''}`}>
-                <span className="material-symbols-outlined text-outline text-[20px] leading-none">
-                  search
-                </span>
-                <input className="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-outline/60 h-full outline-none"
-                  placeholder="Search transactions, accounts..."
-                  type="text"
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setIsSearchFocused(false)}/>
-              </div> */}
-              <div className="flex items-center gap-sm -ml-1">
-                {/* Date Filter */}
-                <div className="relative">
-                  <button
-                    className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
-                    onClick={() =>
-                      setActiveFilter(activeFilter === "date" ? null : "date")
-                    }
-                  >
-                    <span className="material-symbols-outlined text-sm">
-                      calendar_today
-                    </span>
-                    <span className="font-label-md text-label-md">
-                      {sortBy === "date-asc"
-                        ? "Oldest"
-                        : sortBy === "date-desc"
-                          ? "Newest"
-                          : "Date"}
-                    </span>
-                </button>
-                {activeFilter === "date" && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setActiveFilter(null)}
-                    />
-                    <div className="absolute top-full left-0 mt-1 w-40 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
-                      <button
-                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-desc" ? "text-primary font-bold" : "text-on-surface"}`}
-                        onClick={() => {
-                          setSortBy("date-desc");
-                          setActiveFilter(null);
-                        }}
-                      >
-                        Newest First
-                      </button>
-                      <button
-                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-asc" ? "text-primary font-bold" : "text-on-surface"}`}
-                        onClick={() => {
-                          setSortBy("date-asc");
-                          setActiveFilter(null);
-                        }}
-                      >
-                        Oldest First
-                      </button>
-                      {sortBy !== "date-desc" && sortBy !== "date-asc" && (
-                        <button
-                          className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
-                          onClick={() => {
-                            setSortBy("date-desc");
-                            setActiveFilter(null);
-                          }}
-                        >
-                          No Sort
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-              {/* Category Filter */}
-              <div className="relative">
-                <button
-                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${categoryFilter ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
-                  onClick={() =>
-                    setActiveFilter(
-                      activeFilter === "category" ? null : "category",
-                    )
-                  }
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    filter_list
-                  </span>
-                  <span className="font-label-md text-label-md">
-                    {categoryFilter ? categoryFilter : "Category"}
-                  </span>
-                </button>
-                {activeFilter === "category" && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setActiveFilter(null)}
-                    />
-                    <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto">
-                      <button
-                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${!categoryFilter ? "text-primary font-bold" : "text-on-surface"}`}
-                        onClick={() => {
-                          setCategoryFilter(null);
-                          setActiveFilter(null);
-                        }}
-                      >
-                        All Categories
-                      </button>
-                      {allCategories.map((cat) => (
-                        <button
-                          key={cat}
-                          className={`w-full text-left px-3 py-2 font-label-md text-label-md capitalize transition-colors hover:bg-surface-container-high ${categoryFilter === cat ? "text-primary font-bold" : "text-on-surface"}`}
-                          onClick={() => {
-                            setCategoryFilter(cat);
-                            setActiveFilter(null);
-                          }}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-              {/* Amount Filter */}
-              <div className="relative">
-                <button
-                  className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "amount-desc" || sortBy === "amount-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
-                  onClick={() =>
-                    setActiveFilter(activeFilter === "amount" ? null : "amount")
-                  }
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    payments
-                  </span>
-                  <span className="font-label-md text-label-md">
-                    {sortBy === "amount-asc"
-                      ? "Lowest"
-                      : sortBy === "amount-desc"
-                        ? "Highest"
-                        : "Amount"}
-                  </span>
-                </button>
-                {activeFilter === "amount" && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setActiveFilter(null)}
-                    />
-                    <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
-                      <button
-                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-desc" ? "text-primary font-bold" : "text-on-surface"}`}
-                        onClick={() => {
-                          setSortBy("amount-desc");
-                          setActiveFilter(null);
-                        }}
-                      >
-                        Highest First
-                      </button>
-                      <button
-                        className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-asc" ? "text-primary font-bold" : "text-on-surface"}`}
-                        onClick={() => {
-                          setSortBy("amount-asc");
-                          setActiveFilter(null);
-                        }}
-                      >
-                        Lowest First
-                      </button>
-                      {sortBy !== "amount-desc" && sortBy !== "amount-asc" && (
-                        <button
-                          className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
-                          onClick={() => {
-                            setSortBy("date-desc");
-                            setActiveFilter(null);
-                          }}
-                        >
-                          No Sort
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          <div className="flex items-center gap-lg">
-            <button className="relative text-on-surface-variant hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-[24px]">
-                notifications
-              </span>
-              <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface" />
-            </button>
-            <div className="h-8 w-[1px] bg-outline-variant/50" />
-            {/* <a
-              href="/Quickadd"
-              className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+        <Header
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          transactions={transactions}
+          formatCurrency={formatCurrency}
+          defaultCurrency={defaultCurrency}
+          placeholder="Search transactions..."
+        />
+        {/* Desktop Filter Bar */}
+        <div className="hidden md:flex items-center gap-sm px-lg py-sm backdrop-blur-md border-b border-outline-variant  top-[72px] z-30">
+          {/* Date Filter */}
+          <div className="relative">
+            <button
+              className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "date-desc" || sortBy === "date-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+              onClick={() =>
+                setActiveFilter(activeFilter === "date" ? null : "date")
+              }
             >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Quick Add
-            </a> */}
-            <UserProfile />
-          </div>
-        </header>
-          </div>
+              <span className="material-symbols-outlined text-sm">
+                calendar_today
+              </span>
+              <span className="font-label-md text-label-md">
+                {sortBy === "date-asc"
+                  ? "Oldest"
+                  : sortBy === "date-desc"
+                    ? "Newest"
+                    : "Date"}
+              </span>
+          </button>
+          {activeFilter === "date" && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setActiveFilter(null)}
+              />
+              <div className="absolute top-full left-0 mt-1 w-40 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
+                <button
+                  className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-desc" ? "text-primary font-bold" : "text-on-surface"}`}
+                  onClick={() => {
+                    setSortBy("date-desc");
+                    setActiveFilter(null);
+                  }}
+                >
+                  Newest First
+                </button>
+                <button
+                  className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "date-asc" ? "text-primary font-bold" : "text-on-surface"}`}
+                  onClick={() => {
+                    setSortBy("date-asc");
+                    setActiveFilter(null);
+                  }}
+                >
+                  Oldest First
+                </button>
+                {sortBy !== "date-desc" && sortBy !== "date-asc" && (
+                  <button
+                    className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
+                    onClick={() => {
+                      setSortBy("date-desc");
+                      setActiveFilter(null);
+                    }}
+                  >
+                    No Sort
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+        {/* Category Filter */}
+        <div className="relative">
+          <button
+            className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${categoryFilter ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+            onClick={() =>
+              setActiveFilter(
+                activeFilter === "category" ? null : "category",
+              )
+            }
+          >
+            <span className="material-symbols-outlined text-sm">
+              filter_list
+            </span>
+            <span className="font-label-md text-label-md">
+              {categoryFilter ? categoryFilter : "Category"}
+            </span>
+          </button>
+          {activeFilter === "category" && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setActiveFilter(null)}
+              />
+              <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto">
+                <button
+                  className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${!categoryFilter ? "text-primary font-bold" : "text-on-surface"}`}
+                  onClick={() => {
+                    setCategoryFilter(null);
+                    setActiveFilter(null);
+                  }}
+                >
+                  All Categories
+                </button>
+                {allCategories.map((cat) => (
+                  <button
+                    key={cat}
+                    className={`w-full text-left px-3 py-2 font-label-md text-label-md capitalize transition-colors hover:bg-surface-container-high ${categoryFilter === cat ? "text-primary font-bold" : "text-on-surface"}`}
+                    onClick={() => {
+                      setCategoryFilter(cat);
+                      setActiveFilter(null);
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        {/* Amount Filter */}
+        <div className="relative">
+          <button
+            className={`flex items-center gap-xs px-sm py-1.5 border rounded-lg transition-colors text-label-sm ${sortBy === "amount-desc" || sortBy === "amount-asc" ? "bg-primary/10 text-primary border-primary/30" : "text-on-surface-variant border-outline-variant/50 hover:bg-surface-container"}`}
+            onClick={() =>
+              setActiveFilter(activeFilter === "amount" ? null : "amount")
+            }
+          >
+            <span className="material-symbols-outlined text-sm">
+              payments
+            </span>
+            <span className="font-label-md text-label-md">
+              {sortBy === "amount-asc"
+                ? "Lowest"
+                : sortBy === "amount-desc"
+                  ? "Highest"
+                  : "Amount"}
+            </span>
+          </button>
+          {activeFilter === "amount" && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setActiveFilter(null)}
+              />
+              <div className="absolute top-full left-0 mt-1 w-44 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-xl z-50 overflow-hidden">
+                <button
+                  className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-desc" ? "text-primary font-bold" : "text-on-surface"}`}
+                  onClick={() => {
+                    setSortBy("amount-desc");
+                    setActiveFilter(null);
+                  }}
+                >
+                  Highest First
+                </button>
+                <button
+                  className={`w-full text-left px-3 py-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high ${sortBy === "amount-asc" ? "text-primary font-bold" : "text-on-surface"}`}
+                  onClick={() => {
+                    setSortBy("amount-asc");
+                    setActiveFilter(null);
+                  }}
+                >
+                  Lowest First
+                </button>
+                {sortBy !== "amount-desc" && sortBy !== "amount-asc" && (
+                  <button
+                    className="w-full text-left px-3 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors"
+                    onClick={() => {
+                      setSortBy("date-desc");
+                      setActiveFilter(null);
+                    }}
+                  >
+                    No Sort
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+        </div>
         {/* Mobile Filters - overlays content */}
         <div className="relative md:hidden z-10 px-gutter">
           <button
