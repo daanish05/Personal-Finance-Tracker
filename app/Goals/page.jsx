@@ -437,7 +437,8 @@ export default function Goals() {
             >
               <div
                 className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl w-full max-w-md mx-md"
-                onClick={(e) => e.stopPropagation()}>
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="flex items-center justify-between p-xl border-b border-outline-variant/30">
                   <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                     New Goal
@@ -541,7 +542,7 @@ export default function Goals() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-md p-xl pt-0 border-t border-outline-variant/30">
+                {/* <div className="flex gap-md p-xl pt-0 border-t border-outline-variant/30">
                   <button
                     className="flex-1 px-xl py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:opacity-90 transition-all"
                     onClick={addGoal}
@@ -553,6 +554,20 @@ export default function Goals() {
                     onClick={() => setShowForm(false)}
                   >
                     Cancel
+                  </button>
+                </div> */}
+                <div className="flex flex-col-reverse sm:flex-row gap-md p-xl pt-0 border-t border-outline-variant/30">
+                  <button
+                    className="w-full sm:w-auto px-xl py-3 bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-all"
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="w-full sm:flex-1 px-xl py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:opacity-90 transition-all"
+                    onClick={addGoal}
+                  >
+                    Create Goal
                   </button>
                 </div>
               </div>
