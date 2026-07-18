@@ -6,6 +6,7 @@ import { useUser } from "../../components/UserProvider";
 
 export default function EditProfile() {
   const { profile, updateProfile } = useUser();
+  const router = useRouter();
   const avatarInputRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState("");

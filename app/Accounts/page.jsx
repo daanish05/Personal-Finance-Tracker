@@ -684,13 +684,13 @@ export default function Accounts() {
 
       <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 left-60 -z-10 w-[400px] h-[400px] bg-secondary/5 blur-[100px] rounded-full pointer-events-none" />
-      <button
+      {/* <button
         onClick={openAdd}
         className="md:hidden fixed bottom-6 right-6 z-50 flex items-center gap-0 bg-primary text-on-primary px-3 py-3 rounded-full shadow-xl hover:opacity-90 active:scale-95 transition-all"
       >
         <span className="material-symbols-outlined text-[20px]">add</span>
         <span className="font-medium"></span>
-      </button>
+      </button> */}
     </>
   );
 }
