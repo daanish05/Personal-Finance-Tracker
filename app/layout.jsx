@@ -3,7 +3,6 @@ import Providers from "../components/ThemeProvider";
 import UserProvider from "../components/UserProvider";
 import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
-import Script from "next/script";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
