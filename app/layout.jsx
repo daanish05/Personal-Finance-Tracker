@@ -14,16 +14,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         />
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
+              document.documentElement.classList.add("no-transition");
               try {
-                var _s = document.createElement("style");
-                _s.id = "no-transition-fix";
-                _s.textContent = "*,*::before,*::after{transition:none!important}";
-                document.head.appendChild(_s);
                 var theme = localStorage.getItem("theme");
                 if (
                   theme === "dark" ||
@@ -33,18 +28,17 @@ export default function RootLayout({ children }) {
                 } else {
                   document.documentElement.classList.remove("dark");
                 }
-                requestAnimationFrame(function() {
-                  requestAnimationFrame(function() {
-                    var el = document.getElementById("no-transition-fix");
-                    if (el) el.remove();
-                  });
-                });
               } catch (e) {}
+              requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                  document.documentElement.classList.remove("no-transition");
+                });
+              });
             `,
           }}
         />
       </head>
-      <body className={`${GeistSans.className} scroll-smooth bg-surface-container-low text-on-surface antialiased transition-colors duration-300 dark:bg-surface-container-low-dark dark:text-on-surface-dark`}>
+      <body className={`${GeistSans.className} scroll-smooth bg-surface-container-low text-on-surface antialiased`}>
         <Providers>
           <UserProvider>
             <TransactionProvider>
