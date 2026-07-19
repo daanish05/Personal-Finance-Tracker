@@ -562,7 +562,7 @@ export default function Goals() {
                     onClick={() => setShowForm(false)}
                   >
                     Cancel
-                  </button>
+                  </button> 
                   <button
                     className="w-full sm:flex-1 px-xl py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:opacity-90 transition-all"
                     onClick={addGoal}

@@ -454,7 +454,7 @@ export default function Report() {
           </footer>
         </main>
         <button className="fixed bottom-gutter right-gutter w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50">
-          <Link href="/Qucikadd">
+          <Link href="/Quickadd">
             <span
               className="material-symbols-outlined"
               style={{ fontVariationSettings: '"FILL" 1' }}
