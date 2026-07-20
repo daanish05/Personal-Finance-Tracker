@@ -313,13 +313,11 @@ export default function Quickadd() {
                           <>
                             <option value="food">🍱 Food &amp; Dining</option>
                             <option value="shopping">🛍️ Shopping</option>
-                            <option value="bills">
-                              📜 Bills &amp; Utilities
-                            </option>
+                            <option value="bills">📜 Bills &amp; Utilities</option>
                             <option value="transport">🚗 Transportation</option>
-                            <option value="health">
-                              🏥 Health &amp; Fitness
-                            </option>
+                            <option value="health">🏥 Health &amp; Fitness</option>
+                            <option value="miscellaneous">🤷 Miscellaneous</option>
+                            <option value="other">🎁 Other Expenses</option>
                           </>
                         ) : (
                           <>
