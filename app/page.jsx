@@ -129,7 +129,55 @@ export default function Home() {
       monthlySpending[t.category] =
         (monthlySpending[t.category] || 0) + Number(t.amount);
     });
+  const sortedExpenses = Object.entries(monthlySpending).sort(
+    (a, b) => b[1] - a[1],
+  );
 
+  const expenseTransactions = transactions.filter(
+    (t) =>
+      t.type === "expense" &&
+      new Date(t.date).getMonth() === currentMonth &&
+      new Date(t.date).getFullYear() === currentYear,
+  );
+
+  const topCategory = sortedExpenses.length ? sortedExpenses[0] : null;
+
+  const averageExpense =
+    expenseTransactions.length > 0
+      ? monthlyExpenses / expenseTransactions.length
+      : 0;
+
+  const monthlyIncomeByCategory = {};
+
+  transactions
+    .filter(
+      (t) =>
+        t.type === "income" &&
+        new Date(t.date).getMonth() === currentMonth &&
+        new Date(t.date).getFullYear() === currentYear,
+    )
+    .forEach((t) => {
+      monthlyIncomeByCategory[t.category] =
+        (monthlyIncomeByCategory[t.category] || 0) + Number(t.amount);
+    });
+
+  const sortedIncome = Object.entries(monthlyIncomeByCategory).sort(
+    (a, b) => b[1] - a[1],
+  );
+
+  const incomeTransactions = transactions.filter(
+    (t) =>
+      t.type === "income" &&
+      new Date(t.date).getMonth() === currentMonth &&
+      new Date(t.date).getFullYear() === currentYear,
+  );
+
+  const topIncomeSource = sortedIncome.length > 0 ? sortedIncome[0] : null;
+
+  const averageIncome =
+    incomeTransactions.length > 0
+      ? monthlyIncome / incomeTransactions.length
+      : 0;
   return (
     <>
       <>
@@ -240,50 +288,7 @@ export default function Home() {
             </div>
             {/* Main Analysis Grid */}
             <div className="grid grid-cols-12 gap-gutter">
-              {/* Large Area Chart */}
-              <div className="col-span-12 lg:col-span-8 glass-panel p-lg rounded-xl">
-                <div className="flex items-center justify-between mb-xl">
-                  <div>
-                    <h3 className="font-headline-md text-on-surface font-bold">
-                      Income vs Expenses
-                    </h3>
-                    <p className="text-on-surface-variant text-body-sm">
-                      {timeRange === "6m" ? "6-month" : "12-month"} performance
-                      analysis
-                    </p>
-                  </div>
-                  <div className="flex gap-sm">
-                    <button
-                      className={`px-md py-1 rounded border text-label-md transition-colors ${
-                        timeRange === "6m"
-                          ? "bg-primary text-on-primary border-primary"
-                          : "border-outline-variant hover:bg-surface-variant"
-                      }`}
-                      onClick={() => setTimeRange("6m")}
-                    >
-                      6 Months
-                    </button>
-                    <button
-                      className={`px-md py-1 rounded border text-label-md transition-colors ${
-                        timeRange === "1y"
-                          ? "bg-primary text-on-primary border-primary"
-                          : "border-outline-variant hover:bg-surface-variant"
-                      }`}
-                      onClick={() => setTimeRange("1y")}
-                    >
-                      1 Year
-                    </button>
-                  </div>
-                </div>
-                <div className="chart-container">
-                  <IncomeExpenseChart
-                    dark={dark}
-                    transactions={transactions}
-                    timeRange={timeRange}
-                  />
-                </div>
-              </div>
-              {/* Right Column: Budget & Insight */}
+              {/* Left Column: Budget & Insight */}
               <div className="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
                 {/* Budget Progress */}
                 <div className="glass-panel p-lg rounded-xl flex-1">
@@ -461,6 +466,553 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              {/* Middle Column: Expenses & Insight */}
+              <div className="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+                {/* Budget Progress */}
+                {/* <div className="glass-panel p-lg rounded-xl flex-1">
+                  <div className="flex items-center justify-between mb-xl">
+                    <h3 className="font-headline-md text-on-surface font-bold">
+                      Budget Progress
+                    </h3>
+                    <span className="font-label-md text-label-md text-outline">
+                      {
+                        Object.keys(budgets).filter((k) => budgets[k] > 0)
+                          .length
+                      }{" "}
+                      budgets set
+                    </span>
+                  </div>
+                  <div className="space-y-xl">
+                    {Object.entries(budgets).map(([key, budget]) => {
+                      if (budget <= 0) return null;
+                      const spent = monthlySpending[key] || 0;
+                      const pct = Math.min(
+                        100,
+                        Math.round((spent / budget) * 100),
+                      );
+                      const isOver = spent > budget;
+                      return (
+                        <div key={key} className="space-y-sm">
+                          <div className="flex justify-between font-label-md">
+                            <span className="text-on-surface">
+                              {getLabel(key)}
+                            </span>
+                            <span className="text-on-surface-variant inline-flex items-center gap-1">
+                              {editingBudget === key ? (
+                                <span className="inline-flex items-center gap-xs">
+                                  <input
+                                    className="w-20 px-1 py-0.5 bg-surface-container-low border border-outline-variant rounded text-label-md text-right"
+                                    type="number"
+                                    value={editValue}
+                                    onChange={(e) =>
+                                      setEditValue(e.target.value)
+                                    }
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        setBudgets((prev) => ({
+                                          ...prev,
+                                          [key]: parseFloat(editValue) || 0,
+                                        }));
+                                        setEditingBudget(null);
+                                      }
+                                      if (e.key === "Escape")
+                                        setEditingBudget(null);
+                                    }}
+                                    autoFocus
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <button
+                                    className="text-primary text-[12px]"
+                                    onClick={() => {
+                                      setBudgets((prev) => ({
+                                        ...prev,
+                                        [key]: parseFloat(editValue) || 0,
+                                      }));
+                                      setEditingBudget(null);
+                                    }}
+                                  >
+                                    save
+                                  </button>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1">
+                                  <span
+                                    className="cursor-pointer hover:text-primary transition-colors"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEditingBudget(key);
+                                      setEditValue(String(budget));
+                                    }}
+                                  >
+                                    {pct}%
+                                    <span className="text-[10px] text-outline ml-1">
+                                      ({formatCurrency(spent, defaultCurrency)}{" "}
+                                      /{" "}
+                                      {formatCurrency(budget, defaultCurrency)})
+                                    </span>
+                                  </span>
+                                  <button
+                                    className="text-on-surface-variant hover:text-error transition-colors"
+                                    onClick={() => {
+                                      const next = { ...budgets };
+                                      delete next[key];
+                                      setBudgets(next);
+                                    }}
+                                    title="Remove budget"
+                                  >
+                                    <span className="material-symbols-outlined text-[16px]">
+                                      close
+                                    </span>
+                                  </button>
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${isOver ? "bg-error" : getCategoryColor(key)}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          {isOver && (
+                            <p className="text-error text-[11px] font-label-md">
+                              Exceeded by{" "}
+                              {formatCurrency(spent - budget, defaultCurrency)}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {Object.values(budgets).filter((v) => v > 0).length ===
+                      0 && (
+                      <p className="text-on-surface-variant text-body-sm text-center py-lg">
+                        No budgets set. Add a budget below to track spending.
+                      </p>
+                    )}
+                  </div>
+                  {/* Add Budget Category 
+                  <div className="mt-lg pt-lg border-t border-outline-variant/30">
+                    <p className="font-label-md text-label-md text-outline mb-sm">
+                      Add Budget Category
+                    </p>
+                    <div className="flex flex-col gap-sm">
+                      <div className="flex gap-sm">
+                        <input
+                          className="flex-1 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface"
+                          placeholder="Category name"
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                              document
+                                .getElementById("add-budget-btn")
+                                ?.click();
+                          }}
+                        />
+                        <input
+                          className="w-24 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface text-right"
+                          type="number"
+                          placeholder="Amount"
+                          value={newCategoryAmount}
+                          onChange={(e) => setNewCategoryAmount(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        id="add-budget-btn"
+                        className="w-full px-3 py-1.5 bg-primary text-on-primary rounded-lg text-label-md font-bold hover:opacity-90 transition-opacity"
+                        onClick={() => {
+                          const name = newCategoryName.trim();
+                          if (!name) return;
+                          const key = name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^a-z0-9-]/g, "");
+                          if (!key) return;
+                          const amount = parseFloat(newCategoryAmount) || 0;
+                          if (amount <= 0) return;
+                          setBudgets((prev) => ({
+                            ...prev,
+                            ...(prev[key] ? {} : { [key]: amount }),
+                          }));
+                          setNewCategoryName("");
+                          setNewCategoryAmount("");
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+                <div className="glass-panel p-lg rounded-xl flex-1">
+                  <div className="flex items-center justify-between mb-xl">
+                    <div>
+                      <h3 className="font-headline-md font-bold text-on-surface">
+                        Expenses
+                      </h3>
+                      <p className="text-body-sm text-on-surface-variant">
+                        This Month
+                      </p>
+                    </div>
+
+                    <span className="font-title-md font-bold text-error">
+                      {formatCurrency(totalExpenses, defaultCurrency)}
+                    </span>
+                  </div>
+
+                  <div className="space-y-lg">
+                    {sortedExpenses.map(([category, amount]) => {
+                      const percent = Math.round(
+                        (amount / totalExpenses) * 100,
+                      );
+
+                      return (
+                        <div key={category}>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-on-surface">
+                              {getLabel(category)}
+                            </span>
+
+                            <span className="text-on-surface-variant">
+                              {formatCurrency(amount, defaultCurrency)}
+                            </span>
+                          </div>
+
+                          <div className="h-2 rounded-full bg-surface-variant overflow-hidden">
+                            <div
+                              className={`${getCategoryColor(category)} h-full rounded-full`}
+                              style={{ width: `${percent}%` }}
+                            />
+                          </div>
+
+                          <p className="text-[11px] text-outline mt-1">
+                            {percent}% of total spending
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-xl pt-lg border-t border-outline-variant/30 space-y-sm">
+                    <div className="flex justify-between">
+                      <span>Top Category</span>
+                      <span>
+                        {topCategory ? getLabel(topCategory[0]) : "-"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Transactions</span>
+                      <span>{expenseTransactions.length}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Average Expense</span>
+                      <span>
+                        {formatCurrency(averageExpense, defaultCurrency)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Right Column: Budget & Insight */}
+              <div className="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+                {/* Budget Progress */}
+                {/* <div className="glass-panel p-lg rounded-xl flex-1">
+                  <div className="flex items-center justify-between mb-xl">
+                    <h3 className="font-headline-md text-on-surface font-bold">
+                      Budget Progress
+                    </h3>
+                    <span className="font-label-md text-label-md text-outline">
+                      {
+                        Object.keys(budgets).filter((k) => budgets[k] > 0)
+                          .length
+                      }{" "}
+                      budgets set
+                    </span>
+                  </div>
+                  <div className="space-y-xl">
+                    {Object.entries(budgets).map(([key, budget]) => {
+                      if (budget <= 0) return null;
+                      const spent = monthlySpending[key] || 0;
+                      const pct = Math.min(
+                        100,
+                        Math.round((spent / budget) * 100),
+                      );
+                      const isOver = spent > budget;
+                      return (
+                        <div key={key} className="space-y-sm">
+                          <div className="flex justify-between font-label-md">
+                            <span className="text-on-surface">
+                              {getLabel(key)}
+                            </span>
+                            <span className="text-on-surface-variant inline-flex items-center gap-1">
+                              {editingBudget === key ? (
+                                <span className="inline-flex items-center gap-xs">
+                                  <input
+                                    className="w-20 px-1 py-0.5 bg-surface-container-low border border-outline-variant rounded text-label-md text-right"
+                                    type="number"
+                                    value={editValue}
+                                    onChange={(e) =>
+                                      setEditValue(e.target.value)
+                                    }
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        setBudgets((prev) => ({
+                                          ...prev,
+                                          [key]: parseFloat(editValue) || 0,
+                                        }));
+                                        setEditingBudget(null);
+                                      }
+                                      if (e.key === "Escape")
+                                        setEditingBudget(null);
+                                    }}
+                                    autoFocus
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <button
+                                    className="text-primary text-[12px]"
+                                    onClick={() => {
+                                      setBudgets((prev) => ({
+                                        ...prev,
+                                        [key]: parseFloat(editValue) || 0,
+                                      }));
+                                      setEditingBudget(null);
+                                    }}
+                                  >
+                                    save
+                                  </button>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1">
+                                  <span
+                                    className="cursor-pointer hover:text-primary transition-colors"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setEditingBudget(key);
+                                      setEditValue(String(budget));
+                                    }}
+                                  >
+                                    {pct}%
+                                    <span className="text-[10px] text-outline ml-1">
+                                      ({formatCurrency(spent, defaultCurrency)}{" "}
+                                      /{" "}
+                                      {formatCurrency(budget, defaultCurrency)})
+                                    </span>
+                                  </span>
+                                  <button
+                                    className="text-on-surface-variant hover:text-error transition-colors"
+                                    onClick={() => {
+                                      const next = { ...budgets };
+                                      delete next[key];
+                                      setBudgets(next);
+                                    }}
+                                    title="Remove budget"
+                                  >
+                                    <span className="material-symbols-outlined text-[16px]">
+                                      close
+                                    </span>
+                                  </button>
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${isOver ? "bg-error" : getCategoryColor(key)}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          {isOver && (
+                            <p className="text-error text-[11px] font-label-md">
+                              Exceeded by{" "}
+                              {formatCurrency(spent - budget, defaultCurrency)}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {Object.values(budgets).filter((v) => v > 0).length ===
+                      0 && (
+                      <p className="text-on-surface-variant text-body-sm text-center py-lg">
+                        No budgets set. Add a budget below to track spending.
+                      </p>
+                    )}
+                  </div>
+                  {/* Add Budget Category 
+                  <div className="mt-lg pt-lg border-t border-outline-variant/30">
+                    <p className="font-label-md text-label-md text-outline mb-sm">
+                      Add Budget Category
+                    </p>
+                    <div className="flex flex-col gap-sm">
+                      <div className="flex gap-sm">
+                        <input
+                          className="flex-1 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface"
+                          placeholder="Category name"
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                              document
+                                .getElementById("add-budget-btn")
+                                ?.click();
+                          }}
+                        />
+                        <input
+                          className="w-24 px-2 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-label-md text-on-surface text-right"
+                          type="number"
+                          placeholder="Amount"
+                          value={newCategoryAmount}
+                          onChange={(e) => setNewCategoryAmount(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        id="add-budget-btn"
+                        className="w-full px-3 py-1.5 bg-primary text-on-primary rounded-lg text-label-md font-bold hover:opacity-90 transition-opacity"
+                        onClick={() => {
+                          const name = newCategoryName.trim();
+                          if (!name) return;
+                          const key = name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^a-z0-9-]/g, "");
+                          if (!key) return;
+                          const amount = parseFloat(newCategoryAmount) || 0;
+                          if (amount <= 0) return;
+                          setBudgets((prev) => ({
+                            ...prev,
+                            ...(prev[key] ? {} : { [key]: amount }),
+                          }));
+                          setNewCategoryName("");
+                          setNewCategoryAmount("");
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+                <div className="glass-panel p-lg rounded-xl flex-1">
+                  <div className="flex items-center justify-between mb-xl">
+                    <div>
+                      <h3 className="font-headline-md font-bold text-on-surface">
+                        Revenue
+                      </h3>
+
+                      <p className="text-body-sm text-on-surface-variant">
+                        This Month
+                      </p>
+                    </div>
+
+                    <span className="font-title-md font-bold text-primary">
+                      {formatCurrency(monthlyIncome, defaultCurrency)}
+                    </span>
+                  </div>
+
+                  <div className="space-y-lg">
+                    {sortedIncome.length > 0 ? (
+                      sortedIncome.map(([category, amount]) => {
+                        const percent = Math.round(
+                          (amount / monthlyIncome) * 100,
+                        );
+
+                        return (
+                          <div key={category}>
+                            <div className="flex justify-between mb-1">
+                              <span className="text-on-surface">
+                                {getLabel(category)}
+                              </span>
+
+                              <span className="text-on-surface-variant">
+                                {formatCurrency(amount, defaultCurrency)}
+                              </span>
+                            </div>
+
+                            <div className="h-2 rounded-full bg-surface-variant overflow-hidden">
+                              <div
+                                className={`${getCategoryColor(category)} h-full rounded-full`}
+                                style={{ width: `${percent}%` }}
+                              />
+                            </div>
+
+                            <p className="text-[11px] text-outline mt-1">
+                              {percent}% of total income
+                            </p>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-center text-on-surface-variant py-lg">
+                        No income recorded this month.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-xl pt-lg border-t border-outline-variant/30 space-y-sm">
+                    <div className="flex justify-between">
+                      <span>Top Source</span>
+                      <span>
+                        {topIncomeSource ? getLabel(topIncomeSource[0]) : "-"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Transactions</span>
+                      <span>{incomeTransactions.length}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Average Income</span>
+                      <span>
+                        {formatCurrency(averageIncome, defaultCurrency)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Large Area Chart */}
+
+              <div className="col-span-12 lg:col-span-12 glass-panel p-lg rounded-xl">
+                <div className="flex items-center justify-between mb-xl">
+                  <div>
+                    <h3 className="font-headline-md text-on-surface font-bold">
+                      Income vs Expenses
+                    </h3>
+                    <p className="text-on-surface-variant text-body-sm">
+                      {timeRange === "6m" ? "6-month" : "12-month"} performance
+                      analysis
+                    </p>
+                  </div>
+                  <div className="flex gap-sm">
+                    <button
+                      className={`px-md py-1 rounded border text-label-md transition-colors ${
+                        timeRange === "6m"
+                          ? "bg-primary text-on-primary border-primary"
+                          : "border-outline-variant hover:bg-surface-variant"
+                      }`}
+                      onClick={() => setTimeRange("6m")}
+                    >
+                      6 Months
+                    </button>
+                    <button
+                      className={`px-md py-1 rounded border text-label-md transition-colors ${
+                        timeRange === "1y"
+                          ? "bg-primary text-on-primary border-primary"
+                          : "border-outline-variant hover:bg-surface-variant"
+                      }`}
+                      onClick={() => setTimeRange("1y")}
+                    >
+                      1 Year
+                    </button>
+                  </div>
+                </div>
+                <div className="chart-container">
+                  <IncomeExpenseChart
+                    dark={dark}
+                    transactions={transactions}
+                    timeRange={timeRange}
+                  />
+                </div>
+              </div>
             </div>
             {/* Bottom Row: Recent Transactions */}
             <div className="glass-panel rounded-xl overflow-hidden shadow-sm">
@@ -565,16 +1117,15 @@ export default function Home() {
           </footer>
         </main>
         <button className="fixed bottom-gutter right-gutter w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50">
-        <Link href="/Quickadd">
-          <span
-            className="material-symbols-outlined"
-            style={{ fontVariationSettings: '"FILL" 1' }}
-          >
-            add
-          </span>
-        </Link>
-      </button>
-
+          <Link href="/Quickadd">
+            <span
+              className="material-symbols-outlined"
+              style={{ fontVariationSettings: '"FILL" 1' }}
+            >
+              add
+            </span>
+          </Link>
+        </button>
       </>
     </>
   );
