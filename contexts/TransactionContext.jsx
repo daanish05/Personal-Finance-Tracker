@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 export const CURRENCIES = [
   { code: "USD", symbol: "$", label: "US Dollar ($)" },
@@ -15,17 +21,32 @@ export const CURRENCIES = [
 ];
 
 export const PREDEFINED_TAGS = [
-  "Business", "Personal", "Travel", "Food", "Health",
-  "Shopping", "Bills", "Entertainment", "Education", "Other",
+  "Business",
+  "Personal",
+  "Travel",
+  "Food",
+  "Health",
+  "Shopping",
+  "Bills",
+  "Entertainment",
+  "Education",
+  "Other",
 ];
 
 const currencySymbols = {};
-CURRENCIES.forEach((c) => { currencySymbols[c.code] = c.symbol; });
+CURRENCIES.forEach((c) => {
+  currencySymbols[c.code] = c.symbol;
+});
 
 export function formatCurrency(amount, currency = "USD") {
   if (amount == null) return "$0.00";
   const sym = currencySymbols[currency] || "$";
-  return sym + Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return (
+    sym +
+    Number(amount)
+      .toFixed(2)
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  );
 }
 
 const TransactionContext = createContext({
@@ -48,34 +69,60 @@ export default function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
   const [defaultCurrency, setDefaultCurrency] = useState("USD");
 
+  // useEffect(() => {
+  //   try {
+  //     const saved = localStorage.getItem("transactions");
+  //     if (saved) {
+  //       const parsed = JSON.parse(saved);
+  //       if (Array.isArray(parsed)) setTransactions(parsed.filter(t => t && typeof t === "object"));
+  //     }
+  //   } catch (e) {}
+  //   try {
+  //     const saved = localStorage.getItem("defaultCurrency");
+  //     if (saved) setDefaultCurrency(saved);
+  //   } catch (e) {}
+  // }, []);
+
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("transactions");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) setTransactions(parsed.filter(t => t && typeof t === "object"));
-      }
-    } catch (e) {}
-    try {
-      const saved = localStorage.getItem("defaultCurrency");
-      if (saved) setDefaultCurrency(saved);
-    } catch (e) {}
+    async function loadTransactions() {
+      const res = await fetch("/api/transactions");
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      setTransactions(data);
+    }
+
+    loadTransactions();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions]);
+  // useEffect(() => {
+  //   localStorage.setItem("transactions", JSON.stringify(transactions));
+  // }, [transactions]);
 
-  useEffect(() => {
-    localStorage.setItem("defaultCurrency", defaultCurrency);
-  }, [defaultCurrency]);
+  // useEffect(() => {
+  //   localStorage.setItem("defaultCurrency", defaultCurrency);
+  // }, [defaultCurrency]);
+  const addTransaction = useCallback(async (transaction) => {
+    const res = await fetch("/api/transactions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    });
 
-  const addTransaction = useCallback((t) => {
-    setTransactions((prev) => [
-      { ...t, id: Date.now().toString() + Math.random().toString(36).slice(2) },
-      ...prev,
-    ]);
+    const saved = await res.json();
+
+    setTransactions((prev) => [saved, ...prev]);
   }, []);
+  // const addTransaction = useCallback((t) => {
+  //   setTransactions((prev) => [
+  //     { ...t, id: Date.now().toString() + Math.random().toString(36).slice(2) },
+  //     ...prev,
+  //   ]);
+  // }, []);
 
   const deleteTransactions = useCallback((ids) => {
     setTransactions((prev) => prev.filter((t) => !ids.includes(t.id)));
@@ -95,7 +142,17 @@ export default function TransactionProvider({ children }) {
 
   return (
     <TransactionContext.Provider
-      value={{ transactions, addTransaction, deleteTransactions, totalIncome, totalExpenses, balance, recentTransactions, defaultCurrency, setDefaultCurrency }}
+      value={{
+        transactions,
+        addTransaction,
+        deleteTransactions,
+        totalIncome,
+        totalExpenses,
+        balance,
+        recentTransactions,
+        defaultCurrency,
+        setDefaultCurrency,
+      }}
     >
       {children}
     </TransactionContext.Provider>
