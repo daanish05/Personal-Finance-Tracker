@@ -1,8 +1,5 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-} from "drizzle-orm/sqlite-core";
+
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 export const transactions = sqliteTable("transactions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -13,5 +10,7 @@ export const transactions = sqliteTable("transactions", {
   account: text("account").notNull(),
   date: text("date").notNull(),
   note: text("note"),
-  
+  createdAt: text("created_at")
+    .$defaultFn(() => new Date().toISOString()),
 });
+

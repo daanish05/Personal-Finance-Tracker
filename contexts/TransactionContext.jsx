@@ -51,6 +51,7 @@ export function formatCurrency(amount, currency = "USD") {
 
 const TransactionContext = createContext({
   transactions: [],
+  loading: true,
   addTransaction: () => {},
   deleteTransactions: () => {},
   totalIncome: 0,
@@ -67,6 +68,7 @@ export function useTransactions() {
 
 export default function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [defaultCurrency, setDefaultCurrency] = useState("USD");
 
   // useEffect(() => {
@@ -84,26 +86,73 @@ export default function TransactionProvider({ children }) {
   // }, []);
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem("defaultCurrency");
+
+      if (saved) {
+        setDefaultCurrency(saved);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  useEffect(() => {
     async function loadTransactions() {
-      const res = await fetch("/api/transactions");
+      try {
+        const res = await fetch("/api/transactions", {
+          cache: "no-store",
+        });
 
-      if (!res.ok) return;
+        if (!res.ok) {
+          throw new Error(`Failed to fetch transactions (${res.status})`);
+        }
 
-      const data = await res.json();
-
-      setTransactions(data);
+        const data = await res.json();
+        setTransactions(data);
+      } catch (err) {
+        console.error("Error loading transactions:", err);
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadTransactions();
   }, []);
 
   // useEffect(() => {
+  //   async function loadTransactions() {
+  //     try {
+  //       const res = await fetch("/api/transactions");
+
+  //       if (!res.ok) throw new Error("Failed");
+
+  //       const data = await res.json();
+
+  //       setTransactions(data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //     // const res = await fetch("/api/transactions");
+
+  //     // if (!res.ok) return;
+
+  //     // const data = await res.json();
+
+  //     // setTransactions(data);
+  //   }
+
+  //   loadTransactions();
+  // }, []);
+
+  // useEffect(() => {
   //   localStorage.setItem("transactions", JSON.stringify(transactions));
   // }, [transactions]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("defaultCurrency", defaultCurrency);
-  // }, [defaultCurrency]);
+  useEffect(() => {
+    localStorage.setItem("defaultCurrency", defaultCurrency);
+  }, [defaultCurrency]);
+
   const addTransaction = useCallback(async (transaction) => {
     const res = await fetch("/api/transactions", {
       method: "POST",
@@ -113,10 +162,16 @@ export default function TransactionProvider({ children }) {
       body: JSON.stringify(transaction),
     });
 
-    const saved = await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to save transaction");
+    }
 
+    const saved = await res.json();
     setTransactions((prev) => [saved, ...prev]);
+    // const saved = await res.json();
+    // setTransactions((prev) => [saved, ...prev]);
   }, []);
+
   // const addTransaction = useCallback((t) => {
   //   setTransactions((prev) => [
   //     { ...t, id: Date.now().toString() + Math.random().toString(36).slice(2) },
@@ -124,9 +179,18 @@ export default function TransactionProvider({ children }) {
   //   ]);
   // }, []);
 
-  const deleteTransactions = useCallback((ids) => {
+  const deleteTransactions = useCallback(async (ids) => {
+    await fetch("/api/transactions", {
+      method: "DELETE",
+      body: JSON.stringify(ids),
+    });
+
     setTransactions((prev) => prev.filter((t) => !ids.includes(t.id)));
   }, []);
+
+  // const deleteTransactions = useCallback((ids) => {
+  //   setTransactions((prev) => prev.filter((t) => !ids.includes(t.id)));
+  // }, []);
 
   const totalIncome = transactions
     .filter((t) => t?.type === "income")
@@ -144,6 +208,7 @@ export default function TransactionProvider({ children }) {
     <TransactionContext.Provider
       value={{
         transactions,
+        loading,
         addTransaction,
         deleteTransactions,
         totalIncome,
