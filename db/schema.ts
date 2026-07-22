@@ -24,25 +24,49 @@ export const transactions = sqliteTable("transactions", {
 // ==============
 
 export const accounts = sqliteTable("accounts", {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    
+    name: text("name").notNull(),
+    
+    desc: text("desc").notNull(),
+
+    balance: real("balance").notNull(),
+    
+    color: text("color").notNull(),
+    
+    icon: text("icon").notNull(),
+    
+    badge: text("badge"),
+    
+    trend: text("trend").notNull(),
+    
+    wide: integer("wide", { mode: "boolean" }).default(false),
+
+    createdAt: text("created_at").$defaultFn(() =>
+    new Date().toISOString()
+),
+});
+
+
+// ==============
+// ---Goals Table---
+// ==============
+
+export const goals = sqliteTable("goals", {
   id: integer("id").primaryKey({ autoIncrement: true }),
 
   name: text("name").notNull(),
 
-  desc: text("desc").notNull(),
+  target: real("target").notNull(),
 
-  balance: real("balance").notNull(),
+  current: real("current").notNull().default(0),
 
-  color: text("color").notNull(),
+  deadline: text("deadline"),
 
   icon: text("icon").notNull(),
 
-  badge: text("badge"),
+  colorIdx: integer("color_idx").notNull(),
 
-  trend: text("trend").notNull(),
-
-  wide: integer("wide", { mode: "boolean" }).default(false),
-
-  createdAt: text("created_at").$defaultFn(() =>
-    new Date().toISOString()
-  ),
+  createdAt: text("created_at")
+    .$defaultFn(() => new Date().toISOString()),
 });

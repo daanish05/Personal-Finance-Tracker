@@ -62,19 +62,41 @@ export default function Goals() {
     colorIdx: 0,
   });
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("goals");
-      if (saved) setGoals(JSON.parse(saved));
-    } catch (e) {}
-    setGoalsLoaded(true);
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const saved = localStorage.getItem("goals");
+  //     if (saved) setGoals(JSON.parse(saved));
+  //   } catch (e) {}
+  //   setGoalsLoaded(true);
+  // }, []);
 
   useEffect(() => {
-    if (goalsLoaded) {
-      localStorage.setItem("goals", JSON.stringify(goals));
+    async function loadGoals() {
+      try {
+        const res = await fetch("/api/goals");
+
+        if (!res.ok) {
+          throw new Error("Failed to load goals");
+        }
+
+        const data = await res.json();
+
+        setGoals(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setGoalsLoaded(true);
+      }
     }
-  }, [goals, goalsLoaded]);
+
+    loadGoals();
+  }, []);
+
+  // useEffect(() => {
+  //   if (goalsLoaded) {
+  //     localStorage.setItem("goals", JSON.stringify(goals));
+  //   }
+  // }, [goals, goalsLoaded]);
 
   const totalTarget = goals.reduce((s, g) => s + (g.target || 0), 0);
   const totalAllocated = goals.reduce((s, g) => s + (g.current || 0), 0);
@@ -124,41 +146,132 @@ export default function Goals() {
   const avgMonthly =
     monthlySavings.reduce((s, m) => s + m.saved, 0) / monthlySavings.length;
 
-  const addGoal = () => {
+  // const addGoal = () => {
+  //   if (!form.name.trim() || !form.target) return;
+  //   const goal = {
+  //     id: Date.now().toString(),
+  //     name: form.name.trim(),
+  //     target: parseFloat(form.target),
+  //     current: 0,
+  //     deadline: form.deadline || null,
+  //     icon: form.icon,
+  //     colorIdx: form.colorIdx,
+  //     createdAt: new Date().toISOString(),
+  //   };
+  //   setGoals((prev) => [...prev, goal]);
+  //   setForm({
+  //     name: "",
+  //     target: "",
+  //     deadline: "",
+  //     icon: "savings",
+  //     colorIdx: 0,
+  //   });
+  //   setShowForm(false);
+  // };
+
+  const addGoal = async () => {
     if (!form.name.trim() || !form.target) return;
+
     const goal = {
-      id: Date.now().toString(),
       name: form.name.trim(),
       target: parseFloat(form.target),
       current: 0,
       deadline: form.deadline || null,
       icon: form.icon,
       colorIdx: form.colorIdx,
-      createdAt: new Date().toISOString(),
     };
-    setGoals((prev) => [...prev, goal]);
-    setForm({
-      name: "",
-      target: "",
-      deadline: "",
-      icon: "savings",
-      colorIdx: 0,
-    });
-    setShowForm(false);
+
+    try {
+      const res = await fetch("/api/goals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(goal),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create goal");
+      }
+
+      const created = await res.json();
+
+      setGoals((prev) => [...prev, created]);
+
+      setForm({
+        name: "",
+        target: "",
+        deadline: "",
+        icon: "savings",
+        colorIdx: 0,
+      });
+
+      setShowForm(false);
+    } catch (err) {
+      console.error(err);
+      alert("Unable to create goal.");
+    }
   };
 
-  const deleteGoal = (id) => {
-    setGoals((prev) => prev.filter((g) => g.id !== id));
+  // const deleteGoal = (id) => {
+  //   setGoals((prev) => prev.filter((g) => g.id !== id));
+  // };
+
+  const deleteGoal = async (id) => {
+    try {
+      const res = await fetch("/api/goals", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([id]),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete goal");
+      }
+
+      setGoals((prev) => prev.filter((g) => g.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const updateCurrent = (id, amount) => {
-    setGoals((prev) =>
-      prev.map((g) =>
-        g.id === id
-          ? { ...g, current: Math.max(0, parseFloat(amount) || 0) }
-          : g,
-      ),
-    );
+  // const updateCurrent = (id, amount) => {
+  //   setGoals((prev) =>
+  //     prev.map((g) =>
+  //       g.id === id
+  //         ? { ...g, current: Math.max(0, parseFloat(amount) || 0) }
+  //         : g,
+  //     ),
+  //   );
+  // };
+
+  const updateCurrent = async (id, amount) => {
+    const current = Math.max(0, parseFloat(amount) || 0);
+
+    try {
+      const res = await fetch("/api/goals", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          current,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update goal");
+      }
+
+      const updated = await res.json();
+
+      setGoals((prev) => prev.map((g) => (g.id === id ? updated : g)));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -562,7 +675,7 @@ export default function Goals() {
                     onClick={() => setShowForm(false)}
                   >
                     Cancel
-                  </button> 
+                  </button>
                   <button
                     className="w-full sm:flex-1 px-xl py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:opacity-90 transition-all"
                     onClick={addGoal}

@@ -92,12 +92,6 @@ export default function Accounts() {
     badge: "",
   });
 
-  // useEffect(() => {
-  //   try {
-  //     const saved = localStorage.getItem("bankAccounts");
-  //     if (saved) setAccounts(JSON.parse(saved));
-  //   } catch (e) {}
-  // }, []);
   useEffect(() => {
     async function loadAccounts() {
       try {
@@ -119,12 +113,6 @@ export default function Accounts() {
 
     loadAccounts();
   }, []);
-
-  // useEffect(() => {
-  //   try {
-  //     localStorage.setItem("bankAccounts", JSON.stringify(accounts));
-  //   } catch (e) {}
-  // }, [accounts]);
 
   const filteredAccounts = searchQuery.trim()
     ? accounts.filter(
@@ -240,32 +228,6 @@ export default function Accounts() {
     }
   };
 
-  // const handleSave = (e) => {
-  //   e.preventDefault();
-  //   const balance = parseFloat(form.balance) || 0;
-  //   const badge = form.badge.trim() || null;
-  //   const trend = balance > 0 ? "up" : balance < 0 ? "down" : "flat";
-  //   if (editingId) {
-  //     setAccounts((prev) =>
-  //       prev.map((a) =>
-  //         a.id === editingId ? { ...a, ...form, balance, badge, trend } : a,
-  //       ),
-  //     );
-  //   } else {
-  //     setAccounts((prev) => [
-  //       ...prev,
-  //       {
-  //         ...form,
-  //         id: Date.now().toString(),
-  //         balance,
-  //         badge,
-  //         trend,
-  //         wide: false,
-  //       },
-  //     ]);
-  //   }
-  //   setShowModal(false);
-  // };
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this account?")) {
