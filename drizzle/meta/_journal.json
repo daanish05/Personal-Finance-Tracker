@@ -8,6 +8,20 @@
       "when": 1784550334529,
       "tag": "0000_cuddly_green_goblin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784730605975,
+      "tag": "0001_certain_bug",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784731150582,
+      "tag": "0002_groovy_jack_power",
+      "breakpoints": true
     }
   ]
 }

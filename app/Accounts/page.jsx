@@ -5,6 +5,7 @@ import {
   formatCurrency,
 } from "../../contexts/TransactionContext";
 import Header from "../../components/Dashboard/Header";
+import { NextResponse } from "next/server";
 
 const COLORS = ["primary", "secondary", "tertiary", "on-surface"];
 const ICONS = [
@@ -77,7 +78,8 @@ const defaultAccounts = [
 export default function Accounts() {
   const { transactions, defaultCurrency } = useTransactions();
   const [searchQuery, setSearchQuery] = useState("");
-  const [accounts, setAccounts] = useState(defaultAccounts);
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [menuOpenId, setMenuOpenId] = useState(null);
@@ -90,18 +92,39 @@ export default function Accounts() {
     badge: "",
   });
 
+  // useEffect(() => {
+  //   try {
+  //     const saved = localStorage.getItem("bankAccounts");
+  //     if (saved) setAccounts(JSON.parse(saved));
+  //   } catch (e) {}
+  // }, []);
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("bankAccounts");
-      if (saved) setAccounts(JSON.parse(saved));
-    } catch (e) {}
+    async function loadAccounts() {
+      try {
+        const res = await fetch("/api/accounts");
+
+        if (!res.ok) {
+          throw new Error("Failed to load accounts");
+        }
+
+        const data = await res.json();
+
+        setAccounts(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadAccounts();
   }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("bankAccounts", JSON.stringify(accounts));
-    } catch (e) {}
-  }, [accounts]);
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem("bankAccounts", JSON.stringify(accounts));
+  //   } catch (e) {}
+  // }, [accounts]);
 
   const filteredAccounts = searchQuery.trim()
     ? accounts.filter(
@@ -148,32 +171,101 @@ export default function Accounts() {
     setMenuOpenId(null);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+
     const balance = parseFloat(form.balance) || 0;
     const badge = form.badge.trim() || null;
     const trend = balance > 0 ? "up" : balance < 0 ? "down" : "flat";
-    if (editingId) {
-      setAccounts((prev) =>
-        prev.map((a) =>
-          a.id === editingId ? { ...a, ...form, balance, badge, trend } : a,
-        ),
-      );
-    } else {
-      setAccounts((prev) => [
-        ...prev,
+
+    const account = {
+      ...form,
+      balance,
+      badge,
+      trend,
+      wide: false,
+    };
+
+    try {
+      if (editingId) {
+        const res = await fetch("/api/accounts", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: editingId,
+            ...account,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to update account");
+        }
+
+        const updated = await res.json();
+
+        setAccounts((prev) =>
+          prev.map((a) => (a.id === editingId ? updated : a)),
+        );
+      } else {
+        const res = await fetch("/api/accounts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(account),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to create account");
+        }
+
+        const created = await res.json();
+
+        setAccounts((prev) => [...prev, created]);
+      }
+
+      setShowModal(false);
+    } catch (error) {
+      console.error(error);
+
+      return NextResponse.json(
         {
-          ...form,
-          id: Date.now().toString(),
-          balance,
-          badge,
-          trend,
-          wide: false,
-        },
-      ]);
+      success: false,
+      message: "Failed to create account",
+    },
+    {statue: 500}
+      )
     }
-    setShowModal(false);
   };
+
+  // const handleSave = (e) => {
+  //   e.preventDefault();
+  //   const balance = parseFloat(form.balance) || 0;
+  //   const badge = form.badge.trim() || null;
+  //   const trend = balance > 0 ? "up" : balance < 0 ? "down" : "flat";
+  //   if (editingId) {
+  //     setAccounts((prev) =>
+  //       prev.map((a) =>
+  //         a.id === editingId ? { ...a, ...form, balance, badge, trend } : a,
+  //       ),
+  //     );
+  //   } else {
+  //     setAccounts((prev) => [
+  //       ...prev,
+  //       {
+  //         ...form,
+  //         id: Date.now().toString(),
+  //         balance,
+  //         badge,
+  //         trend,
+  //         wide: false,
+  //       },
+  //     ]);
+  //   }
+  //   setShowModal(false);
+  // };
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this account?")) {
@@ -285,10 +377,13 @@ export default function Accounts() {
           </section>
 
           <div className="flex justify-between items-center mb-lg">
-            <h2 className="font-headline-md text-headline-md text-on-surface font-bold">Your Accounts</h2>
+            <h2 className="font-headline-md text-headline-md text-on-surface font-bold">
+              Your Accounts
+            </h2>
             <button
               onClick={openAdd}
-              className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">
+              className="flex items-center gap-sm bg-primary text-on-primary px-lg py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+            >
               <span className="material-symbols-outlined text-[18px]">add</span>
               Add Account
             </button>

@@ -15,10 +15,16 @@ export default function Quickadd() {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("bankAccounts");
-      if (saved) setBankAccounts(JSON.parse(saved));
-    } catch (e) {}
+    async function loadAccounts() {
+      try {
+        const res = await fetch("/api/accounts");
+        if (res.ok) {
+          const data = await res.json();
+          setBankAccounts(data);
+        }
+      } catch (e) {}
+    }
+    loadAccounts();
   }, []);
   const [type, setType] = useState("expense");
   const [paymentMethod, setPaymentMethod] = useState("card");
