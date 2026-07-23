@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function Login() {
   const router = useRouter();
+  const { setUser } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,31 +15,6 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   setLoading(true);
-
-  //   try {
-  //     const res = await fetch("/api/auth/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(form),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!data.success) {
-  //       setError(data.message);
-  //     } else {
-  //       router.push("/");
-  //     }
-  //   } catch {
-  //     setError("Something went wrong. Please try again.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,11 +36,12 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message);
         return;
       }
 
-      // JWT is already stored in an HttpOnly cookie
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
       router.replace("/");
     } catch (error) {
       console.error(error);

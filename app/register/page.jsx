@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function Register() {
   const router = useRouter();
+  const { setUser } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ export default function Register() {
       if (!data.success) {
         setError(data.message);
       } else {
+        setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
         router.push("/");
       }

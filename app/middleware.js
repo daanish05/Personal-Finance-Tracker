@@ -50,7 +50,7 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    "/",
+    "/",    
     "/transactions/:path*",
     "/accounts/:path*",
     "/goals/:path*",
