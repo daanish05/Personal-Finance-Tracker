@@ -32,10 +32,21 @@ export default function Home() {
   const [budgetsLoaded, setBudgetsLoaded] = useState(false);
   const [dashboardSearch, setDashboardSearch] = useState("");
 
+  function userKey(base) {
+    try {
+      const raw = localStorage.getItem("user");
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u?.email) return `${u.email}_${base}`;
+      }
+    } catch {}
+    return base;
+  }
+
   useEffect(() => {
     setMounted(true);
     try {
-      const saved = localStorage.getItem("budgets");
+      const saved = localStorage.getItem(userKey("budgets"));
       if (saved) setBudgets(JSON.parse(saved));
     } catch (e) {}
     setBudgetsLoaded(true);
@@ -43,7 +54,7 @@ export default function Home() {
 
   useEffect(() => {
     if (budgetsLoaded) {
-      localStorage.setItem("budgets", JSON.stringify(budgets));
+      localStorage.setItem(userKey("budgets"), JSON.stringify(budgets));
     }
   }, [budgets, budgetsLoaded]);
 

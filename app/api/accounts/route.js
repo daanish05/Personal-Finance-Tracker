@@ -1,19 +1,30 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { accounts } from "@/db/schema";
-import { desc, eq, inArray } from "drizzle-orm";
+import { desc, eq, and, inArray } from "drizzle-orm";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 // ================= GET =================
 export async function GET() {
   try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const data = await db
       .select()
       .from(accounts)
+      .where(eq(accounts.userId, user.id))
       .orderBy(desc(accounts.createdAt));
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    console.error("GET Accounts Error:", error);
 
     return NextResponse.json(
       {
@@ -28,11 +39,21 @@ export async function GET() {
 // ================= POST =================
 export async function POST(request) {
   try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     const result = await db
       .insert(accounts)
       .values({
+        userId: user.id,
         name: body.name,
         desc: body.desc,
         balance: Number(body.balance),
@@ -46,7 +67,7 @@ export async function POST(request) {
 
     return NextResponse.json(result[0]);
   } catch (error) {
-    console.error(error);
+    console.error("POST Account Error:", error);
 
     return NextResponse.json(
       {
@@ -61,17 +82,16 @@ export async function POST(request) {
 // ================= PUT =================
 export async function PUT(request) {
   try {
-    const body = await request.json();
+    const user = await getCurrentUser();
 
-    if (!body.id) {
+    if (!user) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Account ID is required",
-        },
-        { status: 400 }
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
       );
     }
+
+    const body = await request.json();
 
     const result = await db
       .update(accounts)
@@ -85,12 +105,17 @@ export async function PUT(request) {
         trend: body.trend,
         wide: body.wide ?? false,
       })
-      .where(eq(accounts.id, Number(body.id)))
+      .where(
+        and(
+          eq(accounts.id, Number(body.id)),
+          eq(accounts.userId, user.id)
+        )
+      )
       .returning();
 
     return NextResponse.json(result[0]);
   } catch (error) {
-    console.error(error);
+    console.error("PUT Account Error:", error);
 
     return NextResponse.json(
       {
@@ -105,22 +130,36 @@ export async function PUT(request) {
 // ================= DELETE =================
 export async function DELETE(request) {
   try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const ids = await request.json();
 
     await db
       .delete(accounts)
-      .where(inArray(accounts.id, ids.map(Number)));
+      .where(
+        and(
+          inArray(accounts.id, ids.map(Number)),
+          eq(accounts.userId, user.id)
+        )
+      );
 
     return NextResponse.json({
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("DELETE Account Error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to delete account",
+        message: "Failed to delete accounts",
       },
       { status: 500 }
     );

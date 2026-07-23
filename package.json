@@ -21,7 +21,8 @@
     "postcss": "^8.5.16",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/react": "19.2.17",
