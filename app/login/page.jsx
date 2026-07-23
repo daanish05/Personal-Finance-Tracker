@@ -13,28 +13,60 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setLoading(true);
+
+  //   try {
+  //     const res = await fetch("/api/auth/login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(form),
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (!data.success) {
+  //       setError(data.message);
+  //     } else {
+  //       router.push("/");
+  //     }
+  //   } catch {
+  //     setError("Something went wrong. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
       });
 
       const data = await res.json();
 
-      if (!data.success) {
-        setError(data.message);
-      } else {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        router.push("/");
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+        return;
       }
-    } catch {
+
+      // JWT is already stored in an HttpOnly cookie
+      router.replace("/");
+    } catch (error) {
+      console.error(error);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -70,7 +102,9 @@ export default function Login() {
               <span className="material-symbols-outlined text-error text-[20px]">
                 error
               </span>
-              <span className="font-body-sm text-body-sm text-error">{error}</span>
+              <span className="font-body-sm text-body-sm text-error">
+                {error}
+              </span>
             </div>
           )}
 
@@ -125,7 +159,10 @@ export default function Login() {
 
           <p className="mt-lg text-center font-body-sm text-body-sm text-on-surface-variant">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-primary font-label-md hover:underline">
+            <Link
+              href="/register"
+              className="text-primary font-label-md hover:underline"
+            >
               Create one
             </Link>
           </p>

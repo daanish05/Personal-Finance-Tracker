@@ -1,5 +1,6 @@
 import Sidebar from "../components/Dashboard/Sidebar";
 import Providers from "../components/ThemeProvider";
+import AuthProvider from "../contexts/AuthProvider";
 import UserProvider from "../components/UserProvider";
 import TransactionProvider from "../contexts/TransactionContext";
 import { GeistSans } from "geist/font";
@@ -41,12 +42,14 @@ export default function RootLayout({ children }) {
         className={`${GeistSans.className} scroll-smooth bg-surface-container-low text-on-surface antialiased`}
       >
         <Providers>
-          <UserProvider>
+          <AuthProvider>
             <TransactionProvider>
-              <Sidebar />
-              {children}
+              <UserProvider>
+                <Sidebar />
+                {children}
+              </UserProvider>
             </TransactionProvider>
-          </UserProvider>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

@@ -167,6 +167,19 @@ export default function Sidebar() {
             </div>
             <ThemeToggle dark={dark} onToggle={toggleDark} />
           </div>
+          <button
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              localStorage.removeItem("user");
+              window.location.href = "/login";
+            }}
+            className="flex items-center gap-md w-full px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              logout
+            </span>
+            <span className="font-label-md text-label-md">Logout</span>
+          </button>
         </div>
       </aside>
     </>
