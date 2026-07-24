@@ -51,9 +51,9 @@ export default function Register() {
             '\n      .material-symbols-outlined {\n        font-variation-settings:\n          "FILL" 0,\n          "wght" 400,\n          "GRAD" 0,\n          "opsz" 24;\n        vertical-align: middle;\n      }\n    ',
         }}
       />
-      {/* <main className="min-h-screen flex items-center justify-center bg-surface-container-low px-2"> */}
-      <main className="min-h-screen flex items-center justify-center bg-surface-container-low px-1 sm:px-4 md:px-6">
-        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-xl">
+      <main className="min-h-screen flex items-center justify-center bg-surface-container-low px-2">
+        {/* <main className="min-h-screen flex items-center justify-center bg-surface-container-low px-1 sm:px-4 md:px-6"> */}
+        <div className="w-[88%] sm:max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-xl">
           <div className="text-center mb-lg">
             <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mx-auto mb-md">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
@@ -73,7 +73,9 @@ export default function Register() {
               <span className="material-symbols-outlined text-error text-[20px]">
                 error
               </span>
-              <span className="font-body-sm text-body-sm text-error">{error}</span>
+              <span className="font-body-sm text-body-sm text-error">
+                {error}
+              </span>
             </div>
           )}
 
@@ -144,7 +146,10 @@ export default function Register() {
 
           <p className="mt-lg text-center font-body-sm text-body-sm text-on-surface-variant">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary font-label-md hover:underline">
+            <Link
+              href="/login"
+              className="text-primary font-label-md hover:underline"
+            >
               Sign in
             </Link>
           </p>
