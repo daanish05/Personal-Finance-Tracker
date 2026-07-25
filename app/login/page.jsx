@@ -60,7 +60,7 @@ export default function Login() {
         }}
       />
       <main className="min-h-screen flex items-center justify-center bg-surface-container-low px-4">
-        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-xl p-xl">
+        <div className="w-[88%] md:w-[80%] lg:w-[70%] xl:w-[60%] bg-surface-container-lowest border border-outline-variant rounded-xl p-xl">
           <div className="text-center mb-lg">
             <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mx-auto mb-md">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
