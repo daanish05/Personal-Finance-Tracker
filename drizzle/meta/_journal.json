@@ -43,6 +43,13 @@
       "when": 1784825584389,
       "tag": "0005_round_firedrake",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1785003718615,
+      "tag": "0006_tired_maginty",
+      "breakpoints": true
     }
   ]
 }

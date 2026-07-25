@@ -4,10 +4,12 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { useTransactions, CURRENCIES } from "../../contexts/TransactionContext";
 import { useUser } from "../../components/UserProvider";
+import { useAuth } from "../../contexts/AuthProvider";
 import Header from "../../components/Dashboard/Header";
 
 export default function Settings() {
-  const { defaultCurrency, setDefaultCurrency, transactions } = useTransactions();
+  const { defaultCurrency, setDefaultCurrency, transactions } =
+    useTransactions();
   const {
     profile,
     updateProfile,
@@ -16,6 +18,21 @@ export default function Settings() {
     notifications,
     updateNotifications,
   } = useUser();
+
+  const { user } = useAuth();
+
+  const displayName = user?.name || profile.name;
+  const displayEmail = user?.email || profile.email;
+
+  const avatar = profile?.avatar || "";
+
+  const memberSince = user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
   const avatarInputRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,9 +55,9 @@ export default function Settings() {
   };
 
   const handleProfileSave = () => {
-    const name = document.getElementById("profile-name")?.value || profile.name;
+    const name = document.getElementById("profile-name")?.value || displayName;
     const email =
-      document.getElementById("profile-email")?.value || profile.email;
+      document.getElementById("profile-email")?.value || displayEmail;
     updateProfile({ name, email });
     showToast("Profile saved successfully");
   };
@@ -150,7 +167,7 @@ export default function Settings() {
               </div>
               <div className="flex items-center gap-xl mb-lg">
                 <div className="relative group">
-                  {profile.avatar ? (
+                  {avatar ? (
                     <img
                       className="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm"
                       alt="Profile"
@@ -158,7 +175,7 @@ export default function Settings() {
                     />
                   ) : (
                     <div className="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl">
-                      {profile.name.charAt(0)}
+                      {displayName.charAt(0)}
                     </div>
                   )}
                   <input
@@ -190,47 +207,24 @@ export default function Settings() {
                     </span>
                   </div>
                   <h4 className="font-headline-md text-headline-md font-bold">
-                    {profile.name}
+                    {displayName}
                   </h4>
                   <p className="text-on-surface-variant font-body-sm opacity-100">
-                    {profile.email}
+                    {displayEmail}
                   </p>
                   <p className="text-on-surface-variant font-body-sm opacity-70">
-                    Member since January 2023
+                    Member since {memberSince}
                   </p>
                 </div>
               </div>
-              {/* <div className="grid grid-cols-2 gap-lg">
-                <div className="space-y-2">
-                  <label className="font-label-md text-label-md text-on-surface-variant">
-                    Full Name
-                  </label>
-                  <input
-                    id="profile-name"
-                    className="w-full px-md py-2.5 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
-                    type="text"
-                    defaultValue={profile.name}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="font-label-md text-label-md text-on-surface-variant">
-                    Email Address
-                  </label>
-                  <input
-                    id="profile-email"
-                    className="w-full px-md py-2.5 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
-                    type="email"
-                    defaultValue={profile.email}
-                  />
-                </div>
-              </div> */}
               <div
                 className="
                 mt-lg pt-lg border-t border-outline-variant
                 flex flex-col sm:flex-row
                 gap-4
                 items-stretch sm:items-center
-                justify-end">
+                justify-end"
+              >
                 <Link href="/EditProfile">
                   <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all w-full sm:w-auto">
                     Edit Profile

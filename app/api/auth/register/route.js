@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { hashPassword, generateToken } from "@/lib/auth";
+import { profiles } from "@/db/schema";
 
 export async function POST(request) {
   try {
@@ -55,6 +56,9 @@ export async function POST(request) {
       .returning();
 
     const user = result[0];
+    await db.insert(profiles).values({
+      userId: newUser.id,
+    });
     const token = generateToken(user);
 
     const response = NextResponse.json({
