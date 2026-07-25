@@ -26,7 +26,7 @@ export default function UserProfile() {
             className="w-full h-full object-cover"
             alt="User avatar"
             src={profile.avatar}
-          />\
+          />
           </Link>
         ) : (
           <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">

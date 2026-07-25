@@ -41,6 +41,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${GeistSans.className} scroll-smooth bg-surface-container-low text-on-surface antialiased`}
       >
+          <Providers>
           <AuthProvider>
             <TransactionProvider>
               <UserProvider>
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
               </UserProvider>
             </TransactionProvider>
           </AuthProvider>
+          </Providers>
       </body>
     </html>
   );

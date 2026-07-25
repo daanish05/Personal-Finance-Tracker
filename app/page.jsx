@@ -31,7 +31,7 @@ export default function Home() {
   const [timeRange, setTimeRange] = useState("6m");
   const [budgetsLoaded, setBudgetsLoaded] = useState(false);
   const [dashboardSearch, setDashboardSearch] = useState("");
-
+  
   function userKey(base) {
     try {
       const raw = localStorage.getItem("user");

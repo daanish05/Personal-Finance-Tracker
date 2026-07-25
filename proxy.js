@@ -3,18 +3,16 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export function middleware(request) {
+export function proxy(request) {
   const token = request.cookies.get("token")?.value;
 
   const pathname = request.nextUrl.pathname;
 
-  // Public routes
   const publicRoutes = [
     "/login",
     "/register",
   ];
 
-  // Allow Next.js internals
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
@@ -23,12 +21,10 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Allow login/register pages
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // No token → Login
   if (!token) {
     return NextResponse.redirect(
       new URL("/login", request.url)
@@ -50,9 +46,13 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    "/",    
-    "/transactions/:path*",
-    "/accounts/:path*",
-    "/goals/:path*",
+    "/",
+    "/Transaction/:path*",
+    "/Accounts/:path*",
+    "/Goals/:path*",
+    "/Report/:path*",
+    "/Settings/:path*",
+    "/Quickadd/:path*",
+    "/EditProfile/:path*",
   ],
 };
