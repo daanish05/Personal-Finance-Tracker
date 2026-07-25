@@ -129,4 +129,8 @@ export const profiles = sqliteTable("profiles", {
 
   updatedAt: text("updated_at")
     .$defaultFn(() => new Date().toISOString()),
-});
+    
+  });
+
+
+

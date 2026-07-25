@@ -1,39 +1,78 @@
 "use client";
+
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
 import Link from "next/link";
 import { useTransactions, CURRENCIES } from "../../contexts/TransactionContext";
-import { useUser } from "../../components/UserProvider";
 import { useAuth } from "../../contexts/AuthProvider";
 import Header from "../../components/Dashboard/Header";
 
 export default function Settings() {
   const { defaultCurrency, setDefaultCurrency, transactions } =
     useTransactions();
-  const {
-    profile,
-    updateProfile,
-    preferences,
-    updatePreferences,
-    notifications,
-    updateNotifications,
-  } = useUser();
 
   const { user } = useAuth();
 
-  const displayName = user?.name || profile.name;
-  const displayEmail = user?.email || profile.email;
+  const [profile, setProfile] = useState({
+     id: null,
 
-  const avatar = profile?.avatar || "";
 
-  const memberSince = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString("en-US", {
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    bio: "",
+    linkedin: "",
+    website: "",
+    avatar: "",
+    createdAt: "",
+
+    language: "English (US)",
+    timezone: "(GMT+05:30) India Standard Time",
+
+    budgetAlertsEmail: true,
+    budgetAlertsPush: true,
+
+    billRemindersEmail: true,
+    billRemindersPush: false,
+
+    monthlyReportsEmail: true,
+    monthlyReportsPush: false,
+  });
+
+  const displayName = user?.name || profile.name || "";
+  const displayEmail = user?.email || profile.email || "";
+
+  const memberSince = profile.createdAt
+    ? new Date(profile.createdAt).toLocaleDateString("en-US", {
         month: "long",
         year: "numeric",
       })
     : "";
 
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/profile");
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        setProfile((prev) => ({
+          ...prev,
+          ...data,
+        }));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadProfile();
+  }, []);
+
   const avatarInputRef = useRef(null);
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
@@ -54,64 +93,98 @@ export default function Settings() {
     setTimeout(() => setToastVisible(false), 3000);
   };
 
-  const handleProfileSave = () => {
-    const name = document.getElementById("profile-name")?.value || displayName;
-    const email =
-      document.getElementById("profile-email")?.value || displayEmail;
-    updateProfile({ name, email });
-    showToast("Profile saved successfully");
-  };
-  const router = useRouter();
-
   const handleCurrencyChange = (e) => {
     setDefaultCurrency(e.target.value);
   };
 
   const handleLanguageChange = (e) => {
-    updatePreferences({ language: e.target.value });
+    const value = e.target.value;
+
+    setProfile((prev) => ({
+      ...prev,
+      language: value,
+    }));
   };
 
   const handleTimezoneChange = (e) => {
-    updatePreferences({ timezone: e.target.value });
+    const value = e.target.value;
+
+    setProfile((prev) => ({
+      ...prev,
+      timezone: value,
+    }));
   };
 
-  const toggleNotif = (section, channel) => {
-    const next = {
-      ...notifications,
-      [section]: {
-        ...notifications[section],
-        [channel]: !notifications[section][channel],
-      },
-    };
-    updateNotifications(next);
+  const toggleNotif = (field) => {
+    setProfile((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
   };
 
   const handleAvatarUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
+
     reader.onload = (ev) => {
-      updateProfile({ avatar: ev.target.result });
-      showToast("Profile picture updated");
+      setProfile((prev) => ({
+        ...prev,
+        avatar: ev.target.result,
+      }));
     };
+
     reader.readAsDataURL(file);
   };
 
-  const handleExport = (format) => {
+  async function saveProfile() {
     try {
-      const transactions = JSON.parse(
-        localStorage.getItem("transactions") || "[]",
-      );
-      const data = JSON.stringify(transactions, null, 2);
-      const blob = new Blob([data], { type: "application/json" });
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profile),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      showToast("Profile updated successfully");
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to update profile");
+    }
+  }
+
+  const handleExport = async (format) => {
+    try {
+      const res = await fetch("/api/transactions");
+      const txns = await res.json();
+
+      const data = JSON.stringify(txns, null, 2);
+
+      const blob = new Blob([data], {
+        type: "application/json",
+      });
+
       const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
+
       a.href = url;
       a.download = `wealthflow-export.${format.toLowerCase()}`;
+
       a.click();
+
       URL.revokeObjectURL(url);
+
       showToast(`Data exported as ${format}`);
-    } catch (e) {
+    } catch {
       showToast("No data to export");
     }
   };
@@ -167,7 +240,7 @@ export default function Settings() {
               </div>
               <div className="flex items-center gap-xl mb-lg">
                 <div className="relative group">
-                  {avatar ? (
+                  {profile.avatar ? (
                     <img
                       className="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm"
                       alt="Profile"
@@ -175,7 +248,7 @@ export default function Settings() {
                     />
                   ) : (
                     <div className="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl">
-                      {displayName.charAt(0)}
+                      {displayName?.charAt(0)?.toUpperCase() || "U"}
                     </div>
                   )}
                   <input
@@ -231,29 +304,13 @@ export default function Settings() {
                   </button>
                 </Link>
 
-                {/* <button
-                  className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all w-full sm:w-auto"
-                  onClick={handleProfileSave}
-                >
-                  Save Changes
-                </button> */}
-              </div>
-              {/* <div
-                className="mt-lg pt-lg border-t border-outline-variant flex justify-end"
-                style={{ gap: "1rem", alignItems: "center" }}
-              >
-                <Link href="/EditProfile">
-                  <button className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all">
-                    Edit Profile
-                  </button>
-                </Link>
                 <button
-                  className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all"
-                  onClick={handleProfileSave}
+                  onClick={saveProfile}
+                  className="bg-primary text-on-primary px-xl py-2.5 rounded-lg font-label-md hover:opacity-90"
                 >
                   Save Changes
                 </button>
-              </div> */}
+              </div>
             </section>
 
             <section
@@ -297,7 +354,7 @@ export default function Settings() {
                   </div>
                   <select
                     className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all"
-                    value={preferences.language}
+                    value={profile.language}
                     onChange={handleLanguageChange}
                   >
                     <option>English (US)</option>
@@ -317,7 +374,7 @@ export default function Settings() {
                   </div>
                   <select
                     className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md outline-none focus:border-primary transition-all"
-                    value={preferences.timezone}
+                    value={profile.timezone}
                     onChange={handleTimezoneChange}
                   >
                     <option>(GMT-08:00) Pacific Time</option>
@@ -357,8 +414,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.budgetAlerts.email}
-                        onChange={() => toggleNotif("budgetAlerts", "email")}
+                        checked={profile.budgetAlertsEmail}
+                        onChange={() => toggleNotif("budgetAlertsEmail")}
                       />
                       <div
                         className="
@@ -386,8 +443,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.budgetAlerts.push}
-                        onChange={() => toggleNotif("budgetAlerts", "push")}
+                        checked={profile.budgetAlertsPush}
+                        onChange={() => toggleNotif("budgetAlertsPush")}
                       />
                       <div
                         className="
@@ -427,8 +484,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.billReminders.email}
-                        onChange={() => toggleNotif("billReminders", "email")}
+                        checked={profile.billRemindersEmail}
+                        onChange={() => toggleNotif("billRemindersEmail")}
                       />
                       <div
                         className="
@@ -456,8 +513,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.billReminders.push}
-                        onChange={() => toggleNotif("billReminders", "push")}
+                        checked={profile.billRemindersPush}
+                        onChange={() => toggleNotif("billRemindersPush")}
                       />
                       <div
                         className="
@@ -497,8 +554,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.monthlyReports.email}
-                        onChange={() => toggleNotif("monthlyReports", "email")}
+                        checked={profile.monthlyReportsEmail}
+                        onChange={() => toggleNotif("monthlyReportsEmail")}
                       />
                       <div
                         className="
@@ -526,8 +583,8 @@ export default function Settings() {
                       <input
                         className="sr-only peer"
                         type="checkbox"
-                        checked={notifications.monthlyReports.push}
-                        onChange={() => toggleNotif("monthlyReports", "push")}
+                        checked={profile.monthlyReportsPush}
+                        onChange={() => toggleNotif("monthlyReportsPush")}
                       />
                       <div
                         className="
@@ -675,55 +732,6 @@ export default function Settings() {
               <h3 className="font-headline-md text-headline-md font-bold mb-md text-on-surface">
                 Data Management
               </h3>
-              {/* <div className="flex flex-col gap-md">
-                <div className="p-lg border border-outline-variant rounded-lg bg-surface-container-low flex items-center justify-between">
-                  <div className="flex items-center gap-md">
-                    <span className="material-symbols-outlined text-primary text-[32px]">
-                      download
-                    </span>
-                    <div>
-                      <p className="font-label-md text-label-md font-bold text-on-surface">
-                        Export your data
-                      </p>
-                      <p className="text-on-surface-variant text-body-sm">
-                        Download your full history and profile in a portable
-                        format.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-sm">
-                    <button
-                      className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs"
-                      onClick={() => handleExport("CSV")}
-                    >
-                      CSV
-                    </button>
-                    <button
-                      className="px-md py-2 bg-surface-container-low text-on-surface border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-xs"
-                      onClick={() => handleExport("JSON")}
-                    >
-                      JSON
-                    </button>
-                  </div>
-                </div>
-                <div className="p-lg border border-error/30 bg-error-container/10 rounded-lg flex items-center justify-between">
-                  <div>
-                    <p className="font-label-md text-label-md font-bold text-error">
-                      Delete Account
-                    </p>
-                    <p className="text-on-surface-variant text-body-sm">
-                      Permanently remove your account and all associated data.
-                      This cannot be undone.
-                    </p>
-                  </div>
-                  <button
-                    className="px-md py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all"
-                    onClick={handleDeleteAccount}
-                  >
-                    Delete Account
-                  </button>
-                </div>
-              </div> */}
               <div className="flex flex-col gap-md">
                 {/* Export Data */}
                 <div className="p-lg border border-outline-variant rounded-lg bg-surface-container-low flex flex-col md:flex-row md:items-center md:justify-between gap-4">

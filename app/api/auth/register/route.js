@@ -55,18 +55,20 @@ export async function POST(request) {
       })
       .returning();
 
-    const user = result[0];
+    const newUser = result[0];
+
     await db.insert(profiles).values({
       userId: newUser.id,
     });
-    const token = generateToken(user);
+
+    const token = generateToken(newUser);
 
     const response = NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
       },
     });
 
