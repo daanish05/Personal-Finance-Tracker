@@ -1,4 +1,4 @@
-import Sidebar from "../components/Dashboard/Sidebar";
+import SidebarWrapper from "../components/Dashboard/SidebarWrapper";
 import Providers from "../components/ThemeProvider";
 import AuthProvider from "../contexts/AuthProvider";
 import UserProvider from "../components/UserProvider";
@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <TransactionProvider>
               <UserProvider>
-                <Sidebar />
+                <SidebarWrapper />
                 {children}
               </UserProvider>
             </TransactionProvider>

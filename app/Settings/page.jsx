@@ -189,14 +189,31 @@ export default function Settings() {
     }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (
-      window.confirm(
+      !window.confirm(
         "Are you sure you want to permanently delete your account and all associated data? This cannot be undone.",
       )
     ) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/auth/delete-account", {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
       localStorage.clear();
-      window.location.href = "/";
+      window.location.href = "/login";
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to delete account");
     }
   };
 
