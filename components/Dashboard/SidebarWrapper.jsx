@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 
-const HIDDEN_PATHS = ["/Mainpage", "/login"];
+const HIDDEN_PATHS = ["/login"];
 
 export default function SidebarWrapper() {
   const pathname = usePathname();
