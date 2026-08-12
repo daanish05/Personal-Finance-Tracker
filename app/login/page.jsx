@@ -840,8 +840,8 @@ export default function Login() {
                 {/* SOCIAL AUTH                                           */}
                 {/* ===================================================== */}
 
-                <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* Google */}
+                {/* <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {/* Google 
                   <button
                     type="button"
                     className="
@@ -877,8 +877,8 @@ export default function Login() {
 
                     <span>Google</span>
                   </button>
-
-                  {/* Apple */}
+                  
+                  {/* Apple 
                   <button
                     type="button"
                     className="
@@ -912,13 +912,13 @@ export default function Login() {
 
                     <span>Apple</span>
                   </button>
-                </div>
+                </div> */}
 
                 {/* ===================================================== */}
                 {/* DIVIDER                                               */}
                 {/* ===================================================== */}
 
-                <div className="relative mb-8 flex items-center">
+                {/* <div className="relative mb-8 flex items-center">
                   <div className="flex-1 border-t border-outline-variant/30" />
 
                   <span
@@ -934,7 +934,7 @@ export default function Login() {
                   </span>
 
                   <div className="flex-1 border-t border-outline-variant/30" />
-                </div>
+                </div> */}
 
                 {/* ===================================================== */}
                 {/* FORM                                                  */}
@@ -965,21 +965,19 @@ export default function Login() {
                         onChange={handleChange}
                         placeholder="John Doe"
                         required
-                        className="
-                  input-focus-ring
-                  h-12
-                  w-full
-                  rounded-lg
-                  border
-                  border-outline-variant/50
-                  bg-surface-container-lowest
-                  px-4
-                  font-body-sm
-                  text-body-sm
-                  text-on-surface
-                  transition-all
-                  placeholder:text-on-surface-variant/50
-                "
+                        className="input-focus-ring
+                      h-12
+                      w-full
+                      rounded-lg
+                      border
+                      border-outline-variant/50
+                      bg-surface-container-lowest
+                      px-4
+                      font-body-sm
+                      text-body-sm
+                      text-on-surface
+                      transition-all
+                      placeholder:text-on-surface-variant/50"
                       />
                     </div>
                   )}
@@ -987,16 +985,14 @@ export default function Login() {
                   {/* Email */}
                   <div>
                     <label
-                      className="
-                mb-2
-                block
-                font-label-md
-                text-label-md
-                text-on-surface
-              "
+                      className="mb-2
+                    block
+                    font-label-md
+                    text-label-md
+                    text-on-surface"
                       htmlFor="email"
                     >
-                      Professional Email
+                      Email
                     </label>
 
                     <input
@@ -1005,24 +1001,22 @@ export default function Login() {
                       type="email"
                       value={form.email}
                       onChange={handleChange}
-                      placeholder="name@company.com"
+                      placeholder="name@gmail.com"
                       autoComplete="email"
                       required
-                      className="
-                input-focus-ring
-                h-12
-                w-full
-                rounded-lg
-                border
-                border-outline-variant/50
-                bg-surface-container-lowest
-                px-4
-                font-body-sm
-                text-body-sm
-                text-on-surface
-                transition-all
-                placeholder:text-on-surface-variant/50
-              "
+                      className=" input-focus-ring
+                    h-12
+                    w-full
+                    rounded-lg
+                    border
+                    border-outline-variant/50
+                    bg-surface-container-lowest
+                    px-4
+                    font-body-sm
+                    text-body-sm
+                    text-on-surface
+                    transition-all
+                    placeholder:text-on-surface-variant/50 "
                     />
                   </div>
 
@@ -1134,28 +1128,28 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="
-              h-[72px]
-              w-full
-              rounded-lg
-              bg-primary
-              px-4
-              font-headline-md
-              text-body-md
-              font-bold
-              text-on-primary
-              shadow-lg
-              shadow-primary/10
-              transition-all
-              hover:bg-primary-container
-              active:scale-[0.98]
-              focus:outline-none
-              focus:ring-4
-              focus:ring-primary/10
-              disabled:opacity-50
-
-              sm:h-16
-            "
+                    className=" h-[72px]
+                  w-full
+                  rounded-lg
+                  bg-primary
+                  px-4
+                  font-headline-md
+                  text-body-md
+                  font-bold
+                  text-on-primary
+                  shadow-lg
+                  shadow-primary/10
+                  transition-all
+                  hover:bg-primary-container
+                  hover:shadow-primary/20
+                  hover:-translate-y-2
+                  hover:-translate-x-2
+                  active:scale-[0.98]
+                  focus:outline-none
+                  focus:ring-4
+                  focus:ring-primary/10
+                  disabled:opacity-50
+                  sm:h-16"
                   >
                     {loading
                       ? isSignup
