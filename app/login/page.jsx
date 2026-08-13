@@ -432,6 +432,38 @@ export default function Login() {
             {/* Background Image */}
             <div
               className="
+    absolute inset-0
+    hidden
+    dark:block
+    bg-[#030712]
+  "
+              style={{
+                backgroundImage: `
+      radial-gradient(
+        circle at 75% 30%,
+        rgba(16, 185, 129, 0.14),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 20% 70%,
+        rgba(59, 130, 246, 0.12),
+        transparent 40%
+      ),
+      linear-gradient(
+        rgba(255,255,255,0.025) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,0.025) 1px,
+        transparent 1px
+      )
+    `,
+                backgroundSize: "auto, auto, 60px 60px, 60px 60px",
+              }}
+            />
+            {/* <div
+              className="
         pointer-events-none
         absolute
         inset-0
@@ -444,19 +476,18 @@ export default function Login() {
                 backgroundImage:
                   'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhuIRKMWMfD4aNYuw_SNPNJu_4Qum4fDhN7eE_xXiLKkGAhLP9QEkyHAxDiihdX7wSs9Y0LtiJ5MHOr9IAeVJ6MW0Iq1T7VI6aT_E5ENo4f-xw6DkZBmj4_uJ4_DEFMfM_9ozLkXbMiZtuqoWSKsLbl05YcWppo3Ib3_rlyg8OIFvTXxzgholST5iOuFUpTWw56j9ufJIfRcqqwVeqaMzq7uTxx8zIFjD79bq4BX8j4cBvW7eGm896")',
               }}
-            />
+            /> */}
 
             {/* Dark overlay */}
             <div
-              className="
-        pointer-events-none
-        absolute
-        inset-0
-        bg-gradient-to-br
-        from-[#07182b]/20
-        via-transparent
-        to-[#061528]/30
-      "
+              className=" pointer-events-none
+            absolute
+            inset-0
+            bg-gradient-to-br
+            from-[#07182b]/20
+            via-transparent
+            to-[#061528]/30
+            "
             />
 
             {/* ========================================================= */}
@@ -486,6 +517,8 @@ export default function Login() {
                   text-headline-md
                   text-surface
                   text-xl
+                  text-gray-900
+                  dark:text-white
                   font-bold
                   sm:text-2xl "
                 >
@@ -512,22 +545,24 @@ export default function Login() {
             >
               <h1
                 className="
-          max-w-3xl
-          font-headline-xl
-          text-surface
-          font-semibold
-          leading-[1.15]
-          tracking-[-0.02em]
+    max-w-3xl
+    font-headline-xl
+    font-semibold
+    leading-[1.15]
+    tracking-[-0.02em]
 
-          text-4xl
-          sm:text-5xl
-          lg:text-6xl
-          xl:text-[64px]
-        "
+    text-gray-900
+    dark:text-white
+
+    text-4xl
+    sm:text-5xl
+    lg:text-6xl
+    xl:text-[64px]
+  "
               >
-                Elevate your financial trajectory with{" "}
+                Take control of your financial journey with{" "}
                 <span className="text-primary-fixed-dim">
-                  precision analytics.
+                  smart insights.
                 </span>
               </h1>
 
@@ -544,9 +579,7 @@ export default function Login() {
           lg:text-xl
         "
               >
-                Experience the next generation of asset management. Real-time
-                insights, automated forecasting, and institutional-grade
-                security for the modern investor.
+                Take control of your finances with smarter money management. Track expenses, monitor your spending, set budgets, and gain clear insights into your financial habits all in one simple, secure platform.
               </p>
 
               {/* ========================================================= */}
@@ -555,51 +588,41 @@ export default function Login() {
 
               <div
                 className="
-          mt-10
-          grid
-          grid-cols-3
-          gap-4
+    mt-10
+    grid
+    grid-cols-3
+    gap-4
+    border-t
+    border-gray-200
+    pt-8
 
-          border-t
-          border-outline-variant/20
-          pt-8
+    dark:border-gray-700
 
-          sm:mt-12
-          sm:gap-8
-          sm:pt-10
-
-          lg:max-w-3xl
-        "
+    sm:mt-12
+    sm:gap-8
+    sm:pt-10
+  "
               >
                 {/* Metric 1 */}
                 <div>
-                  <div
-                    className="
-              font-headline-md
-              text-surface
-              text-2xl
-              font-bold
-
-              sm:text-3xl
-            "
-                  >
-                    1.2s
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                    10K+
                   </div>
 
                   <div
                     className="
               mt-1
-              font-label-md
-              text-surface-variant
               text-[10px]
               uppercase
               leading-tight
               tracking-widest
+              text-gray-500
+              dark:text-gray-400
 
               sm:text-xs
             "
                   >
-                    Real-time latency
+                    Expenses tracked 
                   </div>
                 </div>
 
@@ -607,15 +630,13 @@ export default function Login() {
                 <div>
                   <div
                     className="
-              font-headline-md
-              text-surface
-              text-2xl
-              font-bold
-
-              sm:text-3xl
-            "
+                    text-2xl
+                    font-bold
+                    text-gray-900
+                    dark:text-white
+                    sm:text-3xl"
                   >
-                    99.9%
+                    95%
                   </div>
 
                   <div
@@ -625,13 +646,15 @@ export default function Login() {
               text-surface-variant
               text-[10px]
               uppercase
+              text-gray-500
+              dark:text-gray-400
               leading-tight
               tracking-widest
 
               sm:text-xs
             "
                   >
-                    Uptime reliability
+                    Budget Visibility
                   </div>
                 </div>
 
@@ -639,15 +662,13 @@ export default function Login() {
                 <div>
                   <div
                     className="
-              font-headline-md
-              text-surface
-              text-2xl
-              font-bold
-
-              sm:text-3xl
-            "
+                    text-2xl
+                    font-bold
+                    text-gray-900
+                    dark:text-white
+                    sm:text-3xl"
                   >
-                    256-bit
+                    24/7
                   </div>
 
                   <div
@@ -663,7 +684,7 @@ export default function Login() {
               sm:text-xs
             "
                   >
-                    Quantum encryption
+                    Financial Insights
                   </div>
                 </div>
               </div>
@@ -688,8 +709,7 @@ export default function Login() {
           leading-relaxed
         "
               >
-                © 2024 WealthFlow AI. Precision in every penny. Trusted by over
-                50,000 professionals globally.
+                © 2026 Personal Finance Tracker. Smarter money management, made simple. Trusted by thousands of users worldwide.
               </p>
             </div>
           </section>
@@ -820,7 +840,7 @@ export default function Login() {
             "
                   >
                     {isSignup
-                      ? "Join the elite circle of data-driven investors."
+                      ? "Take control of your finances in a smarter way."
                       : "Enter your credentials to access your terminal."}
                   </p>
                 </div>
@@ -1143,7 +1163,6 @@ export default function Login() {
                   hover:bg-primary-container
                   hover:shadow-primary/20
                   hover:-translate-y-2
-                  hover:-translate-x-2
                   active:scale-[0.98]
                   focus:outline-none
                   focus:ring-4
