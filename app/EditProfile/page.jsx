@@ -1,19 +1,51 @@
 "use client";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
 import Link from "next/link";
-import { useUser } from "../../components/UserProvider";
+import { useAuth } from "../../contexts/AuthProvider";
+import { processAvatarImage } from "../../lib/processAvatarImage";
 
 export default function EditProfile() {
-  const { profile, updateProfile } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
   const avatarInputRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [form, setForm] = useState({ ...profile });
-  const [savedForm, setSavedForm] = useState({ ...profile });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    bio: "",
+    linkedin: "",
+    website: "",
+    avatar: "",
+  });
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/profile");
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        setForm((prev) => ({
+          ...prev,
+          ...Object.fromEntries(
+            Object.entries(data).filter(([, v]) => v != null)
+          ),
+        }));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadProfile();
+  }, []);
 
   const sectionMatches = (section) => {
     if (!searchQuery.trim()) return true;
@@ -44,12 +76,7 @@ export default function EditProfile() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    updateProfile(form); // Save the profile
-
-    setSavedForm({ ...form });
-    showToast("Profile updated successfully");
-
-    router.back(); // Go back after saving
+    saveProfile();
   };
 
   const handleCancel = () => {
@@ -60,15 +87,44 @@ export default function EditProfile() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAvatarUpload = (e) => {
+  async function saveProfile() {
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      showToast("Profile updated successfully");
+
+      window.dispatchEvent(new CustomEvent("profile-updated"));
+
+      router.back();
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to update profile");
+    }
+  }
+
+  const handleAvatarUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      updateProfile({ avatar: ev.target.result });
+    try {
+      const dataUrl = await processAvatarImage(file);
+      updateField("avatar", dataUrl);
       showToast("Profile picture updated");
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to load image");
+    }
   };
 
   return (
@@ -233,15 +289,15 @@ export default function EditProfile() {
                   <div className="flex flex-col items-center">
                     <div className="relative group">
                       <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-high shadow-sm">
-                        {profile.avatar ? (
+                        {form.avatar ? (
                           <img
                             className="w-full h-full object-cover"
                             alt="Profile"
-                            src={profile.avatar}
+                            src={form.avatar}
                           />
                         ) : (
                           <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-4xl">
-                            {profile.name.charAt(0)}
+                            {(user?.name || form.name || "U").charAt(0)}
                           </div>
                         )}
                       </div>
@@ -274,7 +330,7 @@ export default function EditProfile() {
                       <button
                         className="w-full py-2 text-error font-label-md text-label-md hover:bg-error-container/10 transition-colors rounded-lg"
                         onClick={() => {
-                          updateProfile({ avatar: "" });
+                          updateField("avatar", "");
                           showToast("Photo removed");
                         }}
                       >

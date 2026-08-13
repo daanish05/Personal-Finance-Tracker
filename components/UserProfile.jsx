@@ -35,10 +35,16 @@ export default function UserProfile() {
     }
 
     loadProfile();
+
+    const handleProfileUpdated = () => loadProfile();
+    window.addEventListener("profile-updated", handleProfileUpdated);
+
+    return () =>
+      window.removeEventListener("profile-updated", handleProfileUpdated);
   }, []);
 
-  const displayName = user?.name || profile.name || "";
-  const displayEmail = user?.email || profile.email || "";
+  const displayName = profile.name || user?.name || "";
+  const displayEmail = profile.email || user?.email || "";
 
   return (
     <Link

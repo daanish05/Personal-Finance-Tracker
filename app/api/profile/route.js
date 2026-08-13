@@ -92,31 +92,49 @@ export async function PUT(request) {
 
     const body = await request.json();
 
+    const fields = {
+      phone: body.phone,
+      location: body.location,
+      bio: body.bio,
+      linkedin: body.linkedin,
+      website: body.website,
+      avatar: body.avatar,
+
+      language: body.language,
+      timezone: body.timezone,
+
+      budgetAlertsEmail: body.budgetAlertsEmail,
+      budgetAlertsPush: body.budgetAlertsPush,
+
+      billRemindersEmail: body.billRemindersEmail,
+      billRemindersPush: body.billRemindersPush,
+
+      monthlyReportsEmail: body.monthlyReportsEmail,
+      monthlyReportsPush: body.monthlyReportsPush,
+
+      updatedAt: new Date().toISOString(),
+    };
+
     await db
-      .update(profiles)
-      .set({
-        phone: body.phone,
-        location: body.location,
-        bio: body.bio,
-        linkedin: body.linkedin,
-        website: body.website,
-        avatar: body.avatar,
-
-        language: body.language,
-        timezone: body.timezone,
-
-        budgetAlertsEmail: body.budgetAlertsEmail,
-        budgetAlertsPush: body.budgetAlertsPush,
-
-        billRemindersEmail: body.billRemindersEmail,
-        billRemindersPush: body.billRemindersPush,
-
-        monthlyReportsEmail: body.monthlyReportsEmail,
-        monthlyReportsPush: body.monthlyReportsPush,
-
-        updatedAt: new Date().toISOString(),
+      .insert(profiles)
+      .values({
+        userId: currentUser.id,
+        ...fields,
       })
-      .where(eq(profiles.userId, currentUser.id));
+      .onConflictDoUpdate({
+        target: profiles.userId,
+        set: fields,
+      });
+
+    if (body.name || body.email) {
+      await db
+        .update(users)
+        .set({
+          name: body.name || undefined,
+          email: body.email || undefined,
+        })
+        .where(eq(users.id, currentUser.id));
+    }
 
     return NextResponse.json({
       success: true,

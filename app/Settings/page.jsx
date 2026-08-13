@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTransactions, CURRENCIES } from "../../contexts/TransactionContext";
 import { useAuth } from "../../contexts/AuthProvider";
 import Header from "../../components/Dashboard/Header";
+import { processAvatarImage } from "../../lib/processAvatarImage";
 
 export default function Settings() {
   const { defaultCurrency, setDefaultCurrency, transactions } =
@@ -40,8 +41,8 @@ export default function Settings() {
     monthlyReportsPush: false,
   });
 
-  const displayName = user?.name || profile.name || "";
-  const displayEmail = user?.email || profile.email || "";
+  const displayName = profile.name || user?.name || "";
+  const displayEmail = profile.email || user?.email || "";
 
   const memberSince = profile.createdAt
     ? new Date(profile.createdAt).toLocaleDateString("en-US", {
@@ -61,7 +62,9 @@ export default function Settings() {
 
         setProfile((prev) => ({
           ...prev,
-          ...data,
+          ...Object.fromEntries(
+            Object.entries(data).filter(([, v]) => v != null)
+          ),
         }));
       } catch (err) {
         console.error(err);
@@ -69,6 +72,12 @@ export default function Settings() {
     }
 
     loadProfile();
+
+    const handleProfileUpdated = () => loadProfile();
+    window.addEventListener("profile-updated", handleProfileUpdated);
+
+    return () =>
+      window.removeEventListener("profile-updated", handleProfileUpdated);
   }, []);
 
   const avatarInputRef = useRef(null);
@@ -122,20 +131,20 @@ export default function Settings() {
     }));
   };
 
-  const handleAvatarUpload = (e) => {
+  const handleAvatarUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-
-    reader.onload = (ev) => {
+    try {
+      const dataUrl = await processAvatarImage(file);
       setProfile((prev) => ({
         ...prev,
-        avatar: ev.target.result,
+        avatar: dataUrl,
       }));
-    };
-
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to load image");
+    }
   };
 
   async function saveProfile() {
@@ -155,6 +164,8 @@ export default function Settings() {
       }
 
       showToast("Profile updated successfully");
+
+      window.dispatchEvent(new CustomEvent("profile-updated"));
     } catch (err) {
       console.error(err);
       showToast("Failed to update profile");
