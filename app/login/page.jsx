@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/Dashboard/ThemeToggle";
+import { Wallet } from "lucide-react";
 
 export default function Login() {
   const router = useRouter();
@@ -462,22 +463,6 @@ export default function Login() {
                 backgroundSize: "auto, auto, 60px 60px, 60px 60px",
               }}
             />
-            {/* <div
-              className="
-        pointer-events-none
-        absolute
-        inset-0
-        bg-cover
-        bg-center
-        opacity-10
-        mix-blend-overlay
-      "
-              style={{
-                backgroundImage:
-                  'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhuIRKMWMfD4aNYuw_SNPNJu_4Qum4fDhN7eE_xXiLKkGAhLP9QEkyHAxDiihdX7wSs9Y0LtiJ5MHOr9IAeVJ6MW0Iq1T7VI6aT_E5ENo4f-xw6DkZBmj4_uJ4_DEFMfM_9ozLkXbMiZtuqoWSKsLbl05YcWppo3Ib3_rlyg8OIFvTXxzgholST5iOuFUpTWw56j9ufJIfRcqqwVeqaMzq7uTxx8zIFjD79bq4BX8j4cBvW7eGm896")',
-              }}
-            /> */}
-
             {/* Dark overlay */}
             <div
               className=" pointer-events-none
@@ -496,34 +481,21 @@ export default function Login() {
 
             <div className="relative z-10">
               <div className="flex items-center gap-3">
-                <span
-                  className="
-            material-symbols-outlined
-            text-primary-fixed-dim
-            text-[28px]
-            sm:text-[30px]
-            lg:text-[32px]
-          "
-                  style={{
-                    fontVariationSettings: '"FILL" 1',
-                  }}
-                >
-                  analytics
-                </span>
+                <div className="w-8 h-8 bg-primary rounded flex items-center justify-center shrink-0">
+                  <Wallet className="text-on-primary" size={20} />
+                </div>
 
-                <span
-                  className="
-                  font-headline-md
-                  text-headline-md
-                  text-surface
-                  text-xl
-                  text-gray-900
-                  dark:text-white
-                  font-bold
-                  sm:text-2xl "
+                <h1
+                className="
+                font-headline-md 
+                text-headline-md 
+                text-primary-fixed-dim
+                sm:text-3xl
+                font-bold 
+                "
                 >
                   WealthFlow
-                </span>
+                </h1>
               </div>
             </div>
 
