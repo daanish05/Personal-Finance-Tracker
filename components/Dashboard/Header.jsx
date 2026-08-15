@@ -71,8 +71,8 @@ export default function Header({
             className="relative w-full max-w-[200px] sm:max-w-[200px] md:max-w-[480px]"
             ref={dropdownRef}
             style={{
-              border: "1px solid var(--outline-variant)",
-              borderRadius: "8px", }}>
+              border: "2px solid var(--outline-variant)",
+              borderRadius: "14px", }}>
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
               search
             </span>
