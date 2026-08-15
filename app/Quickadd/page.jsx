@@ -542,27 +542,6 @@ export default function Quickadd() {
                     rows={3}
                   />
                 </div>
-                {/* Receipt Attachment (Drag & Drop) */}
-                <div>
-                  <label className="block font-label-md text-label-md text-outline mb-sm">
-                    Receipt / Attachment
-                  </label>
-                  <div className="border-2 border-dashed border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center gap-md hover:border-primary hover:bg-primary-container/5 transition-all cursor-pointer group">
-                    <div className="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-outline group-hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined text-[28px]">
-                        cloud_upload
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <p className="font-body-md text-on-surface">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="font-label-md text-outline">
-                        PDF, JPG or PNG (Max 5MB)
-                      </p>
-                    </div>
-                  </div>
-                </div>
                 {/* Action Buttons */}
                 <div className="pt-lg flex flex-col md:flex-row-reverse gap-md">
                   <button

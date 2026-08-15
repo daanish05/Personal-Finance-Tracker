@@ -96,15 +96,6 @@ export default function Sidebar() {
             </span>
             <span className="font-label-md text-label-md">Accounts</span>
           </Link>
-          {/* <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              account_balance_wallet
-            </span>
-            <span className="font-label-md text-label-md">Budgets</span>
-          </a> */}
           <Link
             className={`flex items-center gap-md px-md py-sm rounded-lg transition-all ${isActive("/Goals") ? "text-primary font-bold bg-surface-variant/30 sidebar-active" : "text-on-surface-variant hover:bg-surface-variant/20"}`}
             href="/Goals"
@@ -133,15 +124,6 @@ export default function Sidebar() {
             </span>
             <span className="font-label-md text-label-md">Reports</span>
           </Link>
-          {/* <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant/20 transition-all"
-            href="#"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              psychology
-            </span>
-            <span className="font-label-md text-label-md">AI Insights</span>
-          </a> */}
         </nav>
         <div className="px-md py-xl space-y-base border-t border-outline-variant/30">
           <Link

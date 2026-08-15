@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users, profiles } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
 // ================= GET PROFILE =================
@@ -34,7 +34,7 @@ export async function GET() {
         bio: profiles.bio,
         linkedin: profiles.linkedin,
         website: profiles.website,
-        avatar: profiles.avatar,
+        hasAvatar: sql`${profiles.avatar} IS NOT NULL`.as("hasAvatar"),
 
         language: profiles.language,
         timezone: profiles.timezone,
@@ -98,7 +98,7 @@ export async function PUT(request) {
       bio: body.bio,
       linkedin: body.linkedin,
       website: body.website,
-      avatar: body.avatar,
+      avatar: body.avatar || null,
 
       language: body.language,
       timezone: body.timezone,

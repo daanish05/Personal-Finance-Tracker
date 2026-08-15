@@ -26,6 +26,7 @@ export default function Settings() {
     linkedin: "",
     website: "",
     avatar: "",
+    hasAvatar: false,
     createdAt: "",
 
     language: "English (US)",
@@ -65,7 +66,9 @@ export default function Settings() {
           ...Object.fromEntries(
             Object.entries(data).filter(([, v]) => v != null)
           ),
+          avatar: "",
         }));
+        setAvatarVersion((v) => v + 1);
       } catch (err) {
         console.error(err);
       }
@@ -79,6 +82,8 @@ export default function Settings() {
     return () =>
       window.removeEventListener("profile-updated", handleProfileUpdated);
   }, []);
+
+  const [avatarVersion, setAvatarVersion] = useState(0);
 
   const avatarInputRef = useRef(null);
   const router = useRouter();
@@ -273,6 +278,12 @@ export default function Settings() {
                       className="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm"
                       alt="Profile"
                       src={profile.avatar}
+                    />
+                  ) : profile.hasAvatar ? (
+                    <img
+                      className="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm"
+                      alt="Profile"
+                      src={`/api/avatar?v=${avatarVersion}`}
                     />
                   ) : (
                     <div className="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl">

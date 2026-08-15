@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import { useAuth } from "./AuthProvider";
 
 export const CURRENCIES = [
   { code: "USD", symbol: "$", label: "US Dollar ($)" },
@@ -67,6 +68,7 @@ export function useTransactions() {
 }
 
 export default function TransactionProvider({ children }) {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [defaultCurrency, setDefaultCurrency] = useState("USD");
@@ -105,6 +107,7 @@ export default function TransactionProvider({ children }) {
         });
 
         if (!res.ok) {
+          if (res.status === 401) return;
           throw new Error(`Failed to fetch transactions (${res.status})`);
         }
 
@@ -117,8 +120,14 @@ export default function TransactionProvider({ children }) {
       }
     }
 
+    if (!user) {
+      setTransactions([]);
+      setLoading(false);
+      return;
+    }
+
     loadTransactions();
-  }, []);
+  }, [user]);
 
   // useEffect(() => {
   //   async function loadTransactions() {

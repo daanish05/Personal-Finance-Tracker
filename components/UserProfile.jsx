@@ -12,6 +12,7 @@ export default function UserProfile() {
   const [profile, setProfile] = useState({
     name: "",
     email: "",
+    hasAvatar: false,
     avatar: "",
   });
 
@@ -27,7 +28,8 @@ export default function UserProfile() {
         setProfile({
           name: data.name || "",
           email: data.email || "",
-          avatar: data.avatar || "",
+          hasAvatar: !!data.hasAvatar,
+          avatar: data.hasAvatar ? `/api/avatar?v=${Date.now()}` : "",
         });
       } catch (err) {
         console.error(err);
@@ -62,7 +64,7 @@ export default function UserProfile() {
       </div>
 
       <div className="w-12 h-12 rounded-full border-2 border-surface-variant overflow-hidden">
-        {profile.avatar ? (
+        {profile.hasAvatar ? (
           <img
             src={profile.avatar}
             alt="User avatar"

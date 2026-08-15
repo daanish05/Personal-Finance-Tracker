@@ -13,6 +13,7 @@ export default function EditProfile() {
   const [searchQuery, setSearchQuery] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [avatarVersion, setAvatarVersion] = useState(0);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,6 +23,7 @@ export default function EditProfile() {
     linkedin: "",
     website: "",
     avatar: "",
+    hasAvatar: false,
   });
 
   useEffect(() => {
@@ -38,7 +40,9 @@ export default function EditProfile() {
           ...Object.fromEntries(
             Object.entries(data).filter(([, v]) => v != null)
           ),
+          avatar: "",
         }));
+        setAvatarVersion((v) => v + 1);
       } catch (err) {
         console.error(err);
       }
@@ -295,6 +299,12 @@ export default function EditProfile() {
                             alt="Profile"
                             src={form.avatar}
                           />
+                        ) : form.hasAvatar ? (
+                          <img
+                            className="w-full h-full object-cover"
+                            alt="Profile"
+                            src={`/api/avatar?v=${avatarVersion}`}
+                          />
                         ) : (
                           <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-4xl">
                             {(user?.name || form.name || "U").charAt(0)}
@@ -331,6 +341,7 @@ export default function EditProfile() {
                         className="w-full py-2 text-error font-label-md text-label-md hover:bg-error-container/10 transition-colors rounded-lg"
                         onClick={() => {
                           updateField("avatar", "");
+                          updateField("hasAvatar", false);
                           showToast("Photo removed");
                         }}
                       >
